@@ -68,16 +68,12 @@ src/lib/impeccable/[0-9a-f]*/
 mcp-playwright/
 bridge/
 scratch/
-images/
 screenshot-*.jpg
 *.tsbuildinfo
 __pycache__/
 *.pyc
 
 # Root preview & temporary files
-dark_web.*
-light_web.*
-light_cropped.*
 preview.html
 font_preview.html
 
