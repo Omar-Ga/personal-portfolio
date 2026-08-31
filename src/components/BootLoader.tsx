@@ -64,7 +64,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
       gsap.set(".gsap-intro-1, .gsap-intro-2, .gsap-intro-3", { x: -20, opacity: 0 });
 
       const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-      const durMult = isMobile ? 0.7 : 1.0;
+      const durMult = isMobile ? 0.45 : 0.55;
 
       const entryTl = gsap.timeline({ 
         delay: skipIntro ? 0 : 0.1,
@@ -76,12 +76,16 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
 
       // Directly fade out overlay and reveal video/hero immediately
       entryTl.addLabel("reveal", 0)
-        .to(".gsap-dark-overlay", { opacity: 0, duration: 1.0 * durMult }, "reveal")
-        .to(".gsap-video-bg", { autoAlpha: 1, duration: 1.0 * durMult }, "reveal")
-        .to(".gsap-main-hero", { opacity: 1, duration: 1.0 * durMult }, "reveal");
+        .to(".gsap-dark-overlay", { opacity: 0, duration: 0.8 * durMult }, "reveal")
+        .to(".gsap-video-bg", { autoAlpha: 1, duration: 0.8 * durMult }, "reveal")
+        .to(".gsap-main-hero", { opacity: 1, duration: 0.8 * durMult }, "reveal")
+        .call(() => {
+          document.body.style.overflow = "";
+          onComplete();
+        }, undefined, `reveal+=${0.4 * durMult}`);
 
       // Act 2: Title Decode — ScrambleText reveals each title line
-      entryTl.addLabel("decode", `reveal+=${0.3 * durMult}`)
+      entryTl.addLabel("decode", `reveal+=${0.2 * durMult}`)
         .to(".gsap-title-decode", { autoAlpha: 1, duration: 0.01 }, "decode");
 
       const titleLines = gsap.utils.toArray(".gsap-title-decode") as HTMLElement[];
@@ -91,7 +95,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
           duration: 2.0 * durMult,
           scrambleText: {
             text: originalText,
-            chars: "!@#$%^&*<>[]{}=/\\|~`",
+            chars: "!@#$%*+~_{}[]",
             revealDelay: 0.5 * durMult,
             speed: 0.4 / durMult
           },

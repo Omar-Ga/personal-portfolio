@@ -136,26 +136,6 @@ export default function ProjectsSection() {
           scrub: 0.7,
           refreshPriority: 6,
           invalidateOnRefresh: true,
-          snap: {
-            snapTo: (value: number) => {
-              const points = snapPointsRef.current;
-              if (!points || points.length === 0) return value;
-              let closest = points[0];
-              let minDiff = Math.abs(value - points[0]);
-              for (let i = 1; i < points.length; i++) {
-                const diff = Math.abs(value - points[i]);
-                if (diff < minDiff) {
-                  minDiff = diff;
-                  closest = points[i];
-                }
-              }
-              return closest;
-            },
-            directional: false,
-            delay: 0.1,
-            duration: { min: 0.2, max: 0.5 },
-            ease: "power2.out"
-          },
           onUpdate: function(self) {
             const currentY = -maxScrollY * self.progress;
             let minDistance = Infinity;

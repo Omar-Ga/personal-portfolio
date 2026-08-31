@@ -260,8 +260,8 @@ export default function Home() {
   return (
     <>
       <div className={`${styles.pageWrapper} gsap-page-wrapper`} ref={wrapperRef} suppressHydrationWarning>
-        {isLoaded && <GlobalNav />}
-        {isLoaded && <MobileNav />}
+        <GlobalNav />
+        <MobileNav />
         <main className={styles.main} ref={containerRef} suppressHydrationWarning>
           
           {/* Light Video Background */}
@@ -300,20 +300,18 @@ export default function Home() {
         <div className="gsap-scrub-spacer" style={{ height: "500vh", position: "relative", zIndex: 0 }}></div>
 
         {/* Services Section */}
-        {isLoaded && <ServicesSection />}
+        <ServicesSection />
 
         {/* Story / About Section */}
-        {isLoaded && <StorySection isLoaded={isLoaded} />}
+        <StorySection isLoaded={true} />
 
         {/* Projects Section */}
-        {isLoaded && <ProjectsSection />}
+        <ProjectsSection />
 
         {/* Custom Scroll Progress Bar */}
-        {isLoaded && (
-          <div className={styles.scrollProgressBarContainer}>
-            <div className={`${styles.scrollProgressBarFill} gsap-scroll-progress`}></div>
-          </div>
-        )}
+        <div className={styles.scrollProgressBarContainer}>
+          <div className={`${styles.scrollProgressBarFill} gsap-scroll-progress`}></div>
+        </div>
       </div>
 
       <ContactOverlay isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
