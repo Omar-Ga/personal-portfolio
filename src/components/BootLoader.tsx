@@ -27,7 +27,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
 
     mm.add("(prefers-reduced-motion: reduce)", () => {
       gsap.set(".gsap-dark-overlay", { opacity: 0, display: "none" });
-      gsap.set(".gsap-video-bg", { autoAlpha: 1, scale: 1 });
+      gsap.set(".gsap-video-bg", { autoAlpha: 1, scale: 1.1 });
       gsap.set(".gsap-main-hero", { opacity: 1 });
       gsap.set(".gsap-main-elem", { autoAlpha: 1, y: 0 });
       gsap.set(".gsap-title-decode", { autoAlpha: 1 });
@@ -54,7 +54,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
 
       // 1. CINEMATIC BOOT-UP ENTRY SEQUENCE
       // Initial states: everything hidden
-      gsap.set(".gsap-video-bg", { autoAlpha: 0, scale: 1.08 });
+      gsap.set(".gsap-video-bg", { autoAlpha: 0, scale: 1.1 });
       gsap.set(".gsap-main-hero", { opacity: 0 });
       gsap.set(".gsap-main-elem", { autoAlpha: 0, y: 30 });
       gsap.set(".gsap-title-decode", { autoAlpha: 0 });

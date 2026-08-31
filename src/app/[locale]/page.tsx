@@ -210,9 +210,13 @@ export default function Home() {
         const globalNx = (clientX / innerWidth) * 2 - 1;
         const globalNy = (clientY / innerHeight) * 2 - 1;
 
+        const maxOffset = 28;
+        const targetX = Math.max(-maxOffset, Math.min(maxOffset, -globalNx * maxOffset));
+        const targetY = Math.max(-maxOffset, Math.min(maxOffset, -globalNy * maxOffset));
+
         if (videoXTo && videoYTo) {
-          videoXTo(-globalNx * 30);
-          videoYTo(-globalNy * 30);
+          videoXTo(targetX);
+          videoYTo(targetY);
         }
       };
 
