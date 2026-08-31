@@ -1,0 +1,11 @@
+{
+  "titleLines": ["Let’s", "Talk."],
+  "subtitle": "Whether you have a massive project in mind or just want to discuss the boundaries of web architecture, I’m always open to talking with ambitious people.",
+  "closeLabel": "Close Contact Form",
+  "form": {
+    "name": "YOUR NAME",
+    "email": "EMAIL ADDRESS",
+    "message": "WHAT’S ON YOUR MIND?",
+    "submit": "Send Message"
+  }
+}

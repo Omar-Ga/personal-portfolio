@@ -1,0 +1,605 @@
+.pageWrapper {
+  position: relative;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+.main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  height: 100vh;
+  height: 100dvh;
+  width: 100vw;
+  display: flex;
+  overflow: hidden;
+  background-color: #000; /* Black void behind the video */
+}
+
+.videoBackgroundLight, .videoBackgroundDark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.videoBackgroundLight {
+  z-index: 1;
+}
+
+.videoBackgroundDark {
+  z-index: 2;
+  opacity: 0;
+}
+
+.contentWrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  color: #000;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 100px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 2px solid var(--primary);
+  padding: 3rem 0;
+  flex-shrink: 0;
+}
+
+.logo {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  margin-bottom: auto;
+  gap: 4rem;
+}
+
+.navItem {
+  position: relative;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  /* Rotate text so it reads top-to-bottom, baseline on the left */
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg) translateZ(0);
+  backface-visibility: hidden;
+}
+
+.navTextBase {
+  display: block;
+  pointer-events: none;
+}
+
+.navTextOrange {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--primary, #fb923c);
+  clip-path: inset(0 100% 0 0);
+  pointer-events: none;
+  display: block;
+}
+
+.navTextSweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--primary, #fb923c);
+  clip-path: polygon(0% -60%, 100% -40%, 100% -20%, 0% -40%);
+  pointer-events: none;
+  display: block;
+}
+
+.borderContainer {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  pointer-events: none;
+}
+
+.borderTop, .borderRight, .borderBottom, .borderLeft {
+  position: absolute;
+  background-color: var(--primary, #fb923c);
+}
+
+.borderTop {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.borderRight {
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  transform-origin: top;
+  transform: scaleY(0);
+}
+
+.borderBottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  transform-origin: right;
+  transform: scaleX(0);
+}
+
+.borderLeft {
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  transform-origin: bottom;
+  transform: scaleY(0);
+}
+
+/* Hero Section */
+.hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 6rem;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(5rem, 9vw, 7.5rem); /* Increased slightly based on user feedback */
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+  margin-bottom: 3rem;
+  color: #000;
+}
+
+.title span {
+  display: block;
+}
+
+.bottomSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.textContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  max-width: 450px;
+}
+
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  line-height: 1.4;
+  font-weight: 400;
+  color: #111;
+  letter-spacing: -0.01em;
+}
+
+.cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  padding: 1rem 2rem;
+  border: 2px solid #000;
+  background: transparent;
+  color: #000;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  /* Ensure text layers don't cause resize */
+  min-width: max-content;
+}
+
+/* Invisible spacer to give the button intrinsic size */
+.ctaSpacer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Act 3: sweeping black background fill */
+.ctaBg {
+  position: absolute;
+  inset: 0;
+  background-color: #000;
+  transform-origin: left;
+  transform: scaleX(0);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Shared text layer base */
+.ctaTextLayer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* White text layer (Act 3) */
+.ctaTextWhite {
+  color: #fff;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Fracture strips \u2014 each covers a vertical third of the button */
+.ctaStrip {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: transparent;
+  color: #000;
+  pointer-events: none;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Top third */
+.ctaStrip1 {
+  top: 0;
+  height: 33.33%;
+  clip-path: inset(0 0 0 0);
+  align-items: flex-end;
+  padding-bottom: 0;
+}
+
+/* Middle third */
+.ctaStrip2 {
+  top: 33.33%;
+  height: 33.34%;
+  clip-path: inset(0 0 0 0);
+}
+
+/* Bottom third */
+.ctaStrip3 {
+  top: 66.67%;
+  height: 33.33%;
+  clip-path: inset(0 0 0 0);
+  align-items: flex-start;
+}
+
+
+
+/* Cinematic Intro */
+
+.darkOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  opacity: 1; /* Solid black screen on load */
+  z-index: 1;
+  will-change: opacity;
+}
+
+.introTextContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.introText {
+  position: absolute;
+  font-family: var(--font-serif);
+  font-size: 5vw;
+  font-weight: 500;
+  color: #fff; /* White text for dark overlay */
+  opacity: 0;
+  text-align: center;
+}
+
+.mainHeroContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 5;
+  display: flex;
+  will-change: opacity;
+}
+
+/* Rotating Text styles */
+.rotatingTextContainer {
+  display: inline-grid;
+  vertical-align: bottom;
+  overflow: hidden;
+}
+
+.rotatingItem {
+  grid-area: 1 / 1;
+  opacity: 0;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+.rotatingItem.first {
+  opacity: 1;
+}
+
+/* Custom Cursor */
+.cursorDot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Philosophy Section */
+.philosophyContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 50;
+  perspective: 1000px;
+}
+
+/* Base styles for phrases */
+.philosophyPhrase {
+  position: absolute;
+  font-family: var(--font-serif);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.phrase1 {
+  font-size: clamp(6rem, 15vw, 12rem);
+  white-space: nowrap;
+  right: -20%;
+  top: 35%;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.phrase2 {
+  font-size: clamp(3rem, 7vw, 6rem);
+  text-align: center;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  letter-spacing: 0.1em;
+  font-weight: 300;
+}
+
+.phrase3 {
+  font-size: clamp(4rem, 9vw, 8rem);
+  text-align: left;
+  left: 10%;
+  top: 40%;
+  line-height: 1.1;
+}
+
+.phrase4 {
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  text-align: right;
+  right: 10%;
+  top: 60%;
+  font-style: italic;
+  font-weight: 200;
+}
+
+.phrase5 {
+  font-size: clamp(5rem, 10vw, 9rem);
+  text-align: center;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  letter-spacing: -0.02em;
+}
+
+
+/* Next Section Placeholder */
+.nextSection {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+  border-radius: 40px 40px 0 0;
+  box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.nextSection h2 {
+  font-family: var(--font-serif);
+  font-size: 4rem;
+}
+
+/* Custom Scroll Progress Bar */
+.scrollProgressBarContainer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #000;
+  z-index: 10000;
+}
+
+.scrollProgressBarFill {
+  width: 100%;
+  height: 100%;
+  background-color: #f97316; /* Orange to match nav accent */
+  transform-origin: top;
+  transform: scaleY(0);
+}
+
+@media (max-width: 768px) {
+  .scrollProgressBarContainer {
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: 3px;
+  }
+  .scrollProgressBarFill {
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+}
+
+/* Story Section */
+.storySection {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 80px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #000;
+  color: #000;
+  position: relative;
+  z-index: 20;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.storyVideo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.storyContainer {
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin-top: auto;
+  margin-bottom: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.storyHeadline {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 768px) {
+  .storySection {
+    padding: 60px 1.25rem;
+  }
+  .storyContainer {
+    gap: 1.5rem;
+  }
+  .storyHeadline {
+    font-size: clamp(1.8rem, 7.5vw, 3.2rem);
+  }
+  .storyContent {
+    gap: 1rem;
+  }
+  .storyContent p {
+    font-size: clamp(0.9rem, 3.8vw, 1.1rem);
+    line-height: 1.5;
+  }
+}
+
+.storyContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 700px;
+}
+
+.storyContent p {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  line-height: 1.5;
+  font-weight: 400;
+  color: inherit;
+  opacity: 0.85;
+}

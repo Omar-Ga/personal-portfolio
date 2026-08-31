@@ -1,0 +1,608 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #050507;
+  color: #fff;
+  z-index: 9000;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.overlay.active {
+  visibility: visible;
+}
+
+/* Header Navbar */
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  background: linear-gradient(to bottom, rgba(5, 5, 7, 0.9) 0%, rgba(5, 5, 7, 0) 100%);
+  pointer-events: auto;
+}
+
+.brandBlock {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.brandTag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--primary, #fb923c);
+  text-transform: uppercase;
+}
+
+.brandTitle {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.closeBtn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 0.75rem 1.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.closeBtn:hover {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+
+/* Stage Area (Viewport containing columns and detail panel) */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+/* Slanted Columns Viewport Container */
+.slantedContainer {
+  position: absolute;
+  width: 120vw;
+  height: 140vh;
+  left: -10vw;
+  top: -20vh;
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  transform: rotate(-3deg) skewY(-2deg);
+  transform-origin: center center;
+  transition: transform 0.5s ease-out;
+}
+
+/* Positioning context for each track. Owns the push-aside transform so it never
+   competes with the per-frame drift transform on .columnTrack. */
+.trackViewport {
+  position: relative;
+  width: 440px;
+  height: 100%;
+  flex-shrink: 0;
+  will-change: transform;
+}
+
+/* Vertical Track Column — absolutely positioned so its full height never feeds back into flex layout. */
+.columnTrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  will-change: transform;
+}
+
+/* Individual Project Card in Column */
+.card {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  border-radius: 16px;
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
+  background: #0f0f15;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+  flex-shrink: 0;
+}
+
+.card:hover {
+  border-color: var(--primary, #fb923c);
+  transform: scale(1.03) translateZ(0);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(251, 146, 60, 0.25);
+  z-index: 10;
+}
+
+.cardImage {
+  object-fit: cover;
+  border-radius: inherit;
+  transition: transform 0.6s ease;
+}
+
+.card:hover .cardImage {
+  transform: scale(1.08);
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(to top, rgba(5, 5, 7, 0.95) 0%, rgba(5, 5, 7, 0.3) 50%, rgba(5, 5, 7, 0.1) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2rem;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.cardCategory {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: var(--primary, #fb923c);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+
+.cardTitle {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.cardKeywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.keywordBadge {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+/* ==========================================================================
+   DETAIL VIEW STAGE (Triggered when a project is clicked)
+   ========================================================================== */
+.detailStage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.detailStage.active {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+/* Left/Center Main Hero Image Preview Card */
+.detailHeroArea {
+  flex: 1;
+  height: 100%;
+  padding: 6rem 3rem 4rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.detailHeroCard {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  height: 78vh;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
+  background: #000;
+}
+
+.detailHeroImg {
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.detailHeroBadge {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(5, 5, 7, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  color: var(--primary, #fb923c);
+  z-index: 5;
+}
+
+.heroCounterBadge {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  padding: 0.4rem 0.9rem;
+  background: rgba(5, 5, 7, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  z-index: 5;
+}
+
+.heroNavPrev,
+.heroNavNext {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: rgba(5, 5, 7, 0.75);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+  z-index: 6;
+}
+
+.heroNavPrev {
+  left: 1.5rem;
+}
+
+.heroNavNext {
+  right: 1.5rem;
+}
+
+.heroNavPrev:hover,
+.heroNavNext:hover {
+  background: var(--primary, #fb923c);
+  color: #000;
+  border-color: var(--primary, #fb923c);
+}
+
+/* Right Glassmorphic Detail Sidebar */
+.detailSidebar {
+  width: 540px;
+  height: 100%;
+  background: rgba(10, 10, 15, 0.92);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 6.5rem 3rem 4rem 3rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: -20px 0 50px rgba(0, 0, 0, 0.8);
+  flex-shrink: 0;
+  will-change: transform;
+}
+
+.sidebarCloseBtn {
+  align-self: flex-end;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1.5rem;
+}
+
+.sidebarCloseBtn:hover {
+  background: var(--primary, #fb923c);
+  color: #000;
+  border-color: var(--primary, #fb923c);
+}
+
+.sidebarIndex {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.85rem;
+  color: var(--primary, #fb923c);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.sidebarTitle {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 3vw, 2.75rem);
+  line-height: 1.1;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1.25rem;
+}
+
+.sidebarDescription {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+.sectionHeader {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.85rem;
+}
+
+/* Multi-Screenshot Gallery */
+.gallerySection {
+  margin-bottom: 2rem;
+}
+
+.galleryGrid {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.galleryGrid::-webkit-scrollbar {
+  height: 4px;
+}
+
+.galleryGrid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.galleryThumb {
+  position: relative;
+  width: 72px;
+  height: 48px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #0f0f15;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.galleryThumb:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.galleryThumb.active {
+  border-color: var(--primary, #fb923c);
+  box-shadow: 0 0 12px rgba(251, 146, 60, 0.5);
+  transform: scale(1.05);
+}
+
+.galleryThumbImg {
+  object-fit: cover;
+}
+
+.featureList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.featureItem {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.featureBullet {
+  color: var(--primary, #fb923c);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.techList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.techTag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  padding: 0.3rem 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: #fff;
+}
+
+.actionRow {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
+
+.primaryActionBtn {
+  flex: 1;
+  padding: 0.9rem;
+  background: var(--primary, #fb923c);
+  color: #000;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+  text-align: center;
+}
+
+.primaryActionBtn:hover {
+  filter: brightness(1.1);
+}
+
+.secondaryActionBtn {
+  padding: 0.9rem 1.4rem;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondaryActionBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .slantedContainer {
+    width: 140vw;
+    gap: 2rem;
+    transform: rotate(-2deg) skewY(-1deg);
+  }
+  .trackViewport {
+    width: 340px;
+  }
+  .card {
+    height: 400px;
+  }
+  .detailSidebar {
+    width: 100%;
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1.5rem 1.5rem;
+  }
+  .brandTitle {
+    font-size: 1.25rem;
+  }
+  .slantedContainer {
+    width: 180vw;
+    left: -40vw;
+    gap: 1.5rem;
+    transform: rotate(0deg) skewY(0deg);
+  }
+  .trackViewport {
+    width: 280px;
+  }
+  .card {
+    height: 340px;
+  }
+  .detailStage {
+    flex-direction: column;
+  }
+  .detailHeroArea {
+    height: 45vh;
+    padding: 4.5rem 1rem 1rem 1rem;
+  }
+  .detailHeroCard {
+    height: 100%;
+  }
+  .detailSidebar {
+    width: 100%;
+    height: 55vh;
+    padding: 1.5rem 1.25rem;
+    box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.8);
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "trigger": "Live Voice Agent",
+  "panelLabel": "Voice assistant",
+  "close": "Close assistant",
+  "roleYou": "YOU",
+  "roleAi": "VOICE AGENT",
+  "intro": "Ask about Omar's work, stack, or availability. I'll answer out loud.",
+  "status": {
+    "idle": "Voice Agent Ready",
+    "connecting": "Connecting…",
+    "listening": "Listening",
+    "thinking": "Thinking…",
+    "speaking": "Responding",
+    "error": "Something went wrong"
+  },
+  "start": "Start talking",
+  "endCall": "End",
+  "mute": "Mute microphone",
+  "unmute": "Unmute microphone",
+  "muted": "Microphone muted",
+  "textPlaceholder": "Or type your message…",
+  "send": "Send",
+  "errors": {
+    "micDenied": "Microphone access was blocked. You can still type your question below.",
+    "unsupported": "This browser can't capture audio. Try Chrome, Edge or Safari.",
+    "connection": "The connection dropped. Tap the orb to try again.",
+    "sessionEnded": "This session is about to time out. Start a new one to keep going.",
+    "generic": "Couldn't start the voice session. Please try again."
+  }
+}

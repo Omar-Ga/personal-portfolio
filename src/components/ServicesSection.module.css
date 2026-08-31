@@ -1,0 +1,374 @@
+.showcaseWrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  border-radius: 40px 40px 0 0;
+  box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  isolation: isolate;
+}
+
+.horizontalTrack {
+  display: flex;
+  height: 100%;
+  width: fit-content;
+  will-change: transform;
+}
+
+.projectPanel {
+  width: 100vw;
+  height: 100vh;
+  padding: clamp(80px, 10vh, 115px) clamp(20px, 4vw, 40px) clamp(25px, 3.5vh, 45px) clamp(20px, 4vw, 40px);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 20px;
+}
+
+/* 
+  Flat grid layout to allow GSAP Flip to work without unmounting elements.
+  We define a 3x2 grid: 
+  Col 1 is 2fr (for the main image)
+  Col 2 is 1fr (for top-left and bottom-left small images)
+  Col 3 is 1fr (for top-right and bottom-right small images)
+*/
+.imageLayout {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+}
+
+.posMain { grid-area: 1 / 1 / 3 / 2; }
+.pos0 { grid-area: 1 / 2 / 2 / 3; }
+.pos1 { grid-area: 1 / 3 / 2 / 4; }
+.pos2 { grid-area: 2 / 2 / 3 / 3; }
+.pos3 { grid-area: 2 / 3 / 3 / 4; }
+
+.imageSlot {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #e0e0e0;
+  will-change: transform, width, height;
+}
+
+.projectImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.placeholderCard {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.07) 100%);
+  border: 1px dashed rgba(0,0,0,0.12);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.imageSlot:hover .placeholderCard {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.1) 100%);
+}
+
+.placeholderLabel {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(0,0,0,0.3);
+}
+
+/* Text layout */
+.textSection {
+  height: 25vh;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.projectTitle {
+  font-family: var(--font-serif);
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  color: #000;
+  margin-bottom: 0.25rem;
+}
+
+.projectRole {
+  font-family: var(--font-sans);
+  font-size: clamp(0.9rem, 1.2vw, 1.2rem);
+  font-weight: 600;
+  color: #f97316;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.projectDescription {
+  font-family: var(--font-sans);
+  font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+  color: #333;
+  max-width: 60ch;
+  line-height: 1.5;
+}
+
+/* About Teaser Finale */
+.aboutTeaserPanel {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--ink);
+  color: var(--bg);
+  position: relative;
+  overflow: hidden;
+  /* Needs to be above StorySection (z-index:10) when GSAP pins it as position:fixed */
+  z-index: 20;
+  isolation: isolate;
+}
+
+.teaserTitle {
+  font-family: var(--font-serif);
+  font-size: clamp(3.5rem, 8vw, 8rem);
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.teaserSubtitle {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  color: #f97316;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 1rem;
+}
+
+/* ==========================================================================
+   Window Split Animation (Founders)
+   ========================================================================== */
+
+/* The Window Split Animation Container */
+.windowContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+  z-index: 10;
+  pointer-events: none; /* Let clicks pass through until animated if needed, but actually we want them on top */
+}
+
+/* Common half styles */
+.windowHalf {
+  width: 50vw;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  will-change: transform;
+  pointer-events: auto;
+  background-color: var(--ink);
+}
+
+.leftHalf {
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.rightHalf {
+  border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Founder Portrait */
+.founderImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Overlay gradient for text readability */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 40%);
+  z-index: 2;
+}
+
+/* Text Content */
+.founderInfo {
+  position: relative;
+  z-index: 3;
+  padding: 40px;
+  color: #fff;
+}
+
+.founderRole {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #f97316;
+  margin-bottom: 0.5rem;
+}
+
+.founderName {
+  font-family: var(--font-serif);
+  font-size: 4rem;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .showcaseWrapper {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+    border-radius: 24px 24px 0 0;
+    z-index: 15;
+  }
+
+  .horizontalTrack {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    will-change: auto;
+  }
+
+  .projectPanel {
+    width: 100%;
+    height: auto;
+    min-height: 100dvh;
+    padding: 70px 1.25rem 40px 1.25rem;
+    gap: 16px;
+  }
+
+  .imageLayout {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: minmax(240px, 40dvh) 75px;
+    gap: 10px;
+    flex: none;
+    height: auto;
+  }
+
+  .posMain { grid-area: 1 / 1 / 2 / 5; }
+  .pos0 { grid-area: 2 / 1 / 3 / 2; }
+  .pos1 { grid-area: 2 / 2 / 3 / 3; }
+  .pos2 { grid-area: 2 / 3 / 3 / 4; }
+  .pos3 { grid-area: 2 / 4 / 3 / 5; }
+
+  @media (max-width: 480px) {
+    .imageLayout {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: minmax(200px, 32dvh) 64px 64px;
+      gap: 8px;
+    }
+    .posMain { grid-area: 1 / 1 / 2 / 3; }
+    .pos0 { grid-area: 2 / 1 / 3 / 2; }
+    .pos1 { grid-area: 2 / 2 / 3 / 3; }
+    .pos2 { grid-area: 3 / 1 / 4 / 2; }
+    .pos3 { grid-area: 3 / 2 / 4 / 3; }
+  }
+
+  .imageSlot {
+    border-radius: 12px;
+  }
+
+  .placeholderCard {
+    border-radius: 12px;
+  }
+
+  .textSection {
+    height: auto;
+    margin-top: 0.5rem;
+  }
+
+  .projectTitle {
+    font-size: clamp(1.8rem, 7vw, 2.8rem);
+  }
+
+  .projectRole {
+    font-size: clamp(0.85rem, 3.5vw, 1.05rem);
+  }
+
+  .projectDescription {
+    font-size: clamp(0.85rem, 3.5vw, 1rem);
+    max-width: 100%;
+  }
+
+  .aboutTeaserPanel {
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    padding: 60px 1.5rem;
+  }
+
+  .teaserTitle {
+    font-size: clamp(2.5rem, 9vw, 5rem);
+  }
+
+  .teaserSubtitle {
+    font-size: clamp(0.85rem, 3.5vw, 1.1rem);
+  }
+
+  .windowContainer {
+    width: 100%;
+    height: 100dvh;
+    flex-direction: column;
+  }
+
+  .windowHalf {
+    width: 100%;
+    height: 50dvh;
+  }
+
+  .leftHalf {
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .rightHalf {
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .founderInfo {
+    padding: 16px 20px;
+  }
+
+  .founderRole {
+    font-size: 0.75rem;
+  }
+
+  .founderName {
+    font-size: clamp(1.3rem, 5vw, 2.2rem) !important;
+    line-height: 1.05;
+  }
+}

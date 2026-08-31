@@ -1,0 +1,19 @@
+{
+  "logo": "OG",
+  "items": {
+    "home": "HOME",
+    "services": "SERVICES",
+    "about": "ABOUT",
+    "projects": "PROJECTS",
+    "contact": "CONTACT"
+  },
+  "mobile": {
+    "toggleLabel": "Toggle navigation menu",
+    "footerRole": "Omar Gamal — Portfolio",
+    "footerYear": "2026"
+  },
+  "language": {
+    "label": "Language",
+    "switchTo": "Switch language to {language}"
+  }
+}

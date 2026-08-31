@@ -1,0 +1,277 @@
+/* Hero Section */
+.hero {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 6rem 6dvh 6rem;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(3.2rem, 9.5vw, 7.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+  margin-bottom: 3.5rem;
+  color: #000;
+}
+
+.title span {
+  display: block;
+}
+
+.bottomSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.textContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  max-width: 450px;
+}
+
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 1.4;
+  font-weight: 400;
+  color: #111;
+  letter-spacing: -0.01em;
+}
+
+.cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  padding: 1rem 2rem;
+  border: 2px solid #000;
+  background: transparent;
+  color: #000;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  min-width: max-content;
+}
+
+.ctaSpacer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ctaBg {
+  position: absolute;
+  inset: 0;
+  background-color: #000;
+  transform-origin: left;
+  transform: scaleX(0);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ctaTextLayer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.ctaTextWhite {
+  color: #fff;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.ctaStrip {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: transparent;
+  color: #000;
+  pointer-events: none;
+  overflow: hidden;
+  will-change: transform;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.ctaStrip1 {
+  top: 0;
+  height: 33.33%;
+  clip-path: inset(0 0 0 0);
+  align-items: flex-end;
+  padding-bottom: 0;
+}
+
+.ctaStrip2 {
+  top: 33.33%;
+  height: 33.34%;
+  clip-path: inset(0 0 0 0);
+}
+
+.ctaStrip3 {
+  top: 66.67%;
+  height: 33.33%;
+  clip-path: inset(0 0 0 0);
+  align-items: flex-start;
+}
+
+/* Rotating Text styles */
+.rotatingTextContainer {
+  display: inline-grid;
+  vertical-align: bottom;
+  overflow: hidden;
+}
+
+.rotatingItem {
+  grid-area: 1 / 1;
+  opacity: 0;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+.rotatingItem.first {
+  opacity: 1;
+}
+
+/* Philosophy Section */
+.philosophyContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 50;
+  perspective: 1000px;
+}
+
+.philosophyPhrase {
+  position: absolute;
+  font-family: var(--font-serif);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.phrase1 {
+  font-size: clamp(3rem, 10vw, 12rem);
+  white-space: nowrap;
+  right: -10%;
+  top: 35%;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.phrase2 {
+  font-size: clamp(2rem, 7vw, 6rem);
+  text-align: center;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  letter-spacing: 0.1em;
+  font-weight: 300;
+  width: 90%;
+}
+
+.phrase3 {
+  font-size: clamp(2.2rem, 8vw, 8rem);
+  text-align: left;
+  left: 8%;
+  top: 40%;
+  line-height: 1.1;
+  width: 85%;
+}
+
+.phrase4 {
+  font-size: clamp(2rem, 7.5vw, 7rem);
+  text-align: right;
+  right: 8%;
+  top: 60%;
+  font-style: italic;
+  font-weight: 200;
+  width: 85%;
+}
+
+.phrase5 {
+  font-size: clamp(2.5rem, 9vw, 9rem);
+  text-align: center;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  letter-spacing: -0.02em;
+  width: 90%;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 130px 1.25rem 4dvh 1.25rem;
+    justify-content: flex-start;
+  }
+  .title {
+    font-size: clamp(2.2rem, 11vw, 3.8rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 2rem;
+    width: 100%;
+    word-break: break-word;
+  }
+  .rotatingItem {
+    white-space: pre-wrap;
+    font-size: clamp(2.1rem, 10vw, 3.6rem);
+  }
+  .bottomSection {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .textContent {
+    max-width: 100%;
+    gap: 1.2rem;
+  }
+  .subtitle {
+    font-size: clamp(1rem, 4.2vw, 1.3rem);
+    line-height: 1.45;
+  }
+  .cta {
+    align-self: stretch;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-size: 0.85rem;
+  }
+  .phrase1 {
+    right: -5%;
+  }
+}

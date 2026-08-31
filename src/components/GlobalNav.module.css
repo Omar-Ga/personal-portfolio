@@ -1,0 +1,36 @@
+.topNav {
+  position: fixed;
+  top: 24px;
+  left: 0;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  z-index: 100;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .topNav {
+    display: none !important;
+  }
+}
+
+.topNavItem {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #fff; /* Difference blend mode against white bg makes it black, against dark bg makes it light */
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+}
+
+.topNavItem:hover {
+  opacity: 0.5;
+}

@@ -1,0 +1,232 @@
+{
+  "brandTag": "PROJECT ARCHIVE",
+  "brandTitle": "ALL WORK // Showcase",
+  "badge": "{count} FEATURED PLATFORMS",
+  "close": "Close",
+  "closeLabel": "Close Archive Overlay",
+  "closeView": "Close View",
+  "featuredArchitecture": "FEATURED ARCHITECTURE",
+  "keySpecs": "Key Engineering Specs",
+  "techStack": "Technology Stack",
+  "galleryTitle": "Interactive Views & Screenshots",
+  "discuss": "Discuss Platform ↗",
+  "backToGrid": "Back to Grid",
+  "items": {
+    "p1": {
+      "title": "Talking AI Multimodal Assistant",
+      "category": "Real-Time Multimodal Voice & Audio DSP",
+      "description": "Sub-20ms real-time multimodal voice intelligence terminal powered by Gemini Live 3.1 Flash. Features dual-channel STT/TTS streaming, live 64-band FFT spectral waterfall oscilloscope, PDF lecture slide vector grounding (17 documents, 512 slides), and deep chain-of-thought token attention inspection.",
+      "keywords": ["Gemini Live 3.1", "Web Audio API", "FFT Spectrogram", "Vector Grounding", "KaTeX LaTeX", "React 18"],
+      "features": [
+        "18.4ms Ultra-Low Latency Bidirectional Voice Stream",
+        "PDF Slide Vector Grounding with Kalman Equation OCR",
+        "64-Band FFT Audio Waterfall & Spectral Oscilloscope",
+        "Deep Thinking Chain-of-Thought Attention Heatmap"
+      ]
+    },
+    "p2": {
+      "title": "SkyCourt Commercial Complex",
+      "category": "Luxury Commercial Destination & Dining Directory",
+      "description": "High-end digital destination portal showcasing a multi-acre dining and commercial complex. Features lighting ray shaders, interactive restaurant radial menus with category filters, atmospheric storytelling chapters, and a localized Golden Square radar location planner.",
+      "keywords": ["React", "Vite", "Radial Menus", "GSAP Motion", "Bilingual i18n", "TailwindCSS"],
+      "features": [
+        "Interactive Balbaa Village Dining Experience Radial Menus",
+        "Category-Filtered Restaurant & Café Catalog",
+        "Atmosphere Chapters & Architectural Vision Showcase",
+        "Golden Square Radar Map & Destination Route Planner"
+      ]
+    },
+    "p3": {
+      "title": "Kafa'a AI Talent & HR ATS",
+      "category": "Enterprise HR SaaS & Multi-Stage Recruitment",
+      "description": "Enterprise-grade applicant tracking system and talent intelligence platform. Features unstructured PDF resume OCR ingestion, multi-stage Kanban recruitment pipelines, 6-axis candidate skill fit radar analytics, and localized Arabic HR management workflows.",
+      "keywords": ["Angular 17", "TypeScript", "AI Resume OCR", "Kanban Pipeline", "Radar Analytics", "RxJS"],
+      "features": [
+        "Unstructured PDF Resume Parsing & Semantic Tag Extraction",
+        "Multi-Stage Hiring Pipeline Kanban Board with Drag-and-Drop",
+        "6-Axis Candidate Skill Fit Radar Analytics & Insights",
+        "Full Arabic RTL HR Dashboard & Campaign Setup Workflows"
+      ]
+    },
+    "p4": {
+      "title": "O2MATION Agency Flagship",
+      "category": "Bespoke Creative Agency & AI Automation Flagship",
+      "description": "Cyberpunk dark-mode creative engineering agency flagship. Features real-time system operational ping telemetry, multi-module business process automation matrix, leadership operator HUD for Omar Gamal, and multi-stage project scoping budget calculators.",
+      "keywords": ["React 18", "Cyberpunk HUD", "Process Automation", "Glassmorphism", "Bilingual i18n", "Vite"],
+      "features": [
+        "High-Impact Dark Mode HUD with Live Ping Telemetry",
+        "Interactive Multi-Module Solutions & Capabilities Grid",
+        "Operator Leadership Registry & Clearance Level HUD",
+        "Multi-Stage Consultation Initializer with Budget Sliders"
+      ]
+    },
+    "p5": {
+      "title": "Hard Turso OPFS SQLite Notes",
+      "category": "Local-First Data Architecture & Markdown PKM",
+      "description": "High-performance local-first knowledge management canvas. Features a split markdown editor with live typography, Origin Private File System (OPFS) SQLite storage inspector (0.38ms read latency, 99.82% cache hit ratio), real-time Turso LibSQL cloud edge replication, and interactive knowledge graph explorer.",
+      "keywords": ["React 18", "OPFS SQLite", "Turso LibSQL", "Local-First", "Knowledge Graph", "KaTeX"],
+      "features": [
+        "Synchronous OPFS SQLite WASM Engine with 0.38ms Latency",
+        "Turso LibSQL Edge Replication with Live CDC Transaction Log",
+        "Interactive 5-Node Knowledge Graph & Backlinks Explorer",
+        "Rendered Mathematical LaTeX Derivations & Code Highlighting"
+      ]
+    },
+    "p6": {
+      "title": "Step Coworking & Study Space POS",
+      "category": "Offline-First Co-Working & Point-of-Sale Engine",
+      "description": "Dual-purpose occupancy management and retail checkout system for shared study cafes. Tracks active table and private room sessions with per-minute SQLite timers, cafeteria beverage checkout with tax calculations, room booking dialogs, and instant thermal receipt drawers.",
+      "keywords": ["React", "SQLite WASM", "Local-First", "Coworking POS", "Real-Time Timers", "Receipt Modal"],
+      "features": [
+        "Active Seat & Private Room Session Timers with Per-Minute Rates",
+        "Catering POS Cart Checkout with Instant Total Computation",
+        "Interactive Ticket Creator & Room Booking Modals",
+        "Filtered Customer Seat Search & Thermal Receipt Drawer"
+      ]
+    },
+    "p7": {
+      "title": "DealsHub Luxury Real Estate",
+      "category": "Luxury PropTech Marketplace & Mortgage Amortization",
+      "description": "High-ticket luxury real estate marketplace ('CONCRETE DREAMS'). Features multi-parameter property catalog with 50M EGP price sliders, interactive architectural floor plans (Ground, First, Penthouse), real-time mortgage amortization schedule calculator, and AI property concierge booking drawer.",
+      "keywords": ["React 18", "PropTech", "Architectural Blueprints", "Mortgage Calculator", "AI Concierge", "Vite"],
+      "features": [
+        "50M EGP Price Filter Sidebar with Multi-Parameter Search",
+        "Interactive Architectural Blueprints (Ground, First, Penthouse)",
+        "Real-Time Mortgage Amortization & Payment Schedule Calculator",
+        "AI Property Concierge Chat & VIP Viewing Inquiry Drawer"
+      ]
+    },
+    "p8": {
+      "title": "Abaad Al-Erteqa Luxury Architecture",
+      "category": "High-End Architectural & MEP Contracting Portal",
+      "description": "Luxury corporate gateway presenting the architectural prowess of Abaad Architecture and the MEP/Fire Safety engineering of Sama Contracting. Features architectural project grids, corporate synergy split gateway, institutional partner marquees, and bilingual consultation portals.",
+      "keywords": ["Angular 17", "TypeScript", "Luxury Architecture", "MEP Contracting", "Corporate Synergy", "SCSS"],
+      "features": [
+        "Abaad Architectural Portfolio with Category Filters",
+        "Sama Fire & Safety Engineering Division Showcase",
+        "Corporate Synergy Dual-Division Portal & Brand Bridge",
+        "Institutional Clients Marquee & Consultation Gateway"
+      ]
+    },
+    "p9": {
+      "title": "Antigravity Workflow Kit & Suite",
+      "category": "AI Agent Orchestration & Persistent Memory Vault",
+      "description": "Meta-engineering platform enforcing the 2-tier agent delegation architecture ('The Librarian Never Leaves the Desk'). Features Karpathy 3-layer persistent memory vault explorer (.memory/wiki), interactive Graphify AST codebase knowledge graph, and real-time LLM token budget telemetry saving 78.4% tokens.",
+      "keywords": ["Next.js 15", "Agent Orchestration", "Karpathy Vault", "Graphify AST", "Token Telemetry", "TypeScript"],
+      "features": [
+        "Karpathy 3-Layer Persistent Memory Vault Explorer (.memory/wiki)",
+        "2-Tier Sub-agent Dispatch Deck with 4 Concurrent Scout Workers",
+        "Graphify AST Codebase Knowledge Graph Interactive Canvas",
+        "Real-Time Token Budget Telemetry with 78.4% Cache Savings"
+      ]
+    },
+    "p10": {
+      "title": "Bionicverse Twilio Voice AI Gateway",
+      "category": "Real-Time Voice Telephony & Autonomous Call Center",
+      "description": "Carrier-grade telephony bridge connecting Twilio carrier trunks to Gemini 2.5 Live Native Audio. Features full-duplex G.711 μ-law audio transcoding (8kHz to 24kHz), dual-channel WebRTC oscilloscope, 184ms turnaround latency, automated 38ms barge-in buffer purge, and autonomous SMS appointment dispatch.",
+      "keywords": ["Node.js", "Twilio Media Streams", "Gemini 2.5 Live", "WebRTC DSP", "G.711 μ-law", "Tool Calling"],
+      "features": [
+        "Sub-200ms Turnaround Latency (184ms RTT) Telephony Bridge",
+        "Dual-Channel WebRTC Audio Oscilloscope & Frequency Spectrum",
+        "Realtime Interruption Alert with 38ms Twilio Buffer Purge",
+        "Autonomous Tool-Calling SMS Verification & Egyptian Arabic Synthesis"
+      ]
+    },
+    "p11": {
+      "title": "AI Career Flow & Interview Simulator",
+      "category": "Generative AI Career & Technical Assessment",
+      "description": "AI-driven career acceleration suite that ingests candidate resumes, extracts structured skill graphs (14+ technologies), deploys an autonomous conversational AI recruiter, and spins up an adaptive in-browser Monaco code editor with live difficulty calibration ([HARD LEVEL]) and market salary benchmarks.",
+      "keywords": ["React 18", "Monaco Editor", "Generative AI", "Live Coding", "Career Radar", "Web Speech"],
+      "features": [
+        "Parsed Candidate Skills Profile Modal with 14 Extracted Tags",
+        "Conversational AI Recruiter Chat with Real-Time Turn-Taking",
+        "Adaptive Technical Coding Simulator with Monaco Editor",
+        "6-Axis Skill Fit Radar Analytics & Seniority Salary Benchmark"
+      ]
+    },
+    "p12": {
+      "title": "O2 Supermarket Retail POS & Inventory",
+      "category": "Retail ERP & High-Throughput POS Register",
+      "description": "Enterprise supermarket checkout and warehouse inventory tracking suite. Features high-speed cashier barcode entry with VAT and discount ribbons, tree-structured category hierarchy, vendor supplier profiles, RBAC cashier login, drawer settlement, and full Arabic RTL cashier interface.",
+      "keywords": ["React", "Retail POS", "Inventory Hierarchy", "RBAC Security", "Arabic RTL", "Vite"],
+      "features": [
+        "High-Throughput Cashier POS Register with Live Tax Computation",
+        "Multi-Tier Category Hierarchy Tree & Inventory Records Table",
+        "Vendor & Supplier Directory with Purchasing Terms",
+        "Full Arabic RTL POS Interface with Role-Based Access Control"
+      ]
+    },
+    "p13": {
+      "title": "Maran Atha Industrial Conglomerate",
+      "category": "Enterprise Industrial Portal & Conglomerate Showcase",
+      "description": "Multilingual corporate portal for a heavy industrial conglomerate managing multiple sectors (General Contracting, Heavy Manufacturing, Logistics, Industrial Trade). Features dedicated sector breakdown pages, equipment catalogs with specs, corporate milestones, and bilingual RTL switching.",
+      "keywords": ["React 18", "Vite", "Industrial Conglomerate", "Equipment Catalog", "Bilingual i18n", "TailwindCSS"],
+      "features": [
+        "Multi-Sector Industrial Gateway (Contracting, Manufacturing, Trade)",
+        "Equipment & Products Catalog with Detailed Technical Specs",
+        "Corporate Storyline, Executive Leadership & Milestone Timeline",
+        "Full Arabic RTL Layout with Interactive Consultation Drawer"
+      ]
+    },
+    "p14": {
+      "title": "QuestMarket Gaming Assets & Escrow",
+      "category": "Gaming E-Commerce & Secure Escrow Vault",
+      "description": "Secure digital asset marketplace for verified gaming goods (League of Legends Challenger/Master accounts, PUBG UC top-ups, Valorant skins). Features real-time price calculation carts (EGP), escrow protection badges, seller inventory listings hub, and Cairo Arabic typography.",
+      "keywords": ["React", "E-Commerce", "Digital Asset Escrow", "Live Cart Engine", "Arabic Cairo", "Vite"],
+      "features": [
+        "Dual-Panel Game Storefront Hero (LoL Challenger & PUBG Mobile)",
+        "Verified Account Listings Vault with Rank Filters & Escrow Badges",
+        "Real-Time Shopping Cart Checkout with Instant EGP Calculations",
+        "Seller Management Dashboard Hub with Inventory & Earnings KPIs"
+      ]
+    },
+    "p15": {
+      "title": "EgyRobo Academy LMS & Code Sandbox",
+      "category": "EdTech Course Marketplace & Interactive Code Sandbox",
+      "description": "Enterprise EdTech platform featuring course catalogs with multi-level difficulty filters, cinema-grade 4K UHD video player with interactive code sandbox tab (order-event-producer.ts), timed certification quiz assessment engine with SQL concurrency questions, career track bundles, and student streak analytics.",
+      "keywords": ["React 18", "EdTech SaaS", "4K Video Player", "Code Sandbox", "Timed Quiz Engine", "Arabic RTL"],
+      "features": [
+        "Course Catalog with Multi-Level Difficulty & Star Rating Filters",
+        "Cinema-Grade 4K Lesson Player with Interactive Code Sandbox Tab",
+        "Timed Certification Assessment Engine with Question Navigator",
+        "Packaged Career Track Bundles & Student Streak Analytics Dashboard"
+      ]
+    },
+    "p16": {
+      "title": "The AI Mood Jockey Music Curator",
+      "category": "Generative Music Recommendation & DSP Visualizer",
+      "description": "Generative AI music curator that translates unstructured emotional prompts into acoustic coordinates. Features 6-axis acoustic radar telemetry (Valence, Energy, Danceability, Acousticness, Tempo), real-time FFT 1024-bin neon spectrum visualizer, Jamendo streaming playlist player, and Spotify/M3U8 export.",
+      "keywords": ["Django 6", "Python", "Web Audio FFT", "Valence Radar", "Jamendo API", "TailwindCSS"],
+      "features": [
+        "AI Emotional Prompt Ingestion with Ambient Preset Chips",
+        "Jamendo Streaming Playlist Player with Bottom DSP Bar",
+        "6-Axis Acoustic Valence & Energy Radar Telemetry Chart",
+        "Real-Time FFT 1024-Bin Neon Audio Visualizer & Playlist Exporter"
+      ]
+    },
+    "p17": {
+      "title": "O2 Enterprise Payroll & Ledger Suite",
+      "category": "Enterprise Payroll & Human Capital Accounting",
+      "description": "High-density corporate payroll analytics web suite. Manages multi-department compensation (EGP 436k+ monthly), department organizational hierarchy trees, statutory 35% allowance rules (Basic, Transport, Residency), individual deduction drawers, and dual-language executive dashboards.",
+      "keywords": ["React", "Payroll Ledger", "Org Hierarchy Tree", "Compensation Rules", "Arabic RTL", "Chart.js"],
+      "features": [
+        "Executive Payroll Dashboard with EGP 436k+ Monthly Breakdown",
+        "Organizational Hierarchy Tree & Department Rate Configuration",
+        "Statutory 35% Allowance Calculator (Basic, Transport, Residency)",
+        "Full Arabic RTL Payroll Suite with Printable Payslip Modals"
+      ]
+    },
+    "p18": {
+      "title": "CustomTkinter Desktop Payroll & Licensing",
+      "category": "Native Desktop GUI & Financial Security Engine",
+      "description": "Native Windows desktop payroll management suite built with CustomTkinter and SQLite3. Features high-density employee ledger tables, live 35% statutory allowance calculator, ReportLab vector A4 PDF salary slip generator with dynamic QR codes & corporate stamp, and anti-tamper NTP clock licensing with PID lock.",
+      "keywords": ["Python 3.12", "CustomTkinter", "Desktop GUI", "ReportLab PDF", "NTP Security", "SQLite3"],
+      "features": [
+        "CustomTkinter Windows 11 Desktop Shell & Metrics Dashboard",
+        "High-Density Employee Ledger Table with Department Filters",
+        "ReportLab Vector A4 PDF Payslip Generator with Dynamic QR Codes",
+        "Anti-Tamper NTP Network Time Sync & Single-Instance PID Lock"
+      ]
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "rotatingPhrases": [
+    "CODE & ARCHITECTURE.",
+    "FRONTEND INTERFACES.",
+    "BACKEND SYSTEMS.",
+    "SCALABLE APIS.",
+    "SMOOTH ANIMATIONS."
+  ],
+  "titleLine1": "THE PORTFOLIO OF",
+  "titleLine2": "OMAR GAMAL.",
+  "subtitleLines": [
+    [
+      { "text": "Crafting", "glitch": false },
+      { "text": "digital", "glitch": true },
+      { "text": "experiences", "glitch": true },
+      { "text": "through", "glitch": false }
+    ],
+    [
+      { "text": "elegant", "glitch": true },
+      { "text": "code", "glitch": true },
+      { "text": "and", "glitch": false },
+      { "text": "architecture.", "glitch": true }
+    ]
+  ],
+  "cta": "VIEW PROJECTS",
+  "philosophy": [
+    "I DON’T JUST WRITE CODE.",
+    "I ENGINEER SYSTEMS.",
+    "I ARCHITECT SOLUTIONS.",
+    "I CRAFT EXPERIENCES.",
+    "THIS IS MY WORK."
+  ]
+}

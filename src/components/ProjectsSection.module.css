@@ -1,0 +1,325 @@
+.projectsSection {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  background-color: #000;
+  color: var(--ink);
+  position: relative;
+  z-index: 30;
+  isolation: isolate;
+  display: flex;
+  overflow: hidden;
+}
+
+.projectsContainer {
+  max-width: 1760px;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  padding: 80px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* LEFT SIDE: List of projects */
+.servicesListWrapper {
+  width: 36%;
+  flex-shrink: 0;
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  perspective: 800px; /* 3D effect container */
+  display: flex;
+  align-items: flex-start;
+  overflow: visible;
+  mix-blend-mode: difference;
+  z-index: 10;
+}
+
+.servicesList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* Padding ensures the first item starts in the center, and the last item can reach the center */
+  padding-top: 50vh;
+  padding-bottom: 50vh;
+}
+
+.serviceItem {
+  width: 100%;
+  /* Creates physical scrolling distance between items */
+  padding: 5vh 0;
+  backface-visibility: hidden;
+  color: #ffffff;
+}
+
+.serviceTitle {
+  font-family: var(--font-serif);
+  font-size: clamp(2.2rem, 3.5vw, 3.8rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.serviceDescription {
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+  line-height: 1.5;
+  font-weight: 400;
+  max-width: 90%;
+}
+
+/* CENTER: Visual Canvas */
+.visualCanvas {
+  width: 44%;
+  flex-shrink: 0;
+  height: 58vh;
+  height: 58dvh;
+  position: relative;
+  border-radius: 1.2rem;
+  overflow: hidden;
+  z-index: 5;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.visualImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+/* RIGHT SIDE: Project Meta Widget (Keywords + Thumbnails + Dash Indicator) */
+.projectMetaWidget {
+  width: 22%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 52px;
+}
+
+.keywordsBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  mix-blend-mode: difference;
+  z-index: 10;
+}
+
+.keywordsHeader {
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--primary, #f97316);
+  margin-bottom: 8px;
+}
+
+.keywordsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  mix-blend-mode: difference;
+  z-index: 10;
+}
+
+.keywordItem {
+  font-family: var(--font-sans);
+  font-size: clamp(0.8rem, 0.95vw, 1.02rem);
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.35;
+  white-space: nowrap;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.thumbnailStrip {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  gap: 10px;
+  z-index: 10;
+}
+
+.activeDash {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary, #f97316);
+  position: absolute;
+  left: -18px;
+  top: 0;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  pointer-events: none;
+  line-height: 1;
+}
+
+.thumbnailList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.thumbnailItem {
+  width: 64px;
+  height: 44px;
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #111;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.45;
+  transition: transform 0.3s ease, opacity 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.thumbnailItem:hover {
+  opacity: 0.85;
+  transform: scale(1.06);
+}
+
+.thumbnailActive {
+  opacity: 1;
+  border-color: var(--primary, #f97316);
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.4);
+  transform: scale(1.06);
+}
+
+.thumbnailImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .projectsContainer {
+    flex-direction: column;
+    padding: 70px 1.25rem 20px 1.25rem;
+    gap: 1.25rem;
+    height: 100dvh;
+  }
+  
+  .visualCanvas {
+    width: 100%;
+    height: 35dvh;
+    max-height: 40dvh;
+    flex: none;
+    order: -1; /* Move image canvas above text on mobile */
+    border-radius: 12px;
+  }
+  
+  .servicesListWrapper {
+    height: 45dvh;
+    width: 100%;
+    overflow: hidden;
+    perspective: none;
+  }
+
+  .servicesList {
+    width: 100%;
+    padding-top: 20dvh;
+    padding-bottom: 20dvh;
+  }
+  
+  .serviceTitle {
+    font-size: clamp(1.8rem, 6.5vw, 3rem);
+  }
+  
+  .serviceDescription {
+    font-size: clamp(0.85rem, 3.5vw, 1.05rem);
+    max-width: 100%;
+  }
+
+  .projectMetaWidget {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    order: 0;
+  }
+
+  .keywordsBlock {
+    align-items: center;
+    text-align: center;
+  }
+
+  .keywordsHeader {
+    margin-bottom: 4px;
+  }
+
+  .keywordsList {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .keywordItem {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .thumbnailStrip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .activeDash {
+    display: none;
+  }
+
+  .thumbnailList {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .thumbnailItem {
+    width: 44px;
+    height: 30px;
+  }
+}
+
+/* Explore Archive CTA Button */
+.exploreArchiveBtn {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--primary, #fb923c);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.exploreArchiveBtn:hover {
+  background: var(--primary, #fb923c);
+  color: #000;
+  box-shadow: 0 0 20px rgba(251, 146, 60, 0.4);
+}
+

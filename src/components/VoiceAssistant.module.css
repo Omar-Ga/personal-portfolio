@@ -1,0 +1,543 @@
+/* ==========================================================================
+   Voice assistant
+   --------------------------------------------------------------------------
+   A single shell morphs from a 68px orb button into a chat panel. GSAP owns the
+   shell's width/height/radius; CSS transitions carry the supporting details
+   (surface, orb dock, hover label) on matched durations.
+
+   z-index 130 is deliberate: it sits above the page and GlobalNav (100) but
+   below the MobileNav drawer (140) and the archive overlay (9000), so both of
+   those cover the widget without any coordination.
+   ========================================================================== */
+
+.root {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 130;
+  width: 68px;
+  height: 68px;
+}
+
+/* --------------------------------------------------------------- the shell */
+
+.shell {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  overflow: hidden;
+
+  /* Collapsed: no chrome at all, just the orb floating on the page. */
+  background-color: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
+
+  transition:
+    background-color 0.45s ease-out,
+    border-color 0.45s ease-out,
+    box-shadow 0.45s ease-out;
+}
+
+.shell[data-open] {
+  background-color: var(--bg);
+  border-color: color-mix(in oklch, var(--ink) 12%, transparent);
+  /* Deliberate elevation, not decorative frosting. */
+  box-shadow:
+    0 2px 8px color-mix(in oklch, var(--ink) 4%, transparent),
+    0 24px 60px -12px color-mix(in oklch, var(--ink) 22%, transparent);
+}
+
+/* ----------------------------------------------------------- the orb + bloom */
+
+.orbDock {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transition:
+    top 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    left 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.shell[data-open] .orbDock {
+  top: 18px;
+  left: 18px;
+  width: 88px;
+  height: 88px;
+}
+
+.orbCanvas {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Soft bloom behind the canvas — WebGL alpha alone cannot spill outside its
+   own box, and the spill is what makes the orb read as light rather than glass. */
+.orbHalo {
+  position: absolute;
+  inset: -28%;
+  border-radius: 50%;
+  z-index: 1;
+  filter: blur(16px);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(30, 41, 59, 0.4) 0%,
+    rgba(99, 102, 241, 0.12) 40%,
+    transparent 70%
+  );
+  opacity: 0.85;
+  transition: background 0.7s ease-out, opacity 0.7s ease-out;
+}
+
+.orbHalo[data-phase='listening'] {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(16, 185, 129, 0.55) 0%,
+    rgba(6, 182, 212, 0.22) 45%,
+    transparent 72%
+  );
+  opacity: 1;
+}
+
+.orbHalo[data-phase='thinking'] {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(99, 102, 241, 0.6) 0%,
+    rgba(192, 132, 252, 0.28) 45%,
+    transparent 72%
+  );
+  opacity: 1;
+}
+
+.orbHalo[data-phase='speaking'] {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(190, 24, 93, 0.6) 0%,
+    rgba(251, 146, 60, 0.28) 45%,
+    transparent 72%
+  );
+  opacity: 1;
+}
+
+.orbHalo[data-phase='connecting'] {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(217, 119, 6, 0.5) 0%,
+    rgba(6, 182, 212, 0.2) 45%,
+    transparent 70%
+  );
+  opacity: 0.9;
+}
+
+.orbHalo[data-phase='error'] {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(225, 29, 72, 0.6) 0%,
+    rgba(251, 146, 60, 0.25) 45%,
+    transparent 70%
+  );
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------- panel body */
+
+.body {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  padding: 18px;
+  opacity: 0;
+  outline: none;
+}
+
+.header {
+  /* Clears the docked orb, which floats above this row. */
+  padding-left: 104px;
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  max-width: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background-color: var(--muted);
+  transition: background-color 0.4s ease-out;
+}
+
+.statusDot[data-phase='listening'] {
+  background-color: #10b981;
+}
+
+.statusDot[data-phase='thinking'] {
+  background-color: #6366f1;
+}
+
+.statusDot[data-phase='speaking'] {
+  background-color: var(--accent);
+}
+
+.statusDot[data-phase='connecting'] {
+  background-color: #d97706;
+}
+
+.statusDot[data-phase='error'] {
+  background-color: #e11d48;
+}
+
+.closeBtn {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in oklch, var(--ink) 14%, transparent);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.25s ease-out, border-color 0.25s ease-out, color 0.25s ease-out;
+}
+
+.closeBtn:hover {
+  background-color: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+/* --------------------------------------------------------------- transcript */
+
+.log {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  scrollbar-width: none;
+}
+
+.log::-webkit-scrollbar {
+  display: none;
+}
+
+.intro {
+  margin: 0;
+  max-width: none;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.turn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.turnRole {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.turn[data-role='ai'] .turnRole {
+  color: var(--accent);
+}
+
+.turnText {
+  margin: 0;
+  max-width: none;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+/* Trailing caret while a turn is still streaming. */
+.turn[data-streaming] .turnText::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 0.95em;
+  margin-left: 3px;
+  vertical-align: text-bottom;
+  background-color: var(--accent);
+  animation: voiceCaret 1s steps(2, start) infinite;
+}
+
+@keyframes voiceCaret {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+.error {
+  margin: 0.5rem 0 0;
+  max-width: none;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--accent);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  padding-top: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.primaryBtn,
+.endBtn,
+.ghostBtn,
+.sendBtn {
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s ease-out, border-color 0.25s ease-out, color 0.25s ease-out;
+}
+
+.primaryBtn {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+}
+
+.primaryBtn:hover:not(:disabled) {
+  background-color: var(--primary, #fb923c);
+  border-color: var(--primary, #fb923c);
+  color: var(--bg);
+}
+
+.primaryBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.liveControls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ghostBtn,
+.endBtn {
+  flex: 1;
+  padding: 0.75rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklch, var(--ink) 18%, transparent);
+  background: transparent;
+  color: var(--ink);
+}
+
+.ghostBtn:hover {
+  border-color: var(--ink);
+  background-color: color-mix(in oklch, var(--ink) 6%, transparent);
+}
+
+.ghostBtn[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.endBtn {
+  flex: 0 0 auto;
+  padding-inline: 1.25rem;
+}
+
+.endBtn:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.composer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--ink);
+  background-color: color-mix(in oklch, var(--ink) 4%, transparent);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  outline: none;
+  transition: border-color 0.25s ease-out, background-color 0.25s ease-out;
+}
+
+.input::placeholder {
+  color: var(--muted);
+}
+
+.input:focus-visible {
+  border-color: var(--ink);
+  background-color: transparent;
+}
+
+.sendBtn {
+  flex: 0 0 auto;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--ink);
+  color: var(--bg);
+}
+
+.sendBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.sendBtn:hover:not(:disabled) {
+  background-color: var(--primary, #fb923c);
+}
+
+/* --------------------------------------------------------------- collapsed */
+
+.trigger {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 68px;
+  height: 68px;
+  z-index: 3;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.triggerLabel {
+  position: absolute;
+  right: 84px;
+  bottom: 22px;
+  z-index: 3;
+  white-space: nowrap;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background-color: var(--bg);
+  border: 1px solid color-mix(in oklch, var(--ink) 12%, transparent);
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateX(8px);
+  pointer-events: none;
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+}
+
+.root:not([data-open]):hover .triggerLabel,
+.trigger:focus-visible ~ .triggerLabel,
+.root:not([data-open]):focus-within .triggerLabel {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 768px) {
+  .root {
+    bottom: 1rem;
+    right: 1rem;
+    width: 56px;
+    height: 56px;
+  }
+
+  .shell {
+    width: 56px;
+    height: 56px;
+  }
+
+  .trigger {
+    width: 56px;
+    height: 56px;
+  }
+
+  .shell[data-open] .orbDock {
+    top: 14px;
+    left: 14px;
+    width: 72px;
+    height: 72px;
+  }
+
+  .body {
+    padding: 14px;
+  }
+
+  .header {
+    padding-left: 82px;
+    min-height: 72px;
+  }
+
+  /* The hover label is meaningless without a pointer. */
+  .triggerLabel {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------ reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .orbDock,
+  .orbHalo,
+  .shell {
+    transition: none;
+  }
+
+  .turn[data-streaming] .turnText::after {
+    animation: none;
+  }
+}

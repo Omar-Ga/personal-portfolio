@@ -1,0 +1,29 @@
+{
+  "keywordsHeader": "Tech & Stack",
+  "exploreArchive": "Explore All Projects ↗",
+  "exploreArchiveTitle": "Explore All Projects Archive",
+  "jumpTo": "Jump to {title}",
+  "previewAlt": "Project preview",
+  "items": {
+    "p1": {
+      "title": "SkyCourt Warehouse Engine",
+      "description": "Offline-first enterprise logistics & inventory management platform powered by Turso LibSQL embedded replicas, real-time barcode scanning, and multi-platform desktop/web deployment.",
+      "keywords": ["Turso LibSQL", "Embedded Replicas", "Barcode Telemetry", "Tauri Desktop"]
+    },
+    "p2": {
+      "title": "Kafa'a AI Talent Platform",
+      "description": "An enterprise AI recruitment SaaS that parses unstructured CV resumes, calculates multi-variable candidate match scores, and orchestrates automated AI candidate interviews.",
+      "keywords": ["Enterprise AI SaaS", "CV Resume Parser", "Match Score Engine", "Automated Interviews"]
+    },
+    "p3": {
+      "title": "O2Mation Flagship Web",
+      "description": "Bespoke, agency-grade web platforms. High-impact visual design, fluid GSAP motion, and high-converting architecture built for enterprise scale.",
+      "keywords": ["Fluid GSAP Motion", "WebGL Shaders", "Next.js App Router", "Luxury Design System"]
+    },
+    "p4": {
+      "title": "Voice AI & Intelligent Agents",
+      "description": "Skip the contact form. Ask me anything — my AI assistant knows my stack, my work, and my availability. Press the button and speak.",
+      "keywords": ["Real-Time WebRTC", "Voice AI Assistant", "SIP Telephony", "Autonomous Agents"]
+    }
+  }
+}

@@ -1,0 +1,29 @@
+# Version control
+.git
+.gitignore
+
+# Agent / AI tooling & memory
+.agents
+.memory
+AGENTS.md
+PRODUCT.md
+DESIGN.md
+docs
+
+# Scratch, debug, tooling & test artifacts
+.playwright-cli
+.impeccable
+.impeccable-live
+.impeccable-live.json
+mcp-playwright
+scratch
+bridge
+dist
+*.py
+*.tsbuildinfo
+screenshot-*.jpg
+
+# Development & environment
+.env*.local
+.env.development
+.env.test

@@ -1,0 +1,17 @@
+.cursorDot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  visibility: hidden;
+  opacity: 0;
+  transition: none !important;
+  will-change: transform;
+}
+

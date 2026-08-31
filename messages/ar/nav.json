@@ -1,0 +1,19 @@
+{
+  "logo": "OG",
+  "items": {
+    "home": "الرئيسية",
+    "services": "الخدمات",
+    "about": "نبذة عني",
+    "projects": "المشاريع",
+    "contact": "تواصل"
+  },
+  "mobile": {
+    "toggleLabel": "فتح وإغلاق قائمة التنقّل",
+    "footerRole": "عمر جمال — معرض الأعمال",
+    "footerYear": "2026"
+  },
+  "language": {
+    "label": "اللغة",
+    "switchTo": "تغيير اللغة إلى {language}"
+  }
+}

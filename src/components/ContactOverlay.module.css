@@ -1,0 +1,224 @@
+.overlayWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity, visibility;
+  display: flex;
+  overflow: hidden;
+  background-color: #050505;
+}
+
+/* When overlay is active, make it clickable */
+.overlayWrapper.active {
+  pointer-events: auto;
+}
+
+.videoBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 1; /* Keep at 1, the container fades */
+  filter: contrast(1.1) brightness(0.9);
+}
+
+
+
+.contentContainer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 4rem 5rem;
+  color: #fff;
+}
+
+.closeBtn {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 2.5rem;
+  font-weight: 300;
+  cursor: pointer;
+  padding: 1rem;
+  opacity: 0;
+  transition: transform 0.3s ease;
+  line-height: 1;
+}
+
+.closeBtn:hover {
+  transform: scale(1.1) rotate(90deg);
+}
+
+.mainLayout {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+  padding: 0 15%; /* Bring columns significantly closer together */
+  opacity: 0; /* Animated in by GSAP */
+}
+
+.leftCol {
+  flex: 1;
+  max-width: 50%;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(4rem, 10vw, 10rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  letter-spacing: -0.03em;
+}
+
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 80%;
+  opacity: 0.8;
+}
+
+.rightCol {
+  flex: 1;
+  max-width: 500px;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.inputGroup {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.input, .textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  padding: 0.5rem 0;
+  transition: border-color 0.3s ease;
+  border-radius: 0;
+}
+
+.textarea {
+  resize: none;
+  min-height: 100px;
+}
+
+.input:focus, .textarea:focus {
+  outline: none;
+  border-bottom-color: #fff;
+}
+
+.input::placeholder, .textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.9rem;
+}
+
+.submitBtn {
+  align-self: flex-start;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.5);
+  padding: 1rem 3rem;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  margin-top: 1rem;
+}
+
+.submitBtn:hover {
+  background: #fff;
+  color: #000;
+}
+
+.overlayWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity, visibility;
+  display: flex;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background-color: #050505;
+}
+
+@media (max-width: 900px) {
+  .contentContainer {
+    padding: 1.5rem 1.25rem 2rem 1.25rem;
+  }
+  .closeBtn {
+    padding: 0.5rem;
+    font-size: 2rem;
+  }
+  .mainLayout {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    padding: 0;
+    overflow-y: auto;
+  }
+  .leftCol, .rightCol {
+    max-width: 100%;
+    width: 100%;
+  }
+  .title {
+    font-size: clamp(2.8rem, 9vw, 4.5rem);
+    margin-bottom: 0.75rem;
+  }
+  .subtitle {
+    font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+    max-width: 100%;
+  }
+  .form {
+    gap: 1.5rem;
+  }
+  .input, .textarea {
+    font-size: 1rem;
+  }
+  .submitBtn {
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 0.5rem;
+  }
+}
