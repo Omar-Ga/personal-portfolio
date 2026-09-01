@@ -2,8 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700&display=swap');
 
 :root {
-  --primary: #fb923c;
-  --border: rgba(0, 0, 0, 0.1);
   --bg: oklch(1 0 0); /* Pure white fallback */
   --surface: oklch(1 0 0 / 0.7); /* Translucent surface for sidebar */
   --ink: oklch(0 0 0); /* Pure black for high contrast against holographic background */
@@ -75,7 +73,7 @@ p {
   }
 }
 
-/* GSAP Performance Optimizations — GPU layers only during animation */
+/* GSAP Performance Optimizations ΓÇö GPU layers only during animation */
 .gsap-intro-1, .gsap-intro-2, .gsap-intro-3,
 .gsap-dark-overlay,
 .gsap-main-hero,
@@ -108,7 +106,7 @@ html[lang="ar"] {
   --font-sans: 'Outfit', 'Readex Pro', sans-serif;
 }
 
-/* Arabic is a cursive script — any tracking severs the glyph joins and makes
+/* Arabic is a cursive script ΓÇö any tracking severs the glyph joins and makes
    words unreadable. This neutralises the letter-spacing declarations that the
    Latin design sets throughout the CSS modules. */
 html[lang="ar"] body,

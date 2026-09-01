@@ -66,7 +66,7 @@ export default function HeroSection() {
         });
       });
 
-      // 6. CTA BUTTON — Blueprint Fracture Animation
+      // 6. CTA BUTTON ΓÇö Blueprint Fracture Animation
       const ctaBtn = document.querySelector(".gsap-cta") as HTMLElement | null;
       let ctaCleanup: (() => void) | null = null;
 
@@ -82,24 +82,24 @@ export default function HeroSection() {
 
         const ctaTl = gsap.timeline({ paused: true });
 
-        // Act 1 — Fracture
+        // Act 1 ΓÇö Fracture
         ctaTl.addLabel("fracture", 0)
           .set([strip1, strip2, strip3], { autoAlpha: 1 }, "fracture")
           .to(strip1, { x: 10, duration: 0.12, ease: "power4.out" }, "fracture")
           .to(strip2, { x: -14, duration: 0.12, ease: "power4.out" }, "fracture")
           .to(strip3, { x: 10, duration: 0.12, ease: "power4.out" }, "fracture")
 
-        // Act 2 — Reassemble + Scramble
+        // Act 2 ΓÇö Reassemble + Scramble
           .addLabel("reassemble", "fracture+=0.12")
           .to([strip1, strip2, strip3], { x: 0, duration: 0.08, ease: "power4.in" }, "reassemble")
           .set([strip1, strip2, strip3], { autoAlpha: 0 }, "reassemble+=0.08")
           .to(ctaTextBase, {
             duration: 0.55,
-            scrambleText: { text: ctaLabel, chars: "!@#$%*+~_{}[]", revealDelay: 0.1, speed: 0.8 },
+            scrambleText: { text: ctaLabel, chars: "<>/[]{}=%", revealDelay: 0.1, speed: 0.8 },
             ease: "none"
           }, "reassemble")
 
-        // Act 3 — Dark Fill + text swap
+        // Act 3 ΓÇö Dark Fill + text swap
           .addLabel("fill", "reassemble+=0.15")
           .to(ctaBg, { scaleX: 1, duration: 0.35, ease: "power3.inOut" }, "fill")
           .to(ctaTextWhite, { autoAlpha: 1, duration: 0.2, ease: "power2.out" }, "fill+=0.15")
@@ -125,8 +125,6 @@ export default function HeroSection() {
       }
 
       // 6. PHILOSOPHY SCROLL SEQUENCE
-      gsap.set(".gsap-phrase-1, .gsap-phrase-2, .gsap-phrase-3, .gsap-phrase-4, .gsap-phrase-5", { autoAlpha: 0 });
-
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: ".gsap-scrub-spacer",
@@ -154,7 +152,7 @@ export default function HeroSection() {
       // Act 2: Video Collapse into Void (15% - 30%)
       scrollTl.addLabel("act2", 0.15)
         .fromTo(".gsap-video-bg", 
-        { scale: 1.1, borderRadius: "0%", autoAlpha: 1 },
+        { scale: 1.05, borderRadius: "0%", autoAlpha: 1 },
         {
           scale: 0,
           borderRadius: "50%",
@@ -235,7 +233,7 @@ export default function HeroSection() {
 
         gsap.to(word, {
           duration: 1.2,
-          scrambleText: { text: original, chars: "!@#$%*+~_{}[]", speed: 0.3 },
+          scrambleText: { text: original, chars: "<>/[]{}=%", speed: 0.3 },
           ease: "none",
           onComplete: scheduleNextGlitch
         });
@@ -255,7 +253,7 @@ export default function HeroSection() {
     });
 
     mm.add("(prefers-reduced-motion: reduce)", () => {
-      // In reduced motion, ensure all rotating phrases, title tokens, and CTA are static and visible
+      // In reduced motion, ensure all rotating phrases, title tokens, CTA and philosophy phrases are static and visible
       const textContainers = gsap.utils.toArray('[class*="rotatingTextContainer"]');
       textContainers.forEach(container => {
         const rotatingItems = gsap.utils.toArray(".gsap-rotating-item", container as Element) as Element[];
@@ -274,9 +272,10 @@ export default function HeroSection() {
 
       gsap.set(".gsap-video-bg", { autoAlpha: 1, scale: 1, borderRadius: "0%" });
       gsap.set(".gsap-phrase-1, .gsap-phrase-2, .gsap-phrase-3, .gsap-phrase-4, .gsap-phrase-5", {
-        autoAlpha: 0,
-        opacity: 0,
-        visibility: "hidden"
+        autoAlpha: 1,
+        scale: 1,
+        xPercent: 0,
+        y: 0
       });
     });
   });

@@ -91,7 +91,7 @@ export default function StorySection({ isLoaded = false }: StorySectionProps) {
           pin: true,
           anticipatePin: 1,
           start: "top top",
-          end: "+=220%",
+          end: "+=150%",
           scrub: 0.5,
           refreshPriority: 8,
           invalidateOnRefresh: true,

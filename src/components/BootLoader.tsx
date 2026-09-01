@@ -27,7 +27,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
 
     mm.add("(prefers-reduced-motion: reduce)", () => {
       gsap.set(".gsap-dark-overlay", { opacity: 0, display: "none" });
-      gsap.set(".gsap-video-bg", { autoAlpha: 1, scale: 1.1 });
+      gsap.set(".gsap-video-bg", { autoAlpha: 1, scale: 1 });
       gsap.set(".gsap-main-hero", { opacity: 1 });
       gsap.set(".gsap-main-elem", { autoAlpha: 1, y: 0 });
       gsap.set(".gsap-title-decode", { autoAlpha: 1 });
@@ -54,7 +54,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
 
       // 1. CINEMATIC BOOT-UP ENTRY SEQUENCE
       // Initial states: everything hidden
-      gsap.set(".gsap-video-bg", { autoAlpha: 0, scale: 1.1 });
+      gsap.set(".gsap-video-bg", { autoAlpha: 0, scale: 1.08 });
       gsap.set(".gsap-main-hero", { opacity: 0 });
       gsap.set(".gsap-main-elem", { autoAlpha: 0, y: 30 });
       gsap.set(".gsap-title-decode", { autoAlpha: 0 });
@@ -64,7 +64,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
       gsap.set(".gsap-intro-1, .gsap-intro-2, .gsap-intro-3", { x: -20, opacity: 0 });
 
       const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-      const durMult = isMobile ? 0.45 : 0.55;
+      const durMult = isMobile ? 0.7 : 1.0;
 
       const entryTl = gsap.timeline({ 
         delay: skipIntro ? 0 : 0.1,
@@ -76,16 +76,12 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
 
       // Directly fade out overlay and reveal video/hero immediately
       entryTl.addLabel("reveal", 0)
-        .to(".gsap-dark-overlay", { opacity: 0, duration: 0.8 * durMult }, "reveal")
-        .to(".gsap-video-bg", { autoAlpha: 1, duration: 0.8 * durMult }, "reveal")
-        .to(".gsap-main-hero", { opacity: 1, duration: 0.8 * durMult }, "reveal")
-        .call(() => {
-          document.body.style.overflow = "";
-          onComplete();
-        }, undefined, `reveal+=${0.4 * durMult}`);
+        .to(".gsap-dark-overlay", { opacity: 0, duration: 1.0 * durMult }, "reveal")
+        .to(".gsap-video-bg", { autoAlpha: 1, duration: 1.0 * durMult }, "reveal")
+        .to(".gsap-main-hero", { opacity: 1, duration: 1.0 * durMult }, "reveal");
 
-      // Act 2: Title Decode — ScrambleText reveals each title line
-      entryTl.addLabel("decode", `reveal+=${0.2 * durMult}`)
+      // Act 2: Title Decode ΓÇö ScrambleText reveals each title line
+      entryTl.addLabel("decode", `reveal+=${0.3 * durMult}`)
         .to(".gsap-title-decode", { autoAlpha: 1, duration: 0.01 }, "decode");
 
       const titleLines = gsap.utils.toArray(".gsap-title-decode") as HTMLElement[];
@@ -95,7 +91,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
           duration: 2.0 * durMult,
           scrambleText: {
             text: originalText,
-            chars: "!@#$%*+~_{}[]",
+            chars: "!@#$%^&*<>[]{}=/\\|~`",
             revealDelay: 0.5 * durMult,
             speed: 0.4 / durMult
           },
@@ -136,7 +132,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
 
   return (
     <div ref={containerRef} suppressHydrationWarning>
-      {/* Dark Overlay — Starts solid black for CRT flicker */}
+      {/* Dark Overlay ΓÇö Starts solid black for CRT flicker */}
       <div className={`${styles.darkOverlay} gsap-dark-overlay`} suppressHydrationWarning></div>
 
       {/* Cinematic Intro Texts (legacy structure, kept for potential reuse) */}

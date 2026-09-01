@@ -210,13 +210,9 @@ export default function Home() {
         const globalNx = (clientX / innerWidth) * 2 - 1;
         const globalNy = (clientY / innerHeight) * 2 - 1;
 
-        const maxOffset = 28;
-        const targetX = Math.max(-maxOffset, Math.min(maxOffset, -globalNx * maxOffset));
-        const targetY = Math.max(-maxOffset, Math.min(maxOffset, -globalNy * maxOffset));
-
         if (videoXTo && videoYTo) {
-          videoXTo(targetX);
-          videoYTo(targetY);
+          videoXTo(-globalNx * 30);
+          videoYTo(-globalNy * 30);
         }
       };
 
@@ -260,8 +256,8 @@ export default function Home() {
   return (
     <>
       <div className={`${styles.pageWrapper} gsap-page-wrapper`} ref={wrapperRef} suppressHydrationWarning>
-        <GlobalNav />
-        <MobileNav />
+        {isLoaded && <GlobalNav />}
+        {isLoaded && <MobileNav />}
         <main className={styles.main} ref={containerRef} suppressHydrationWarning>
           
           {/* Light Video Background */}
@@ -296,22 +292,24 @@ export default function Home() {
           </div>
         </main>
 
-        {/* Invisible Scrub Spacer for Curtain Reveal — 500vh adapts dynamically to screen height */}
+        {/* Invisible Scrub Spacer for Curtain Reveal ΓÇö 500vh adapts dynamically to screen height */}
         <div className="gsap-scrub-spacer" style={{ height: "500vh", position: "relative", zIndex: 0 }}></div>
 
         {/* Services Section */}
-        <ServicesSection />
+        {isLoaded && <ServicesSection />}
 
         {/* Story / About Section */}
-        <StorySection isLoaded={true} />
+        {isLoaded && <StorySection isLoaded={isLoaded} />}
 
         {/* Projects Section */}
-        <ProjectsSection />
+        {isLoaded && <ProjectsSection />}
 
         {/* Custom Scroll Progress Bar */}
-        <div className={styles.scrollProgressBarContainer}>
-          <div className={`${styles.scrollProgressBarFill} gsap-scroll-progress`}></div>
-        </div>
+        {isLoaded && (
+          <div className={styles.scrollProgressBarContainer}>
+            <div className={`${styles.scrollProgressBarFill} gsap-scroll-progress`}></div>
+          </div>
+        )}
       </div>
 
       <ContactOverlay isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />

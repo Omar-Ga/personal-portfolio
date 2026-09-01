@@ -185,10 +185,10 @@ export default function ServicesSection() {
 
     // Desktop: Horizontal Pinning & Track Scroll
     mm.add("(min-width: 769px)", () => {
-      const getInitialHoldDist = () => window.innerHeight * 0.35;
-      const getHorizontalDist = () => (track.scrollWidth - window.innerWidth) * 1.15;
-      const getVerticalDist = () => window.innerHeight * 1.8;
-      const getHoldDist = () => window.innerHeight * 0.5;
+      const getInitialHoldDist = () => window.innerHeight * 0.20;
+      const getHorizontalDist = () => track.scrollWidth - window.innerWidth;
+      const getVerticalDist = () => window.innerHeight * 1.5;
+      const getHoldDist = () => window.innerHeight * 0.4;
 
       gsap.set(leftHalfRef.current, { xPercent: -100, yPercent: 0 });
       gsap.set(rightHalfRef.current, { xPercent: 100, yPercent: 0 });

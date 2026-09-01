@@ -15,7 +15,7 @@ const WebGLShader = dynamic(() => import('./ui/web-gl-shader').then((m) => m.Web
 
 gsap.registerPlugin(ScrollTrigger);
 
-/** Translated half of a project card — see `messages/<locale>/projects.json`. */
+/** Translated half of a project card ΓÇö see `messages/<locale>/projects.json`. */
 interface ProjectCopy {
   title: string;
   description: string;
@@ -136,6 +136,26 @@ export default function ProjectsSection() {
           scrub: 0.7,
           refreshPriority: 6,
           invalidateOnRefresh: true,
+          snap: {
+            snapTo: (value: number) => {
+              const points = snapPointsRef.current;
+              if (!points || points.length === 0) return value;
+              let closest = points[0];
+              let minDiff = Math.abs(value - points[0]);
+              for (let i = 1; i < points.length; i++) {
+                const diff = Math.abs(value - points[i]);
+                if (diff < minDiff) {
+                  minDiff = diff;
+                  closest = points[i];
+                }
+              }
+              return closest;
+            },
+            directional: false,
+            delay: 0.1,
+            duration: { min: 0.2, max: 0.5 },
+            ease: "power2.out"
+          },
           onUpdate: function(self) {
             const currentY = -maxScrollY * self.progress;
             let minDistance = Infinity;
@@ -251,7 +271,7 @@ export default function ProjectsSection() {
                 }}
               >
                 <h3 className={styles.serviceTitle}>
-                  <span className="i18n-ltr">0{idx + 1}</span> — {project.title}
+                  <span className="i18n-ltr">0{idx + 1}</span> ΓÇö {project.title}
                 </h3>
                 <p className={styles.serviceDescription}>{project.description}</p>
               </div>
@@ -308,7 +328,7 @@ export default function ProjectsSection() {
               style={{ transform: `translateY(${activeImage * 56 + 10}px)` }}
               aria-hidden="true"
             >
-              —
+              ΓÇö
             </div>
             <div className={styles.thumbnailList}>
               {projects.map((p, idx) => (
