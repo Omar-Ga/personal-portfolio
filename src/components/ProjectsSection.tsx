@@ -122,133 +122,81 @@ export default function ProjectsSection() {
     });
     snapPointsRef.current = snapPoints;
 
-    const mm = gsap.matchMedia();
-
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          id: "projects-st",
-          trigger: sectionRef.current,
-          pin: true,
-          anticipatePin: 1,
-          start: "top top",
-          end: `+=${PROJECT_IDS.length * 200}%`,
-          scrub: 0.7,
-          refreshPriority: 6,
-          invalidateOnRefresh: true,
-          snap: {
-            snapTo: (value: number) => {
-              const points = snapPointsRef.current;
-              if (!points || points.length === 0) return value;
-              let closest = points[0];
-              let minDiff = Math.abs(value - points[0]);
-              for (let i = 1; i < points.length; i++) {
-                const diff = Math.abs(value - points[i]);
-                if (diff < minDiff) {
-                  minDiff = diff;
-                  closest = points[i];
-                }
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        id: "projects-st",
+        trigger: sectionRef.current,
+        pin: true,
+        anticipatePin: 1,
+        start: "top top",
+        end: `+=${PROJECT_IDS.length * 200}%`,
+        scrub: 0.7,
+        refreshPriority: 6,
+        invalidateOnRefresh: true,
+        snap: {
+          snapTo: (value: number) => {
+            const points = snapPointsRef.current;
+            if (!points || points.length === 0) return value;
+            let closest = points[0];
+            let minDiff = Math.abs(value - points[0]);
+            for (let i = 1; i < points.length; i++) {
+              const diff = Math.abs(value - points[i]);
+              if (diff < minDiff) {
+                minDiff = diff;
+                closest = points[i];
               }
-              return closest;
-            },
-            directional: false,
-            delay: 0.1,
-            duration: { min: 0.2, max: 0.5 },
-            ease: "power2.out"
-          },
-          onUpdate: function(self) {
-            const currentY = -maxScrollY * self.progress;
-            let minDistance = Infinity;
-            let closestIdx = 0;
-
-            itemCenters.forEach((itemCenterY, i) => {
-              const el = texts[i];
-              if (!el) return;
-
-              const dist = (itemCenterY + currentY) - containerCenter;
-              const absDist = Math.abs(dist);
-
-              if (absDist < minDistance) {
-                minDistance = absDist;
-                closestIdx = i;
-              }
-
-              const normalizedDist = Math.max(0, Math.min(1, absDist / maxDist));
-              const curve = Math.pow(normalizedDist, 1.5);
-              
-              const scale = 1 - (curve * 0.3);
-              const opacity = 1 - (curve * 1.0);
-              const rotateX = (dist / maxDist) * -90;
-              const z = curve * -100;
-
-              gsap.set(el, {
-                scale,
-                opacity,
-                rotateX,
-                z,
-                transformOrigin: "center center -150px"
-              });
-            });
-
-            if (!isClickScrollingRef.current) {
-              setActiveImage((prev) => (prev !== closestIdx ? closestIdx : prev));
             }
+            return closest;
+          },
+          directional: false,
+          delay: 0.1,
+          duration: { min: 0.2, max: 0.5 },
+          ease: "power2.out"
+        },
+        onUpdate: function(self) {
+          const currentY = -maxScrollY * self.progress;
+          let minDistance = Infinity;
+          let closestIdx = 0;
+
+          itemCenters.forEach((itemCenterY, i) => {
+            const el = texts[i];
+            if (!el) return;
+
+            const dist = (itemCenterY + currentY) - containerCenter;
+            const absDist = Math.abs(dist);
+
+            if (absDist < minDistance) {
+              minDistance = absDist;
+              closestIdx = i;
+            }
+
+            const normalizedDist = Math.max(0, Math.min(1, absDist / maxDist));
+            const curve = Math.pow(normalizedDist, 1.5);
+            
+            const scale = 1 - (curve * 0.3);
+            const opacity = 1 - (curve * 1.0);
+            const rotateX = (dist / maxDist) * -90;
+            const z = curve * -100;
+
+            gsap.set(el, {
+              scale,
+              opacity,
+              rotateX,
+              z,
+              transformOrigin: "center center -150px"
+            });
+          });
+
+          if (!isClickScrollingRef.current) {
+            setActiveImage((prev) => (prev !== closestIdx ? closestIdx : prev));
           }
         }
-      });
-
-      tl.to(listRef.current, {
-        y: -maxScrollY,
-        ease: "none"
-      });
+      }
     });
 
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      texts.forEach((el) => {
-        gsap.set(el, {
-          scale: 1,
-          opacity: 1,
-          rotateX: 0,
-          z: 0
-        });
-      });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          id: "projects-st",
-          trigger: sectionRef.current,
-          pin: true,
-          anticipatePin: 1,
-          start: "top top",
-          end: `+=${PROJECT_IDS.length * 150}%`,
-          scrub: true,
-          refreshPriority: 6,
-          invalidateOnRefresh: true,
-          onUpdate: function(self) {
-            const currentY = -maxScrollY * self.progress;
-            let minDistance = Infinity;
-            let closestIdx = 0;
-
-            itemCenters.forEach((itemCenterY, i) => {
-              const dist = (itemCenterY + currentY) - containerCenter;
-              const absDist = Math.abs(dist);
-              if (absDist < minDistance) {
-                minDistance = absDist;
-                closestIdx = i;
-              }
-            });
-
-            if (!isClickScrollingRef.current) {
-              setActiveImage((prev) => (prev !== closestIdx ? closestIdx : prev));
-            }
-          }
-        }
-      });
-
-      tl.to(listRef.current, {
-        y: -maxScrollY,
-        ease: "none"
-      });
+    tl.to(listRef.current, {
+      y: -maxScrollY,
+      ease: "none"
     });
 
     ScrollTrigger.refresh();

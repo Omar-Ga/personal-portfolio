@@ -155,13 +155,6 @@ export default function AllProjectsOverlay({ isOpen, onClose }: AllProjectsOverl
   useEffect(() => {
     if (!isOpen) return;
 
-    const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) {
-      if (colLeftRef.current) colLeftRef.current.style.transform = "none";
-      if (colRightRef.current) colRightRef.current.style.transform = "none";
-      return;
-    }
-
     const measurePeriod = (): boolean => {
       const track = colLeftRef.current;
       if (!track || track.children.length <= UNIQUE_PER_COL) return false;
@@ -245,9 +238,6 @@ export default function AllProjectsOverlay({ isOpen, onClose }: AllProjectsOverl
   // Scroll wheel momentum injection
   useEffect(() => {
     if (!isOpen || selectedProject) return;
-
-    const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();

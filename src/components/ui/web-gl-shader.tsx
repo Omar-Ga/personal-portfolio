@@ -110,20 +110,16 @@ export function WebGLShader() {
       handleResize()
     }
 
-    const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     const animate = () => {
       if (isVisible) {
-        if (!prefersReducedMotion && refs.uniforms) {
+        if (refs.uniforms) {
           refs.uniforms.time.value += 0.01;
         }
         if (refs.renderer && refs.scene && refs.camera) {
           refs.renderer.render(refs.scene, refs.camera);
         }
       }
-      if (!prefersReducedMotion) {
-        refs.animationId = requestAnimationFrame(animate);
-      }
+      refs.animationId = requestAnimationFrame(animate);
     };
 
     let resizeTimer: NodeJS.Timeout

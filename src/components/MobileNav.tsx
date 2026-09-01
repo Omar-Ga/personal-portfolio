@@ -27,70 +27,48 @@ export default function MobileNav() {
   useGSAP(() => {
     if (!drawerRef.current) return;
 
-    const mm = gsap.matchMedia();
+    if (isOpen) {
+      // Slide up and fade in drawer
+      gsap.to(drawerRef.current, {
+        autoAlpha: 1,
+        duration: 0.4,
+        ease: "power3.out"
+      });
 
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      if (isOpen) {
-        // Slide up and fade in drawer
-        gsap.to(drawerRef.current, {
-          autoAlpha: 1,
-          duration: 0.4,
-          ease: "power3.out"
-        });
-
-        // Stagger animate links in
-        const validItems = navItemsRef.current.filter(Boolean);
-        if (validItems.length > 0) {
-          gsap.fromTo(
-            validItems,
-            { y: 30, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.5,
-              stagger: 0.08,
-              ease: "power2.out",
-              delay: 0.1
-            }
-          );
-        }
-      } else {
-        const validItems = navItemsRef.current.filter(Boolean);
-        if (validItems.length > 0) {
-          gsap.to(validItems, {
-            y: -15,
-            opacity: 0,
-            duration: 0.25,
-            ease: "power2.in"
-          });
-        }
-
-        gsap.to(drawerRef.current, {
-          autoAlpha: 0,
-          duration: 0.35,
-          delay: 0.1,
-          ease: "power3.in"
-        });
-      }
-    });
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
+      // Stagger animate links in
       const validItems = navItemsRef.current.filter(Boolean);
-      if (isOpen) {
-        gsap.set(validItems, { y: 0, opacity: 1 });
-        gsap.to(drawerRef.current, {
-          autoAlpha: 1,
-          duration: 0.15,
-          ease: "none"
-        });
-      } else {
-        gsap.to(drawerRef.current, {
-          autoAlpha: 0,
-          duration: 0.15,
-          ease: "none"
+      if (validItems.length > 0) {
+        gsap.fromTo(
+          validItems,
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            stagger: 0.08,
+            ease: "power2.out",
+            delay: 0.1
+          }
+        );
+      }
+    } else {
+      const validItems = navItemsRef.current.filter(Boolean);
+      if (validItems.length > 0) {
+        gsap.to(validItems, {
+          y: -15,
+          opacity: 0,
+          duration: 0.25,
+          ease: "power2.in"
         });
       }
-    });
+
+      gsap.to(drawerRef.current, {
+        autoAlpha: 0,
+        duration: 0.35,
+        delay: 0.1,
+        ease: "power3.in"
+      });
+    }
   }, [isOpen]);
 
   const handleNavClick = (item: NavItem) => {

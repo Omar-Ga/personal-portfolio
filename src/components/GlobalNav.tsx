@@ -18,37 +18,18 @@ export default function GlobalNav() {
   const handleNavClick = useNavScroll(1.5);
 
   useGSAP(() => {
-    const mm = gsap.matchMedia();
+    gsap.set(navRef.current, { yPercent: -100, autoAlpha: 0 });
 
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.set(navRef.current, { yPercent: -100, autoAlpha: 0 });
-
-      gsap.to(navRef.current, {
-        yPercent: 0,
-        autoAlpha: 1,
-        duration: 0.6,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: "#services",
-          start: "top top",
-          toggleActions: "play none none reverse"
-        }
-      });
-    });
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      gsap.set(navRef.current, { yPercent: 0, autoAlpha: 0 });
-
-      gsap.to(navRef.current, {
-        autoAlpha: 1,
-        duration: 0.2,
-        ease: "none",
-        scrollTrigger: {
-          trigger: "#services",
-          start: "top top",
-          toggleActions: "play none none reverse"
-        }
-      });
+    gsap.to(navRef.current, {
+      yPercent: 0,
+      autoAlpha: 1,
+      duration: 0.6,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: "#services",
+        start: "top top",
+        toggleActions: "play none none reverse"
+      }
     });
   });
 

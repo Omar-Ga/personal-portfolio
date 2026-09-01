@@ -8,10 +8,9 @@ export default function CustomCursor() {
 
   useEffect(() => {
     const isHoverDevice = window.matchMedia("(hover: hover)").matches;
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const cursorDot = cursorRef.current;
 
-    if (!isHoverDevice || prefersReducedMotion || !cursorDot) return;
+    if (!isHoverDevice || !cursorDot) return;
 
     // Reveal cursor element
     cursorDot.style.visibility = "visible";

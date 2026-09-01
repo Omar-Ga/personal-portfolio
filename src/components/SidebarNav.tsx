@@ -20,13 +20,10 @@ export default function SidebarNav() {
   const handleNavClick = useNavScroll(1.5);
 
   useGSAP((context, contextSafe) => {
-    const mm = gsap.matchMedia();
+    // 3. MAGNETIC HOVER & GLOBAL PARALLAX FOR NAV ITEMS
+    const navItems = gsap.utils.toArray(".gsap-nav-item", containerRef.current) as HTMLElement[];
 
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      // 3. MAGNETIC HOVER & GLOBAL PARALLAX FOR NAV ITEMS
-      const navItems = gsap.utils.toArray(".gsap-nav-item", containerRef.current) as HTMLElement[];
-
-      // 3.5 AMBIENT SIDEBAR SWEEP
+    // 3.5 AMBIENT SIDEBAR SWEEP
       gsap.fromTo(".gsap-nav-sweep",
         { clipPath: "polygon(0% -60%, 100% -40%, 100% -20%, 0% -40%)" },
         {
@@ -145,13 +142,6 @@ export default function SidebarNav() {
           item.removeEventListener("mouseleave", onLeave);
         });
       };
-    });
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      // In reduced motion, simply keep nav items static and visible
-      gsap.set(".gsap-nav-item", { x: 0, y: 0, opacity: 1 });
-      gsap.set(".gsap-nav-sweep", { clipPath: "none", opacity: 0 });
-    });
   }, { scope: containerRef });
 
   return (

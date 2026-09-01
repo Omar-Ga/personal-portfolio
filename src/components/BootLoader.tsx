@@ -23,23 +23,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
     // Performance optimizations
     gsap.config({ force3D: true });
 
-    const mm = gsap.matchMedia();
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      gsap.set(".gsap-dark-overlay", { opacity: 0, display: "none" });
-      gsap.set(".gsap-video-bg", { autoAlpha: 1, scale: 1 });
-      gsap.set(".gsap-main-hero", { opacity: 1 });
-      gsap.set(".gsap-main-elem", { autoAlpha: 1, y: 0 });
-      gsap.set(".gsap-title-decode", { autoAlpha: 1 });
-      gsap.set(".gsap-rotating-container", { autoAlpha: 1 });
-      gsap.set(".gsap-cta", { autoAlpha: 1, y: 0 });
-      gsap.set(".gsap-subtitle", { autoAlpha: 1, y: 0 });
-      document.body.style.overflow = "";
-      onComplete();
-    });
-
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      const skipIntro = false; // Entrance sequence enabled
+    const skipIntro = false; // Entrance sequence enabled
 
       // Lock scroll and reset position during boot phase
       if (!skipIntro) {
@@ -127,7 +111,6 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
       if (skipIntro) {
         entryTl.progress(1);
       }
-    });
   });
 
   return (

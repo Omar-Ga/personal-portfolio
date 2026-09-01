@@ -27,80 +27,51 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
   useGSAP(() => {
     if (!overlayRef.current) return;
 
-    const mm = gsap.matchMedia();
-
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      if (isOpen) {
-        setShouldLoadVideo(true);
-        if (videoRef.current && videoRef.current.readyState >= 2) {
-          videoRef.current.play().catch(() => {});
-        }
-
-        // Fade in the transparent overlay container
-        gsap.to(overlayRef.current, {
-          autoAlpha: 1, // handles opacity and visibility
-          duration: 0.5,
-        });
-
-        // Animate elements inside fading in
-        gsap.fromTo(
-          [closeBtnRef.current, contentRef.current],
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.5,
-            stagger: 0.2,
-            ease: "power3.out",
-            delay: 0.8 // Wait for environmental crossfade
-          }
-        );
-      } else {
-        if (videoRef.current) {
-          videoRef.current.pause();
-        }
-
-        // Retract the contact form
-        gsap.to([closeBtnRef.current, contentRef.current], {
-          opacity: 0,
-          y: -20,
-          duration: 0.5,
-          ease: "power2.in"
-        });
-
-        // Hide the overlay container
-        gsap.to(overlayRef.current, {
-          autoAlpha: 0,
-          duration: 0.5,
-          delay: 0.3
-        });
+    if (isOpen) {
+      setShouldLoadVideo(true);
+      if (videoRef.current && videoRef.current.readyState >= 2) {
+        videoRef.current.play().catch(() => {});
       }
-    });
 
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      if (isOpen) {
-        setShouldLoadVideo(true);
-        if (videoRef.current && videoRef.current.readyState >= 2) {
-          videoRef.current.play().catch(() => {});
-        }
+      // Fade in the transparent overlay container
+      gsap.to(overlayRef.current, {
+        autoAlpha: 1, // handles opacity and visibility
+        duration: 0.5,
+      });
 
-        gsap.set([closeBtnRef.current, contentRef.current], { opacity: 1, y: 0 });
-        gsap.to(overlayRef.current, {
-          autoAlpha: 1,
-          duration: 0.15,
-          ease: "none"
-        });
-      } else {
-        if (videoRef.current) {
-          videoRef.current.pause();
+      // Animate elements inside fading in
+      gsap.fromTo(
+        [closeBtnRef.current, contentRef.current],
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.5,
+          stagger: 0.2,
+          ease: "power3.out",
+          delay: 0.8 // Wait for environmental crossfade
         }
-        gsap.to(overlayRef.current, {
-          autoAlpha: 0,
-          duration: 0.15,
-          ease: "none"
-        });
+      );
+    } else {
+      if (videoRef.current) {
+        videoRef.current.pause();
       }
-    });
+
+      // Retract the contact form
+      gsap.to([closeBtnRef.current, contentRef.current], {
+        opacity: 0,
+        y: -20,
+        duration: 0.5,
+        ease: "power2.in"
+      });
+
+      // Hide the overlay container
+      gsap.to(overlayRef.current, {
+        autoAlpha: 0,
+        duration: 0.5,
+        delay: 0.3
+      });
+    }
   }, { scope: overlayRef, dependencies: [isOpen] });
 
   useGSAP(() => {
@@ -113,18 +84,14 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
     }
   }, { scope: overlayRef, dependencies: [isVideoLoaded] });
 
-  // Desktop Video Mouse Parallax (only enabled when fine pointer/hover present and reduced motion is off)
+  // Desktop Video Mouse Parallax (enabled when fine pointer/hover present)
   useGSAP((context, contextSafe) => {
     if (!videoRef.current) return;
 
     const mm = gsap.matchMedia();
 
-    mm.add({
-      isHover: "(hover: hover)",
-      noReducedMotion: "(prefers-reduced-motion: no-preference)"
-    }, (ctx) => {
-      const { isHover, noReducedMotion } = ctx.conditions as { isHover: boolean, noReducedMotion: boolean };
-      if (!isHover || !noReducedMotion || !videoRef.current) return;
+    mm.add("(hover: hover)", () => {
+      if (!videoRef.current) return;
 
       gsap.set(videoRef.current, { scale: 1.08 });
 

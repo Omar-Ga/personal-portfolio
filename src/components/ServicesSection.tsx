@@ -72,42 +72,31 @@ const ServicePanel = React.memo(({ serviceId }: { serviceId: ServiceId }) => {
   };
 
   useGSAP(() => {
-    const mm = gsap.matchMedia();
-
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      // 1. Image FLIP animation
-      if (flipStateRef.current) {
-        Flip.from(flipStateRef.current, {
-          duration: 0.7,
-          ease: "power3.inOut",
-          absolute: true,
-          nested: true
-        });
-        flipStateRef.current = null;
-      }
-
-      // 2. GSAP Text Transition Animation
-      if (textRef.current) {
-        gsap.fromTo(
-          textRef.current.children,
-          { opacity: 0, y: 18 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            stagger: 0.08,
-            ease: "power3.out"
-          }
-        );
-      }
-    });
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
+    // 1. Image FLIP animation
+    if (flipStateRef.current) {
+      Flip.from(flipStateRef.current, {
+        duration: 0.7,
+        ease: "power3.inOut",
+        absolute: true,
+        nested: true
+      });
       flipStateRef.current = null;
-      if (textRef.current) {
-        gsap.set(textRef.current.children, { opacity: 1, y: 0 });
-      }
-    });
+    }
+
+    // 2. GSAP Text Transition Animation
+    if (textRef.current) {
+      gsap.fromTo(
+        textRef.current.children,
+        { opacity: 0, y: 18 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: "power3.out"
+        }
+      );
+    }
   }, { scope: containerRef, dependencies: [activeIndex] });
 
   const getPosClass = (idx: number) => {
@@ -258,11 +247,6 @@ export default function ServicesSection() {
                 .to(rightHalfRef.current, { yPercent: 0, ease: "none", duration: 1 }, "aboutPanel")
                 .to({}, { duration: 0.4 });
       }
-    });
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      gsap.set(leftHalfRef.current, { xPercent: 0, yPercent: 0, opacity: 1 });
-      gsap.set(rightHalfRef.current, { xPercent: 0, yPercent: 0, opacity: 1 });
     });
 
     return () => mm.revert();

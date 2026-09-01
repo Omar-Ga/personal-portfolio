@@ -15,21 +15,17 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
   useEffect(() => {
     const checkDisabled = () => {
       const isSmall = window.innerWidth <= 768;
-      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      setIsDisabled(isSmall || reducedMotion);
+      setIsDisabled(isSmall);
     };
     checkDisabled();
 
     const mqlMobile = window.matchMedia("(max-width: 768px)");
-    const mqlMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const handleChange = () => checkDisabled();
     mqlMobile.addEventListener("change", handleChange);
-    mqlMotion.addEventListener("change", handleChange);
 
     return () => {
       mqlMobile.removeEventListener("change", handleChange);
-      mqlMotion.removeEventListener("change", handleChange);
     };
   }, []);
 

@@ -75,32 +75,24 @@ export default function StorySection({ isLoaded = false }: StorySectionProps) {
     const words = gsap.utils.toArray<HTMLElement>('.gsap-story-word');
     if (words.length === 0) return;
 
-    const mm = gsap.matchMedia();
+    // Initially dim all words
+    gsap.set(words, { opacity: 0.15 });
 
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      // Initially dim all words
-      gsap.set(words, { opacity: 0.15 });
-
-      // Scrub opacity to 1 as we scroll through the section
-      gsap.to(words, {
-        opacity: 1,
-        stagger: 0.1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          pin: true,
-          anticipatePin: 1,
-          start: "top top",
-          end: "+=150%",
-          scrub: 0.5,
-          refreshPriority: 8,
-          invalidateOnRefresh: true,
-        }
-      });
-    });
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      gsap.set(words, { opacity: 1 });
+    // Scrub opacity to 1 as we scroll through the section
+    gsap.to(words, {
+      opacity: 1,
+      stagger: 0.1,
+      ease: "none",
+      scrollTrigger: {
+        trigger: containerRef.current,
+        pin: true,
+        anticipatePin: 1,
+        start: "top top",
+        end: "+=150%",
+        scrub: 0.5,
+        refreshPriority: 8,
+        invalidateOnRefresh: true,
+      }
     });
   }, { scope: containerRef });
 

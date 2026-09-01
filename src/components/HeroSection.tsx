@@ -30,254 +30,225 @@ export default function HeroSection() {
   const ctaLabel = t('cta');
 
   useGSAP((context, contextSafe) => {
-    const mm = gsap.matchMedia();
+    // 2. ROTATING TEXT (runs independently, cycles in background)
+    const textContainers = gsap.utils.toArray('[class*="rotatingTextContainer"]');
 
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      // 2. ROTATING TEXT (runs independently, cycles in background)
-      const textContainers = gsap.utils.toArray('[class*="rotatingTextContainer"]');
+    textContainers.forEach(container => {
+      const rotatingItems = gsap.utils.toArray(".gsap-rotating-item", container as Element) as Element[];
+      if (rotatingItems.length === 0) return;
 
-      textContainers.forEach(container => {
-        const rotatingItems = gsap.utils.toArray(".gsap-rotating-item", container as Element) as Element[];
-        if (rotatingItems.length === 0) return;
+      gsap.set(rotatingItems, { yPercent: 100, opacity: 0 });
+      gsap.set(rotatingItems[0], { yPercent: 0, opacity: 1 });
 
-        gsap.set(rotatingItems, { yPercent: 100, opacity: 0 });
-        gsap.set(rotatingItems[0], { yPercent: 0, opacity: 1 });
+      const rotatingTl = gsap.timeline({ repeat: -1 });
 
-        const rotatingTl = gsap.timeline({ repeat: -1 });
+      rotatingItems.forEach((item, i) => {
+        const nextItem = rotatingItems[(i + 1) % rotatingItems.length];
 
-        rotatingItems.forEach((item, i) => {
-          const nextItem = rotatingItems[(i + 1) % rotatingItems.length];
-
-          rotatingTl
-            .to({}, { duration: 2.5 })
-            .to(item, {
-              yPercent: -100,
-              opacity: 0,
-              duration: 0.7,
-              ease: "power2.inOut"
-            }, "transition" + i)
-            .set(nextItem, { yPercent: 100, opacity: 0 }, "transition" + i)
-            .to(nextItem, {
-              yPercent: 0,
-              opacity: 1,
-              duration: 0.7,
-              ease: "power2.inOut"
-            }, "transition" + i);
-        });
+        rotatingTl
+          .to({}, { duration: 2.5 })
+          .to(item, {
+            yPercent: -100,
+            opacity: 0,
+            duration: 0.7,
+            ease: "power2.inOut"
+          }, "transition" + i)
+          .set(nextItem, { yPercent: 100, opacity: 0 }, "transition" + i)
+          .to(nextItem, {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: "power2.inOut"
+          }, "transition" + i);
       });
+    });
 
-      // 6. CTA BUTTON ΓÇö Blueprint Fracture Animation
-      const ctaBtn = document.querySelector(".gsap-cta") as HTMLElement | null;
-      let ctaCleanup: (() => void) | null = null;
+    // 6. CTA BUTTON — Blueprint Fracture Animation
+    const ctaBtn = document.querySelector(".gsap-cta") as HTMLElement | null;
+    let ctaCleanup: (() => void) | null = null;
 
-      if (ctaBtn) {
-        const ctaBg       = ctaBtn.querySelector(".gsap-cta-bg") as HTMLElement;
-        const ctaTextBase = ctaBtn.querySelector(".gsap-cta-text-base") as HTMLElement;
-        const ctaTextWhite= ctaBtn.querySelector(".gsap-cta-text-white") as HTMLElement;
-        const strip1      = ctaBtn.querySelector(".gsap-cta-strip-1") as HTMLElement;
-        const strip2      = ctaBtn.querySelector(".gsap-cta-strip-2") as HTMLElement;
-        const strip3      = ctaBtn.querySelector(".gsap-cta-strip-3") as HTMLElement;
+    if (ctaBtn) {
+      const ctaBg       = ctaBtn.querySelector(".gsap-cta-bg") as HTMLElement;
+      const ctaTextBase = ctaBtn.querySelector(".gsap-cta-text-base") as HTMLElement;
+      const ctaTextWhite= ctaBtn.querySelector(".gsap-cta-text-white") as HTMLElement;
+      const strip1      = ctaBtn.querySelector(".gsap-cta-strip-1") as HTMLElement;
+      const strip2      = ctaBtn.querySelector(".gsap-cta-strip-2") as HTMLElement;
+      const strip3      = ctaBtn.querySelector(".gsap-cta-strip-3") as HTMLElement;
 
-        gsap.set([strip1, strip2, strip3], { autoAlpha: 0 });
+      gsap.set([strip1, strip2, strip3], { autoAlpha: 0 });
 
-        const ctaTl = gsap.timeline({ paused: true });
+      const ctaTl = gsap.timeline({ paused: true });
 
-        // Act 1 ΓÇö Fracture
-        ctaTl.addLabel("fracture", 0)
-          .set([strip1, strip2, strip3], { autoAlpha: 1 }, "fracture")
-          .to(strip1, { x: 10, duration: 0.12, ease: "power4.out" }, "fracture")
-          .to(strip2, { x: -14, duration: 0.12, ease: "power4.out" }, "fracture")
-          .to(strip3, { x: 10, duration: 0.12, ease: "power4.out" }, "fracture")
+      // Act 1 — Fracture
+      ctaTl.addLabel("fracture", 0)
+        .set([strip1, strip2, strip3], { autoAlpha: 1 }, "fracture")
+        .to(strip1, { x: 10, duration: 0.12, ease: "power4.out" }, "fracture")
+        .to(strip2, { x: -14, duration: 0.12, ease: "power4.out" }, "fracture")
+        .to(strip3, { x: 10, duration: 0.12, ease: "power4.out" }, "fracture")
 
-        // Act 2 ΓÇö Reassemble + Scramble
-          .addLabel("reassemble", "fracture+=0.12")
-          .to([strip1, strip2, strip3], { x: 0, duration: 0.08, ease: "power4.in" }, "reassemble")
-          .set([strip1, strip2, strip3], { autoAlpha: 0 }, "reassemble+=0.08")
-          .to(ctaTextBase, {
-            duration: 0.55,
-            scrambleText: { text: ctaLabel, chars: "<>/[]{}=%", revealDelay: 0.1, speed: 0.8 },
-            ease: "none"
-          }, "reassemble")
+      // Act 2 — Reassemble + Scramble
+        .addLabel("reassemble", "fracture+=0.12")
+        .to([strip1, strip2, strip3], { x: 0, duration: 0.08, ease: "power4.in" }, "reassemble")
+        .set([strip1, strip2, strip3], { autoAlpha: 0 }, "reassemble+=0.08")
+        .to(ctaTextBase, {
+          duration: 0.55,
+          scrambleText: { text: ctaLabel, chars: "<>/[]{}=%", revealDelay: 0.1, speed: 0.8 },
+          ease: "none"
+        }, "reassemble")
 
-        // Act 3 ΓÇö Dark Fill + text swap
-          .addLabel("fill", "reassemble+=0.15")
-          .to(ctaBg, { scaleX: 1, duration: 0.35, ease: "power3.inOut" }, "fill")
-          .to(ctaTextWhite, { autoAlpha: 1, duration: 0.2, ease: "power2.out" }, "fill+=0.15")
-          .to(ctaTextBase, { autoAlpha: 0, duration: 0.15, ease: "power2.out" }, "fill");
+      // Act 3 — Dark Fill + text swap
+        .addLabel("fill", "reassemble+=0.15")
+        .to(ctaBg, { scaleX: 1, duration: 0.35, ease: "power3.inOut" }, "fill")
+        .to(ctaTextWhite, { autoAlpha: 1, duration: 0.2, ease: "power2.out" }, "fill+=0.15")
+        .to(ctaTextBase, { autoAlpha: 0, duration: 0.15, ease: "power2.out" }, "fill");
 
-        const onCtaEnter = () => {
-          ctaTl.play();
-        };
-        const onCtaLeave = () => {
-          ctaTl.reverse();
-        };
+      const onCtaEnter = () => {
+        ctaTl.play();
+      };
+      const onCtaLeave = () => {
+        ctaTl.reverse();
+      };
 
-        ctaBtn.addEventListener("pointerenter", onCtaEnter);
-        ctaBtn.addEventListener("pointerleave", onCtaLeave);
-        ctaBtn.addEventListener("touchend", onCtaLeave);
+      ctaBtn.addEventListener("pointerenter", onCtaEnter);
+      ctaBtn.addEventListener("pointerleave", onCtaLeave);
+      ctaBtn.addEventListener("touchend", onCtaLeave);
 
-        ctaCleanup = () => {
-          ctaBtn.removeEventListener("pointerenter", onCtaEnter);
-          ctaBtn.removeEventListener("pointerleave", onCtaLeave);
-          ctaBtn.removeEventListener("touchend", onCtaLeave);
-          ctaTl.kill();
-        };
+      ctaCleanup = () => {
+        ctaBtn.removeEventListener("pointerenter", onCtaEnter);
+        ctaBtn.removeEventListener("pointerleave", onCtaLeave);
+        ctaBtn.removeEventListener("touchend", onCtaLeave);
+        ctaTl.kill();
+      };
+    }
+
+    // 6. PHILOSOPHY SCROLL SEQUENCE
+    gsap.set(".gsap-phrase-1, .gsap-phrase-2, .gsap-phrase-3, .gsap-phrase-4, .gsap-phrase-5", { autoAlpha: 0 });
+
+    const scrollTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".gsap-scrub-spacer",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
+        invalidateOnRefresh: true,
+        refreshPriority: 12,
       }
-
-      // 6. PHILOSOPHY SCROLL SEQUENCE
-      const scrollTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".gsap-scrub-spacer",
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1,
-          invalidateOnRefresh: true,
-          refreshPriority: 12,
-        }
-      });
-
-      // Act 1: Fade out hero content (0% - 15%)
-      scrollTl.addLabel("act1", 0)
-        .fromTo(".gsap-main-elem, .gsap-title-decode, .gsap-rotating-container, .gsap-subtitle, .gsap-cta", 
-        { autoAlpha: 1, y: 0 },
-        {
-          autoAlpha: 0,
-          y: -30,
-          duration: 0.15,
-          stagger: 0.02,
-          ease: "power2.inOut",
-          immediateRender: false
-        }, "act1");
-
-      // Act 2: Video Collapse into Void (15% - 30%)
-      scrollTl.addLabel("act2", 0.15)
-        .fromTo(".gsap-video-bg", 
-        { scale: 1.05, borderRadius: "0%", autoAlpha: 1 },
-        {
-          scale: 0,
-          borderRadius: "50%",
-          duration: 0.15,
-          ease: "power2.inOut",
-          immediateRender: false
-        }, "act2")
-        .to(".gsap-video-bg", {
-          autoAlpha: 0,
-          duration: 0.05,
-          ease: "power2.in"
-        }, "act2+=0.10");
-
-      // Act 3: Typography Bespoke Flythrough (30% - 90%)
-      const getPhrase1StartX = () => (window.innerWidth <= 768 ? 100 : 150);
-      const getPhrase1EndX = () => (window.innerWidth <= 768 ? -100 : -150);
-
-      gsap.set(".gsap-phrase-1", { xPercent: getPhrase1StartX(), autoAlpha: 0 });
-      
-      scrollTl.to(".gsap-phrase-1", { autoAlpha: 1, duration: 0.01 }, 0.29);
-      
-      scrollTl.fromTo(".gsap-phrase-1",
-        { xPercent: () => getPhrase1StartX() },
-        { xPercent: () => getPhrase1EndX(), duration: 0.15, ease: "none", immediateRender: false },
-        0.30
-      );
-
-      scrollTl.to(".gsap-phrase-1", { autoAlpha: 0, duration: 0.01 }, 0.45);
-
-      // Phrase 2: Sleek fade up with transform scale
-      gsap.set(".gsap-phrase-2", { y: 50, autoAlpha: 0, scale: 0.95 });
-      scrollTl.fromTo(".gsap-phrase-2",
-        { y: 50, autoAlpha: 0, scale: 0.95 },
-        { y: -20, autoAlpha: 1, scale: 1.05, duration: 0.08, ease: "power2.out", immediateRender: false },
-        0.43
-      ).to(".gsap-phrase-2", {
-        y: -50, autoAlpha: 0, scale: 1.1, duration: 0.04, ease: "power2.in"
-      }, 0.51);
-
-      // Phrase 3: Slide-in reveal from left
-      gsap.set(".gsap-phrase-3", { xPercent: -100, autoAlpha: 0 });
-      scrollTl.fromTo(".gsap-phrase-3",
-        { xPercent: -100, autoAlpha: 0 },
-        { xPercent: 0, autoAlpha: 1, duration: 0.08, ease: "power3.inOut", immediateRender: false },
-        0.53
-      ).to(".gsap-phrase-3", {
-        xPercent: 100, autoAlpha: 0, duration: 0.04, ease: "power2.in"
-      }, 0.61);
-
-      // Phrase 4: Scale and opacity fade
-      gsap.set(".gsap-phrase-4", { autoAlpha: 0, scale: 1.2 });
-      scrollTl.fromTo(".gsap-phrase-4",
-        { autoAlpha: 0, scale: 1.2 },
-        { autoAlpha: 1, scale: 1, duration: 0.08, ease: "power2.out", immediateRender: false },
-        0.63
-      ).to(".gsap-phrase-4", {
-        autoAlpha: 0, scale: 0.8, duration: 0.04, ease: "power2.in"
-      }, 0.71);
-
-      // Phrase 5: Slam into center and hold
-      gsap.set(".gsap-phrase-5", { scale: 0.1, autoAlpha: 0 });
-      scrollTl.fromTo(".gsap-phrase-5",
-        { scale: 0.1, autoAlpha: 0 },
-        { scale: 1, autoAlpha: 1, duration: 0.05, ease: "power2.out", immediateRender: false },
-        0.75
-      ).to(".gsap-phrase-5", {
-        scale: 1.05, duration: 0.10, ease: "none"
-      }, 0.80);
-
-      // 7. AMBIENT SUBTITLE GLITCH
-      const glitchWords = gsap.utils.toArray(".gsap-glitch-word") as HTMLElement[];
-      let glitchCall: gsap.core.Tween | null = null;
-
-      const triggerGlitch = () => {
-        if (glitchWords.length === 0) return;
-        const word = glitchWords[Math.floor(Math.random() * glitchWords.length)];
-        const original = word.dataset.original || word.textContent || "";
-
-        gsap.to(word, {
-          duration: 1.2,
-          scrambleText: { text: original, chars: "<>/[]{}=%", speed: 0.3 },
-          ease: "none",
-          onComplete: scheduleNextGlitch
-        });
-      };
-
-      const scheduleNextGlitch = () => {
-        const delay = gsap.utils.random(2, 4);
-        glitchCall = gsap.delayedCall(delay, triggerGlitch);
-      };
-
-      scheduleNextGlitch();
-
-      return () => {
-        if (ctaCleanup) ctaCleanup();
-        if (glitchCall) glitchCall.kill();
-      };
     });
 
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      // In reduced motion, ensure all rotating phrases, title tokens, CTA and philosophy phrases are static and visible
-      const textContainers = gsap.utils.toArray('[class*="rotatingTextContainer"]');
-      textContainers.forEach(container => {
-        const rotatingItems = gsap.utils.toArray(".gsap-rotating-item", container as Element) as Element[];
-        if (rotatingItems.length > 0) {
-          gsap.set(rotatingItems, { yPercent: 0, opacity: 0 });
-          gsap.set(rotatingItems[0], { yPercent: 0, opacity: 1 });
-        }
-      });
+    // Act 1: Fade out hero content (0% - 15%)
+    scrollTl.addLabel("act1", 0)
+      .fromTo(".gsap-main-elem, .gsap-title-decode, .gsap-rotating-container, .gsap-subtitle, .gsap-cta", 
+      { autoAlpha: 1, y: 0 },
+      {
+        autoAlpha: 0,
+        y: -30,
+        duration: 0.15,
+        stagger: 0.02,
+        ease: "power2.inOut",
+        immediateRender: false
+      }, "act1");
 
-      gsap.set(".gsap-main-elem, .gsap-title-decode, .gsap-rotating-container, .gsap-subtitle, .gsap-cta", {
-        autoAlpha: 1,
-        y: 0,
-        x: 0,
-        scale: 1
-      });
+    // Act 2: Video Collapse into Void (15% - 30%)
+    scrollTl.addLabel("act2", 0.15)
+      .fromTo(".gsap-video-bg", 
+      { scale: 1.05, borderRadius: "0%", autoAlpha: 1 },
+      {
+        scale: 0,
+        borderRadius: "50%",
+        duration: 0.15,
+        ease: "power2.inOut",
+        immediateRender: false
+      }, "act2")
+      .to(".gsap-video-bg", {
+        autoAlpha: 0,
+        duration: 0.05,
+        ease: "power2.in"
+      }, "act2+=0.10");
 
-      gsap.set(".gsap-video-bg", { autoAlpha: 1, scale: 1, borderRadius: "0%" });
-      gsap.set(".gsap-phrase-1, .gsap-phrase-2, .gsap-phrase-3, .gsap-phrase-4, .gsap-phrase-5", {
-        autoAlpha: 1,
-        scale: 1,
-        xPercent: 0,
-        y: 0
+    // Act 3: Typography Bespoke Flythrough (30% - 90%)
+    const getPhrase1StartX = () => (window.innerWidth <= 768 ? 100 : 150);
+    const getPhrase1EndX = () => (window.innerWidth <= 768 ? -100 : -150);
+
+    gsap.set(".gsap-phrase-1", { xPercent: getPhrase1StartX(), autoAlpha: 0 });
+    
+    scrollTl.to(".gsap-phrase-1", { autoAlpha: 1, duration: 0.01 }, 0.29);
+    
+    scrollTl.fromTo(".gsap-phrase-1",
+      { xPercent: () => getPhrase1StartX() },
+      { xPercent: () => getPhrase1EndX(), duration: 0.15, ease: "none", immediateRender: false },
+      0.30
+    );
+
+    scrollTl.to(".gsap-phrase-1", { autoAlpha: 0, duration: 0.01 }, 0.45);
+
+    // Phrase 2: Sleek fade up with transform scale
+    gsap.set(".gsap-phrase-2", { y: 50, autoAlpha: 0, scale: 0.95 });
+    scrollTl.fromTo(".gsap-phrase-2",
+      { y: 50, autoAlpha: 0, scale: 0.95 },
+      { y: -20, autoAlpha: 1, scale: 1.05, duration: 0.08, ease: "power2.out", immediateRender: false },
+      0.43
+    ).to(".gsap-phrase-2", {
+      y: -50, autoAlpha: 0, scale: 1.1, duration: 0.04, ease: "power2.in"
+    }, 0.51);
+
+    // Phrase 3: Slide-in reveal from left
+    gsap.set(".gsap-phrase-3", { xPercent: -100, autoAlpha: 0 });
+    scrollTl.fromTo(".gsap-phrase-3",
+      { xPercent: -100, autoAlpha: 0 },
+      { xPercent: 0, autoAlpha: 1, duration: 0.08, ease: "power3.inOut", immediateRender: false },
+      0.53
+    ).to(".gsap-phrase-3", {
+      xPercent: 100, autoAlpha: 0, duration: 0.04, ease: "power2.in"
+    }, 0.61);
+
+    // Phrase 4: Scale and opacity fade
+    gsap.set(".gsap-phrase-4", { autoAlpha: 0, scale: 1.2 });
+    scrollTl.fromTo(".gsap-phrase-4",
+      { autoAlpha: 0, scale: 1.2 },
+      { autoAlpha: 1, scale: 1, duration: 0.08, ease: "power2.out", immediateRender: false },
+      0.63
+    ).to(".gsap-phrase-4", {
+      autoAlpha: 0, scale: 0.8, duration: 0.04, ease: "power2.in"
+    }, 0.71);
+
+    // Phrase 5: Slam into center and hold
+    gsap.set(".gsap-phrase-5", { scale: 0.1, autoAlpha: 0 });
+    scrollTl.fromTo(".gsap-phrase-5",
+      { scale: 0.1, autoAlpha: 0 },
+      { scale: 1, autoAlpha: 1, duration: 0.05, ease: "power2.out", immediateRender: false },
+      0.75
+    ).to(".gsap-phrase-5", {
+      scale: 1.05, duration: 0.10, ease: "none"
+    }, 0.80);
+
+    // 7. AMBIENT SUBTITLE GLITCH
+    const glitchWords = gsap.utils.toArray(".gsap-glitch-word") as HTMLElement[];
+    let glitchCall: gsap.core.Tween | null = null;
+
+    const triggerGlitch = () => {
+      if (glitchWords.length === 0) return;
+      const word = glitchWords[Math.floor(Math.random() * glitchWords.length)];
+      const original = word.dataset.original || word.textContent || "";
+
+      gsap.to(word, {
+        duration: 1.2,
+        scrambleText: { text: original, chars: "<>/[]{}=%", speed: 0.3 },
+        ease: "none",
+        onComplete: scheduleNextGlitch
       });
-    });
+    };
+
+    const scheduleNextGlitch = () => {
+      const delay = gsap.utils.random(2, 4);
+      glitchCall = gsap.delayedCall(delay, triggerGlitch);
+    };
+
+    scheduleNextGlitch();
+
+    return () => {
+      if (ctaCleanup) ctaCleanup();
+      if (glitchCall) glitchCall.kill();
+    };
   });
 
   return (

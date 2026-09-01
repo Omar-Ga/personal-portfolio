@@ -517,8 +517,6 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
       return;
     }
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setClearColor(0x000000, 0);
 
@@ -665,14 +663,12 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
       const levels = levelsRef.current();
 
       // Organic celestial breathing
-      const breath = reducedMotion ? 1 : 1 + Math.sin(elapsed * 0.85) * 0.018;
+      const breath = 1 + Math.sin(elapsed * 0.85) * 0.018;
 
-      if (!reducedMotion) {
-        elapsed += delta;
-        uniforms.u_time.value = elapsed;
-      }
+      elapsed += delta;
+      uniforms.u_time.value = elapsed;
 
-      const gain = reducedMotion ? 0 : target.gain;
+      const gain = target.gain;
       uniforms.u_level.value += (levels.level * gain - uniforms.u_level.value) * 0.22;
       uniforms.u_low.value += (levels.low * gain - uniforms.u_low.value) * 0.22;
       uniforms.u_mid.value += (levels.mid * gain - uniforms.u_mid.value) * 0.24;
@@ -692,20 +688,18 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
 
       spin += (target.spin - spin) * 0.05;
 
-      if (!reducedMotion) {
-        shellMesh.rotation.y += spin * delta;
-        shellMesh.rotation.x = Math.sin(elapsed * 0.22) * 0.16;
-        shellMesh.rotation.z = Math.cos(elapsed * 0.18) * 0.12;
+      shellMesh.rotation.y += spin * delta;
+      shellMesh.rotation.x = Math.sin(elapsed * 0.22) * 0.16;
+      shellMesh.rotation.z = Math.cos(elapsed * 0.18) * 0.12;
 
-        auraMesh.rotation.y -= spin * 0.6 * delta;
-        auraMesh.rotation.z = Math.cos(elapsed * 0.24) * 0.14;
+      auraMesh.rotation.y -= spin * 0.6 * delta;
+      auraMesh.rotation.z = Math.cos(elapsed * 0.24) * 0.14;
 
-        coreMesh.rotation.y += spin * 1.5 * delta;
-        coreMesh.rotation.x = Math.cos(elapsed * 0.3) * 0.2;
+      coreMesh.rotation.y += spin * 1.5 * delta;
+      coreMesh.rotation.x = Math.cos(elapsed * 0.3) * 0.2;
 
-        particlePoints.rotation.y += spin * 0.8 * delta;
-        particlePoints.rotation.x = Math.sin(elapsed * 0.15) * 0.1;
-      }
+      particlePoints.rotation.y += spin * 0.8 * delta;
+      particlePoints.rotation.x = Math.sin(elapsed * 0.15) * 0.1;
 
       renderer.render(scene, camera);
     };

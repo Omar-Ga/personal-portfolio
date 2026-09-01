@@ -192,14 +192,8 @@ export default function Home() {
 
     const mm = gsap.matchMedia();
 
-    // Desktop Video Parallax (only enabled when fine pointer/hover present and reduced motion is off)
-    mm.add({
-      isHover: "(hover: hover)",
-      noReducedMotion: "(prefers-reduced-motion: no-preference)"
-    }, (ctx) => {
-      const { isHover, noReducedMotion } = ctx.conditions as { isHover: boolean, noReducedMotion: boolean };
-      if (!isHover || !noReducedMotion) return;
-
+    // Desktop Video Parallax (enabled when fine pointer/hover present)
+    mm.add("(hover: hover)", () => {
       const videoBg = document.querySelector(".gsap-video-bg") as HTMLElement | null;
       const videoXTo = videoBg ? gsap.quickTo(videoBg, "x", { duration: 1.2, ease: "power2" }) : null;
       const videoYTo = videoBg ? gsap.quickTo(videoBg, "y", { duration: 1.2, ease: "power2" }) : null;
