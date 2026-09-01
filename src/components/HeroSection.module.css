@@ -90,7 +90,7 @@
 }
 
 :global(html[lang="ar"]) .title {
-  font-size: clamp(2.9rem, 7vw, 6.8rem);
+  font-size: clamp(2.61rem, 6.3vw, 6.12rem);
   font-weight: 700;
   line-height: 1.22;
   letter-spacing: normal;
@@ -399,7 +399,7 @@
     align-items: flex-start;
   }
   :global(html[lang="ar"]) .title {
-    font-size: clamp(2.4rem, 11vw, 4.2rem);
+    font-size: clamp(2.16rem, 9.9vw, 3.78rem);
     line-height: 1.22;
     text-align: right;
   }

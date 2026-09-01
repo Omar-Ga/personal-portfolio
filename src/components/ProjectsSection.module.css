@@ -363,14 +363,38 @@
   box-shadow: 0 0 20px rgba(251, 146, 60, 0.4);
 }
 
-/* Arabic (RTL) Meta Widget alignment */
+/* Arabic (RTL) Meta Widget alignment & Typography */
 :global(html[lang="ar"]) .projectMetaWidget {
   justify-content: flex-start;
+}
+
+:global(html[lang="ar"]) .serviceTitle {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: normal;
+  line-height: 1.25;
+}
+
+:global(html[lang="ar"]) .serviceDescription {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  line-height: 1.75;
+  letter-spacing: normal;
 }
 
 :global(html[lang="ar"]) .keywordsBlock {
   align-items: flex-start;
   text-align: left;
+}
+
+:global(html[lang="ar"]) .keywordsHeader {
+  font-weight: 600;
+  letter-spacing: normal;
+}
+
+:global(html[lang="ar"]) .keywordItem {
+  font-weight: 500;
+  letter-spacing: normal;
 }
 
 :global(html[lang="ar"]) .thumbnailStrip {
@@ -381,6 +405,11 @@
 :global(html[lang="ar"]) .activeDash {
   left: auto;
   right: 0;
+}
+
+:global(html[lang="ar"]) .exploreArchiveBtn {
+  font-weight: 600;
+  letter-spacing: normal;
 }
 
 

@@ -34,3 +34,14 @@
 .topNavItem:hover {
   opacity: 0.5;
 }
+
+:global(html[lang="ar"]) .topNav {
+  gap: 56px;
+}
+
+:global(html[lang="ar"]) .topNavItem {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.92rem;
+  letter-spacing: normal;
+}

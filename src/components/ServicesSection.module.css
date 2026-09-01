@@ -387,6 +387,7 @@
 
 :global(html[lang="ar"]) .projectTitle {
   font-family: var(--font-serif);
+  font-weight: 700;
   line-height: 1.25;
   letter-spacing: normal;
   text-align: right;
@@ -394,12 +395,14 @@
 
 :global(html[lang="ar"]) .projectRole {
   font-family: var(--font-sans);
+  font-weight: 600;
   letter-spacing: normal;
   text-align: right;
 }
 
 :global(html[lang="ar"]) .projectDescription {
   font-family: var(--font-sans);
+  font-weight: 500;
   line-height: 1.8;
   letter-spacing: normal;
   text-align: right;
@@ -411,6 +414,7 @@
 
 :global(html[lang="ar"]) .teaserTitle {
   font-family: var(--font-serif);
+  font-weight: 700;
   line-height: 1.25;
   letter-spacing: normal;
   text-align: center;
@@ -418,6 +422,7 @@
 
 :global(html[lang="ar"]) .teaserSubtitle {
   font-family: var(--font-sans);
+  font-weight: 600;
   letter-spacing: normal;
   text-align: center;
 }
@@ -429,12 +434,14 @@
 
 :global(html[lang="ar"]) .founderRole {
   font-family: var(--font-sans);
+  font-weight: 600;
   letter-spacing: normal;
   text-align: right;
 }
 
 :global(html[lang="ar"]) .founderName {
   font-family: var(--font-serif);
+  font-weight: 700;
   line-height: 1.25;
   letter-spacing: normal;
   text-align: right;

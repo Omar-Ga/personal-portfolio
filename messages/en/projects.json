@@ -17,12 +17,12 @@
     },
     "p3": {
       "title": "O2Mation Flagship Web",
-      "description": "Bespoke, agency-grade web platforms. High-impact visual design, fluid GSAP motion, and high-converting architecture built for enterprise scale.",
-      "keywords": ["Fluid GSAP Motion", "WebGL Shaders", "Next.js App Router", "Luxury Design System"]
+      "description": "High-performance agency web platform featuring responsive GSAP motion, WebGL shaders, and modular design components.",
+      "keywords": ["GSAP Motion", "WebGL Shaders", "Next.js App Router", "Design System"]
     },
     "p4": {
       "title": "Voice AI & Intelligent Agents",
-      "description": "Skip the contact form. Ask me anything — my AI assistant knows my stack, my work, and my availability. Press the button and speak.",
+      "description": "Interactive voice assistant with low-latency audio streaming. Press the audio orb to ask directly about my stack, projects, and availability.",
       "keywords": ["Real-Time WebRTC", "Voice AI Assistant", "SIP Telephony", "Autonomous Agents"]
     }
   }

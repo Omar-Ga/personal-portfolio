@@ -91,6 +91,10 @@ body.hide-default-cursor * {
    ========================================================================== */
 
 html[lang="ar"] {
+  /* Readex Pro has a naturally smaller optical size than Outfit.
+     A 150% root font size ensures Arabic typography renders with strong visual weight. */
+  font-size: 150%;
+
   /* Outfit is listed first so embedded Latin (brand names, "Next.js", "GSAP",
      digits) keeps the site's display face; Arabic codepoints are absent from
      Outfit and therefore fall through to Readex Pro. */
@@ -106,10 +110,12 @@ html[lang="ar"] body * {
   letter-spacing: normal;
 }
 
-/* Arabic ascenders/descenders need more breathing room than the Latin type. */
+/* Arabic ascenders/descenders need more breathing room than the Latin type,
+   and Readex Pro benefits from medium/bold weights for crisp readability. */
 html[lang="ar"] p,
 html[lang="ar"] li {
   line-height: 1.9;
+  font-weight: 500;
 }
 
 html[lang="ar"] h1,
@@ -119,6 +125,7 @@ html[lang="ar"] h4,
 html[lang="ar"] h5,
 html[lang="ar"] h6 {
   line-height: 1.45;
+  font-weight: 700;
 }
 
 /* Right-to-left text flow per block, so punctuation, parentheses, digits and
