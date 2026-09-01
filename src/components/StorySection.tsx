@@ -5,7 +5,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTranslations } from 'next-intl';
-import styles from '@/app/page.module.css';
+import styles from './StorySection.module.css';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 

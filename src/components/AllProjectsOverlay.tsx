@@ -23,10 +23,7 @@ interface ProjectCopy {
   features: string[];
 }
 
-export interface DetailedProject extends ArchiveProjectEntry, ProjectCopy {
-  liveUrl?: string;
-  repoUrl?: string;
-}
+export interface DetailedProject extends ArchiveProjectEntry, ProjectCopy {}
 
 interface AllProjectsOverlayProps {
   isOpen: boolean;
@@ -56,9 +53,7 @@ export default function AllProjectsOverlay({ isOpen, onClose }: AllProjectsOverl
   // Merge the static asset/id data with the active locale's copy.
   const allProjects: DetailedProject[] = ARCHIVE_ENTRIES.map((entry) => ({
     ...entry,
-    ...(t.raw(`items.${entry.id}`) as ProjectCopy),
-    liveUrl: '#',
-    repoUrl: '#'
+    ...(t.raw(`items.${entry.id}`) as ProjectCopy)
   }));
 
   const [selectedProject, setSelectedProject] = useState<DetailedProject | null>(null);

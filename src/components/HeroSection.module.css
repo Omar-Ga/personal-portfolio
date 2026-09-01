@@ -5,18 +5,26 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(2rem, 5vh, 4.5rem) clamp(2rem, 5vw, 6rem);
+  padding: clamp(2rem, 4.5vh, 3.8rem) clamp(2rem, 4.8vw, 5rem);
   box-sizing: border-box;
   min-height: 0;
 }
 
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1280px;
+}
+
 .title {
   font-family: var(--font-serif);
-  font-size: clamp(2.4rem, min(7.5vw, 9.5vh), 6.5rem);
+  font-size: clamp(2.7rem, 6.8vw, 6.6rem);
   line-height: 0.95;
   letter-spacing: -0.04em;
-  font-weight: 500;
-  margin-bottom: clamp(1.5rem, 3.5vh, 3.5rem);
+  font-weight: 700;
+  margin-bottom: clamp(1.5rem, 3vh, 2.6rem);
   color: #000;
   max-width: 100%;
 }
@@ -27,26 +35,26 @@
 
 .bottomSection {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  max-width: 1200px;
 }
 
 .textContent {
   display: flex;
   flex-direction: column;
-  gap: clamp(1.2rem, 2.5vh, 2.5rem);
-  max-width: 480px;
+  align-items: flex-start;
+  gap: clamp(1.2rem, 2.2vh, 2rem);
+  max-width: 580px;
 }
 
 .subtitle {
   font-family: var(--font-sans);
-  font-size: clamp(0.95rem, min(1.8vw, 2.2vh), 1.35rem);
-  line-height: 1.4;
-  font-weight: 400;
+  font-size: clamp(0.98rem, 1.45vw, 1.25rem);
+  line-height: 1.5;
+  font-weight: 450;
   color: #111;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
 .cta {
@@ -55,18 +63,120 @@
   align-items: center;
   justify-content: center;
   align-self: flex-start;
-  padding: 1rem 2rem;
+  padding: 0.95rem 2.2rem;
   border: 2px solid #000;
   background: transparent;
   color: #000;
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
   overflow: hidden;
   min-width: max-content;
+}
+
+/* Arabic Locale Refinements */
+:global(html[lang="ar"]) .hero {
+  direction: rtl;
+  padding: clamp(2rem, 4.5vh, 3.8rem) clamp(2.5rem, 4.8vw, 5.5rem);
+}
+
+:global(html[lang="ar"]) .heroContent {
+  align-items: flex-start;
+  text-align: right;
+  direction: rtl;
+}
+
+:global(html[lang="ar"]) .title {
+  font-size: clamp(2.9rem, 7vw, 6.8rem);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: normal;
+  text-align: right;
+  direction: rtl;
+  width: 100%;
+  max-width: 100%;
+}
+
+:global(html[lang="ar"]) .bottomSection {
+  justify-content: flex-start;
+  direction: rtl;
+}
+
+:global(html[lang="ar"]) .textContent {
+  align-items: flex-start;
+  text-align: right;
+  direction: rtl;
+  max-width: 600px;
+}
+
+:global(html[lang="ar"]) .subtitle {
+  font-size: clamp(1.05rem, 1.55vw, 1.35rem);
+  line-height: 1.8;
+  letter-spacing: normal;
+  text-align: right;
+  direction: rtl;
+}
+
+:global(html[lang="ar"]) .cta {
+  align-self: flex-start;
+  letter-spacing: normal;
+  font-size: 0.92rem;
+  padding: 0.95rem 2.2rem;
+}
+
+:global(html[lang="ar"]) .ctaBg {
+  transform-origin: right;
+}
+
+:global(html[lang="ar"]) .philosophyContainer {
+  direction: rtl;
+}
+
+:global(html[lang="ar"]) .philosophyPhrase {
+  direction: rtl;
+  letter-spacing: normal;
+}
+
+:global(html[lang="ar"]) .phrase1 {
+  font-size: clamp(2.4rem, 7.5vw, 8.5rem);
+  left: -10%;
+  right: auto;
+  text-align: right;
+  line-height: 1.35;
+}
+
+:global(html[lang="ar"]) .phrase2 {
+  font-size: clamp(1.8rem, 5.5vw, 5rem);
+  text-align: center;
+  line-height: 1.4;
+  letter-spacing: normal;
+}
+
+:global(html[lang="ar"]) .phrase3 {
+  font-size: clamp(2rem, 6.5vw, 6.5rem);
+  left: auto;
+  right: 8%;
+  text-align: right;
+  line-height: 1.35;
+}
+
+:global(html[lang="ar"]) .phrase4 {
+  font-size: clamp(1.8rem, 6vw, 6rem);
+  left: 8%;
+  right: auto;
+  text-align: left;
+  font-style: normal;
+  line-height: 1.35;
+}
+
+:global(html[lang="ar"]) .phrase5 {
+  font-size: clamp(2.2rem, 7.5vw, 7.5rem);
+  text-align: center;
+  line-height: 1.35;
+  letter-spacing: normal;
 }
 
 .ctaSpacer {
@@ -245,17 +355,20 @@
     padding: 130px 1.25rem 4dvh 1.25rem;
     justify-content: flex-start;
   }
+  .heroContent {
+    align-items: flex-start;
+  }
   .title {
-    font-size: clamp(2.2rem, 11vw, 3.8rem);
-    line-height: 1.05;
-    letter-spacing: -0.04em;
+    font-size: clamp(2.4rem, 11vw, 4.2rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
     margin-bottom: 2rem;
     width: 100%;
     word-break: break-word;
   }
   .rotatingItem {
     white-space: pre-wrap;
-    font-size: clamp(2.1rem, 10vw, 3.6rem);
+    font-size: clamp(2.3rem, 10vw, 4rem);
   }
   .bottomSection {
     flex-direction: column;
@@ -263,19 +376,38 @@
   }
   .textContent {
     max-width: 100%;
-    gap: 1.2rem;
+    gap: 1.4rem;
   }
   .subtitle {
-    font-size: clamp(1rem, 4.2vw, 1.3rem);
-    line-height: 1.45;
+    font-size: clamp(1.05rem, 4.2vw, 1.35rem);
+    line-height: 1.5;
   }
   .cta {
     align-self: stretch;
     width: 100%;
-    padding: 1rem 1.25rem;
-    font-size: 0.85rem;
+    padding: 1.1rem 1.5rem;
+    font-size: 0.9rem;
   }
   .phrase1 {
     right: -5%;
+  }
+  :global(html[lang="ar"]) .phrase1 {
+    left: -5%;
+    right: auto;
+  }
+  :global(html[lang="ar"]) .heroContent {
+    align-items: flex-start;
+  }
+  :global(html[lang="ar"]) .title {
+    font-size: clamp(2.4rem, 11vw, 4.2rem);
+    line-height: 1.22;
+    text-align: right;
+  }
+  :global(html[lang="ar"]) .textContent {
+    align-items: stretch;
+    text-align: right;
+  }
+  :global(html[lang="ar"]) .cta {
+    align-self: stretch;
   }
 }

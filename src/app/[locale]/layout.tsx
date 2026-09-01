@@ -2,9 +2,24 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Outfit, Readex_Pro } from "next/font/google";
 import "../globals.css";
 import LenisProvider from "@/components/providers/LenisProvider";
 import { routing, localeDirection, type Locale } from "@/i18n/routing";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+  variable: "--font-outfit",
+  display: "swap"
+});
+
+const readexPro = Readex_Pro({
+  subsets: ["arabic"],
+  weight: ["200", "300", "400", "500", "600", "700"],
+  variable: "--font-readex",
+  display: "swap"
+});
 
 /** Pre-render one static shell per locale. */
 export function generateStaticParams() {
@@ -50,9 +65,10 @@ export default async function LocaleLayout({
       dir="ltr"
       data-locale={locale}
       data-text-dir={localeDirection[locale as Locale]}
+      className={`${outfit.variable} ${readexPro.variable}`}
       suppressHydrationWarning
     >
-      <body suppressHydrationWarning>
+      <body className={`${outfit.variable} ${readexPro.variable}`} suppressHydrationWarning>
         <NextIntlClientProvider>
           <LenisProvider>{children}</LenisProvider>
         </NextIntlClientProvider>

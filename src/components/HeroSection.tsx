@@ -6,7 +6,7 @@ import { useGSAP } from '@gsap/react';
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLenis } from 'lenis/react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import styles from './HeroSection.module.css';
 
 if (typeof window !== "undefined") {
@@ -22,6 +22,8 @@ interface SubtitleToken {
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const lenis = useLenis();
+  const locale = useLocale();
+  const isRTL = locale === 'ar';
   const t = useTranslations('hero');
 
   const rotatingPhrases = t.raw('rotatingPhrases') as string[];
@@ -168,8 +170,14 @@ export default function HeroSection() {
       }, "act2+=0.10");
 
     // Act 3: Typography Bespoke Flythrough (30% - 90%)
-    const getPhrase1StartX = () => (window.innerWidth <= 768 ? 100 : 150);
-    const getPhrase1EndX = () => (window.innerWidth <= 768 ? -100 : -150);
+    const getPhrase1StartX = () => {
+      const dist = window.innerWidth <= 768 ? 100 : 150;
+      return isRTL ? -dist : dist;
+    };
+    const getPhrase1EndX = () => {
+      const dist = window.innerWidth <= 768 ? 100 : 150;
+      return isRTL ? dist : -dist;
+    };
 
     gsap.set(".gsap-phrase-1", { xPercent: getPhrase1StartX(), autoAlpha: 0 });
     
@@ -177,51 +185,54 @@ export default function HeroSection() {
     
     scrollTl.fromTo(".gsap-phrase-1",
       { xPercent: () => getPhrase1StartX() },
-      { xPercent: () => getPhrase1EndX(), duration: 0.15, ease: "none", immediateRender: false },
+      { xPercent: () => getPhrase1EndX(), duration: 0.14, ease: "none", immediateRender: false },
       0.30
     );
 
-    scrollTl.to(".gsap-phrase-1", { autoAlpha: 0, duration: 0.01 }, 0.45);
+    scrollTl.to(".gsap-phrase-1", { autoAlpha: 0, duration: 0.01 }, 0.44);
 
-    // Phrase 2: Sleek fade up with transform scale
+    // Phrase 2: Sleek fade up with transform scale (0.46 - 0.56)
     gsap.set(".gsap-phrase-2", { y: 50, autoAlpha: 0, scale: 0.95 });
     scrollTl.fromTo(".gsap-phrase-2",
       { y: 50, autoAlpha: 0, scale: 0.95 },
-      { y: -20, autoAlpha: 1, scale: 1.05, duration: 0.08, ease: "power2.out", immediateRender: false },
-      0.43
+      { y: -15, autoAlpha: 1, scale: 1.05, duration: 0.06, ease: "power2.out", immediateRender: false },
+      0.46
     ).to(".gsap-phrase-2", {
-      y: -50, autoAlpha: 0, scale: 1.1, duration: 0.04, ease: "power2.in"
-    }, 0.51);
+      y: -50, autoAlpha: 0, scale: 1.1, duration: 0.03, ease: "power2.in"
+    }, 0.53);
 
-    // Phrase 3: Slide-in reveal from left
-    gsap.set(".gsap-phrase-3", { xPercent: -100, autoAlpha: 0 });
+    // Phrase 3: Slide-in reveal (0.57 - 0.68)
+    const phrase3StartX = isRTL ? 100 : -100;
+    const phrase3EndX = isRTL ? -100 : 100;
+
+    gsap.set(".gsap-phrase-3", { xPercent: phrase3StartX, autoAlpha: 0 });
     scrollTl.fromTo(".gsap-phrase-3",
-      { xPercent: -100, autoAlpha: 0 },
-      { xPercent: 0, autoAlpha: 1, duration: 0.08, ease: "power3.inOut", immediateRender: false },
-      0.53
+      { xPercent: phrase3StartX, autoAlpha: 0 },
+      { xPercent: 0, autoAlpha: 1, duration: 0.06, ease: "power3.out", immediateRender: false },
+      0.57
     ).to(".gsap-phrase-3", {
-      xPercent: 100, autoAlpha: 0, duration: 0.04, ease: "power2.in"
-    }, 0.61);
+      xPercent: phrase3EndX, autoAlpha: 0, duration: 0.03, ease: "power2.in"
+    }, 0.65);
 
-    // Phrase 4: Scale and opacity fade
+    // Phrase 4: Scale and opacity fade (0.69 - 0.79)
     gsap.set(".gsap-phrase-4", { autoAlpha: 0, scale: 1.2 });
     scrollTl.fromTo(".gsap-phrase-4",
       { autoAlpha: 0, scale: 1.2 },
-      { autoAlpha: 1, scale: 1, duration: 0.08, ease: "power2.out", immediateRender: false },
-      0.63
+      { autoAlpha: 1, scale: 1, duration: 0.06, ease: "power2.out", immediateRender: false },
+      0.69
     ).to(".gsap-phrase-4", {
-      autoAlpha: 0, scale: 0.8, duration: 0.04, ease: "power2.in"
-    }, 0.71);
+      autoAlpha: 0, scale: 0.8, duration: 0.03, ease: "power2.in"
+    }, 0.76);
 
-    // Phrase 5: Slam into center and hold
+    // Phrase 5: Slam into center and hold (0.80 - 0.90)
     gsap.set(".gsap-phrase-5", { scale: 0.1, autoAlpha: 0 });
     scrollTl.fromTo(".gsap-phrase-5",
       { scale: 0.1, autoAlpha: 0 },
-      { scale: 1, autoAlpha: 1, duration: 0.05, ease: "power2.out", immediateRender: false },
-      0.75
+      { scale: 1, autoAlpha: 1, duration: 0.04, ease: "power2.out", immediateRender: false },
+      0.80
     ).to(".gsap-phrase-5", {
-      scale: 1.05, duration: 0.10, ease: "none"
-    }, 0.80);
+      scale: 1.05, duration: 0.06, ease: "none"
+    }, 0.84);
 
     // 7. AMBIENT SUBTITLE GLITCH
     const glitchWords = gsap.utils.toArray(".gsap-glitch-word") as HTMLElement[];
@@ -251,74 +262,75 @@ export default function HeroSection() {
       if (ctaCleanup) ctaCleanup();
       if (glitchCall) glitchCall.kill();
     };
-  });
+  }, { dependencies: [isRTL] });
 
   return (
     <div ref={containerRef} style={{ flex: 1, height: '100%', display: 'flex', flexDirection: 'column' }} suppressHydrationWarning>
       {/* Main Hero Area */}
       <section className={styles.hero} suppressHydrationWarning>
-        
-        {/* Title with ScrambleText decode + rotating element */}
-        <h1 className={`${styles.title} gsap-main-elem`} suppressHydrationWarning>
-          <span>
-            <div className={`${styles.rotatingTextContainer} gsap-rotating-container`} suppressHydrationWarning>
-              {rotatingPhrases.map((phrase, idx) => (
-                <div 
-                  key={idx} 
-                  className={`${styles.rotatingItem} gsap-rotating-item ${idx === 0 ? styles.first : ''}`}
-                  dir="auto"
-                >
-                  {phrase}
-                </div>
-              ))}
-            </div>
-          </span>
-          <span className="gsap-title-decode gsap-glitch-word" data-original={t('titleLine1')}>{t('titleLine1')}</span>
-          <span className="gsap-title-decode gsap-glitch-word" data-original={t('titleLine2')}>{t('titleLine2')}</span>
-        </h1>
-        
-        <div className={`${styles.bottomSection} gsap-main-elem`}>
-          {/* Text Content & Button */}
-          <div className={styles.textContent}>
-            <p className={`${styles.subtitle} gsap-subtitle`}>
-              {subtitleLines.map((line, lineIdx) => (
-                <span key={lineIdx}>
-                  {line.map((token, tokenIdx) => (
-                    <span key={tokenIdx}>
-                      {token.glitch ? (
-                        <span className="gsap-glitch-word" data-original={token.text}>{token.text}</span>
-                      ) : (
-                        token.text
-                      )}
-                      {tokenIdx < line.length - 1 ? ' ' : null}
-                    </span>
-                  ))}
-                  {lineIdx < subtitleLines.length - 1 ? <br /> : null}
-                </span>
-              ))}
-            </p>
-            
-            <button 
-              className={`${styles.cta} gsap-cta`}
-              onClick={() => {
-                const targetEl = document.querySelector("#projects") as HTMLElement;
-                if (targetEl) {
-                  if (lenis) {
-                    lenis.scrollTo(targetEl, { duration: 1.5 });
-                  } else {
-                    targetEl.scrollIntoView({ behavior: "smooth" });
+        <div className={styles.heroContent}>
+          {/* Title with ScrambleText decode + rotating element */}
+          <h1 className={`${styles.title} gsap-main-elem`} suppressHydrationWarning>
+            <span>
+              <div className={`${styles.rotatingTextContainer} gsap-rotating-container`} suppressHydrationWarning>
+                {rotatingPhrases.map((phrase, idx) => (
+                  <div 
+                    key={idx} 
+                    className={`${styles.rotatingItem} gsap-rotating-item ${idx === 0 ? styles.first : ''}`}
+                    dir="auto"
+                  >
+                    {phrase}
+                  </div>
+                ))}
+              </div>
+            </span>
+            <span className="gsap-title-decode gsap-glitch-word" data-original={t('titleLine1')}>{t('titleLine1')}</span>
+            <span className="gsap-title-decode gsap-glitch-word" data-original={t('titleLine2')}>{t('titleLine2')}</span>
+          </h1>
+          
+          <div className={`${styles.bottomSection} gsap-main-elem`}>
+            {/* Text Content & Button */}
+            <div className={styles.textContent}>
+              <p className={`${styles.subtitle} gsap-subtitle`}>
+                {subtitleLines.map((line, lineIdx) => (
+                  <span key={lineIdx}>
+                    {line.map((token, tokenIdx) => (
+                      <span key={tokenIdx}>
+                        {token.glitch ? (
+                          <span className="gsap-glitch-word" data-original={token.text}>{token.text}</span>
+                        ) : (
+                          token.text
+                        )}
+                        {tokenIdx < line.length - 1 ? ' ' : null}
+                      </span>
+                    ))}
+                    {lineIdx < subtitleLines.length - 1 ? <br /> : null}
+                  </span>
+                ))}
+              </p>
+              
+              <button 
+                className={`${styles.cta} gsap-cta`}
+                onClick={() => {
+                  const targetEl = document.querySelector("#projects") as HTMLElement;
+                  if (targetEl) {
+                    if (lenis) {
+                      lenis.scrollTo(targetEl, { duration: 1.5 });
+                    } else {
+                      targetEl.scrollIntoView({ behavior: "smooth" });
+                    }
                   }
-                }
-              }}
-            >
-              <span className={styles.ctaSpacer}>{ctaLabel}</span>
-              <span className={`${styles.ctaBg} gsap-cta-bg`}></span>
-              <span className={`${styles.ctaTextLayer} gsap-cta-text-base`}>{ctaLabel}</span>
-              <span className={`${styles.ctaTextLayer} ${styles.ctaTextWhite} gsap-cta-text-white`}>{ctaLabel}</span>
-              <span className={`${styles.ctaStrip} ${styles.ctaStrip1} gsap-cta-strip-1`}>{ctaLabel}</span>
-              <span className={`${styles.ctaStrip} ${styles.ctaStrip2} gsap-cta-strip-2`}>{ctaLabel}</span>
-              <span className={`${styles.ctaStrip} ${styles.ctaStrip3} gsap-cta-strip-3`}>{ctaLabel}</span>
-            </button>
+                }}
+              >
+                <span className={styles.ctaSpacer}>{ctaLabel}</span>
+                <span className={`${styles.ctaBg} gsap-cta-bg`}></span>
+                <span className={`${styles.ctaTextLayer} gsap-cta-text-base`}>{ctaLabel}</span>
+                <span className={`${styles.ctaTextLayer} ${styles.ctaTextWhite} gsap-cta-text-white`}>{ctaLabel}</span>
+                <span className={`${styles.ctaStrip} ${styles.ctaStrip1} gsap-cta-strip-1`}>{ctaLabel}</span>
+                <span className={`${styles.ctaStrip} ${styles.ctaStrip2} gsap-cta-strip-2`}>{ctaLabel}</span>
+                <span className={`${styles.ctaStrip} ${styles.ctaStrip3} gsap-cta-strip-3`}>{ctaLabel}</span>
+              </button>
+            </div>
           </div>
         </div>
           

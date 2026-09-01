@@ -126,11 +126,11 @@ export default function SidebarNav() {
         }
       };
 
-      window.addEventListener("mousemove", onGlobalMouseMove);
+      window.addEventListener("mousemove", onGlobalMouseMove, { passive: true });
 
       navItems.forEach((item) => {
         item.addEventListener("mouseenter", onEnter);
-        item.addEventListener("mousemove", onMouseMove);
+        item.addEventListener("mousemove", onMouseMove, { passive: true });
         item.addEventListener("mouseleave", onLeave);
       });
 

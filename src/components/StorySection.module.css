@@ -1,0 +1,81 @@
+/* Story Section */
+.storySection {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 80px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #000;
+  color: #000;
+  position: relative;
+  z-index: 20;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.storyVideo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.storyContainer {
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin-top: auto;
+  margin-bottom: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.storyHeadline {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 768px) {
+  .storySection {
+    padding: 60px 1.25rem;
+  }
+  .storyContainer {
+    gap: 1.5rem;
+  }
+  .storyHeadline {
+    font-size: clamp(1.8rem, 7.5vw, 3.2rem);
+  }
+  .storyContent {
+    gap: 1rem;
+  }
+  .storyContent p {
+    font-size: clamp(0.9rem, 3.8vw, 1.1rem);
+    line-height: 1.5;
+  }
+}
+
+.storyContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 700px;
+}
+
+.storyContent p {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  line-height: 1.5;
+  font-weight: 400;
+  color: inherit;
+  opacity: 0.85;
+}

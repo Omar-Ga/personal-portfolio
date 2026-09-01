@@ -372,3 +372,85 @@
     line-height: 1.05;
   }
 }
+
+/* ==========================================================================
+   ARABIC LOCALE OVERRIDES
+   ========================================================================== */
+:global(html[lang="ar"]) .projectPanel {
+  direction: rtl;
+}
+
+:global(html[lang="ar"]) .textSection {
+  direction: rtl;
+  text-align: right;
+}
+
+:global(html[lang="ar"]) .projectTitle {
+  font-family: var(--font-serif);
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-align: right;
+}
+
+:global(html[lang="ar"]) .projectRole {
+  font-family: var(--font-sans);
+  letter-spacing: normal;
+  text-align: right;
+}
+
+:global(html[lang="ar"]) .projectDescription {
+  font-family: var(--font-sans);
+  line-height: 1.8;
+  letter-spacing: normal;
+  text-align: right;
+}
+
+:global(html[lang="ar"]) .placeholderLabel {
+  letter-spacing: normal;
+}
+
+:global(html[lang="ar"]) .teaserTitle {
+  font-family: var(--font-serif);
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-align: center;
+}
+
+:global(html[lang="ar"]) .teaserSubtitle {
+  font-family: var(--font-sans);
+  letter-spacing: normal;
+  text-align: center;
+}
+
+:global(html[lang="ar"]) .founderInfo {
+  direction: rtl;
+  text-align: right;
+}
+
+:global(html[lang="ar"]) .founderRole {
+  font-family: var(--font-sans);
+  letter-spacing: normal;
+  text-align: right;
+}
+
+:global(html[lang="ar"]) .founderName {
+  font-family: var(--font-serif);
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  :global(html[lang="ar"]) .projectTitle {
+    font-size: clamp(1.8rem, 7vw, 2.8rem);
+    line-height: 1.25;
+  }
+
+  :global(html[lang="ar"]) .projectDescription {
+    line-height: 1.7;
+  }
+
+  :global(html[lang="ar"]) .founderName {
+    line-height: 1.15;
+  }
+}

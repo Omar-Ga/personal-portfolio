@@ -4,7 +4,6 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
-import { useTranslations } from 'next-intl';
 import styles from './BootLoader.module.css';
 
 if (typeof window !== "undefined") {
@@ -17,7 +16,6 @@ interface BootLoaderProps {
 
 export default function BootLoader({ onComplete }: BootLoaderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const t = useTranslations('boot');
 
   useGSAP(() => {
     // Performance optimizations
@@ -45,7 +43,6 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
       gsap.set(".gsap-rotating-container", { autoAlpha: 0 });
       gsap.set(".gsap-cta", { autoAlpha: 0, y: 40 });
       gsap.set(".gsap-subtitle", { autoAlpha: 0, y: 20 });
-      gsap.set(".gsap-intro-1, .gsap-intro-2, .gsap-intro-3", { x: -20, opacity: 0 });
 
       const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
       const durMult = isMobile ? 0.7 : 1.0;
@@ -117,13 +114,6 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
     <div ref={containerRef} suppressHydrationWarning>
       {/* Dark Overlay — Starts solid black for CRT flicker */}
       <div className={`${styles.darkOverlay} gsap-dark-overlay`} suppressHydrationWarning></div>
-
-      {/* Cinematic Intro Texts (legacy structure, kept for potential reuse) */}
-      <div className={styles.introTextContainer} suppressHydrationWarning>
-        <div className={`${styles.introText} gsap-intro-1`} dir="auto" suppressHydrationWarning>{t('line1')}</div>
-        <div className={`${styles.introText} gsap-intro-2`} dir="auto" suppressHydrationWarning>{t('line2')}</div>
-        <div className={`${styles.introText} gsap-intro-3`} dir="auto" suppressHydrationWarning>{t('line3')}</div>
-      </div>
     </div>
   );
 }

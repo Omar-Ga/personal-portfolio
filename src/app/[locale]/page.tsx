@@ -16,12 +16,11 @@ import GlobalNav from "@/components/GlobalNav";
 import ServicesSection from "@/components/ServicesSection";
 import StorySection from "@/components/StorySection";
 import ProjectsSection from "@/components/ProjectsSection";
-import ContactOverlay from "@/components/ContactOverlay";
-import AllProjectsOverlay from "@/components/AllProjectsOverlay";
 import styles from '../page.module.css';
 
-// Pulls three.js and @google/genai out of the initial bundle; the widget is
-// browser-only (WebGL, WebAudio, mic), so there is nothing to prerender.
+// Pull heavy off-screen overlays and 3D/AI widgets out of the initial bundle
+const ContactOverlay = dynamic(() => import('@/components/ContactOverlay'), { ssr: false });
+const AllProjectsOverlay = dynamic(() => import('@/components/AllProjectsOverlay'), { ssr: false });
 const VoiceAssistant = dynamic(() => import('@/components/VoiceAssistant'), { ssr: false });
 
 if (typeof window !== "undefined") {

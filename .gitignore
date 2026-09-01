@@ -65,7 +65,11 @@ src/lib/impeccable/[0-9a-f]*/
 
 # AI / Agentic coding temporary artifacts
 .playwright-cli/
+.playwright-mcp/
 mcp-playwright/
+.agents/
+skills-lock.json
+hero_*.png
 bridge/
 scratch/
 screenshot-*.jpg
