@@ -64,7 +64,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
         .to(".gsap-video-bg", { autoAlpha: 1, duration: 1.0 * durMult }, "reveal")
         .to(".gsap-main-hero", { opacity: 1, duration: 1.0 * durMult }, "reveal");
 
-      // Act 2: Title Decode ΓÇö ScrambleText reveals each title line
+      // Act 2: Title Decode — ScrambleText reveals each title line
       entryTl.addLabel("decode", `reveal+=${0.3 * durMult}`)
         .to(".gsap-title-decode", { autoAlpha: 1, duration: 0.01 }, "decode");
 
@@ -115,7 +115,7 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
 
   return (
     <div ref={containerRef} suppressHydrationWarning>
-      {/* Dark Overlay ΓÇö Starts solid black for CRT flicker */}
+      {/* Dark Overlay — Starts solid black for CRT flicker */}
       <div className={`${styles.darkOverlay} gsap-dark-overlay`} suppressHydrationWarning></div>
 
       {/* Cinematic Intro Texts (legacy structure, kept for potential reuse) */}

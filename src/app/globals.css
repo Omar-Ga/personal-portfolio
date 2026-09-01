@@ -69,7 +69,7 @@ p {
   transition: none !important;
 }
 
-/* GSAP Performance Optimizations ΓÇö GPU layers only during animation */
+/* GSAP Performance Optimizations — GPU layers only during animation */
 .gsap-intro-1, .gsap-intro-2, .gsap-intro-3,
 .gsap-dark-overlay,
 .gsap-main-hero,
@@ -102,7 +102,7 @@ html[lang="ar"] {
   --font-sans: 'Outfit', 'Readex Pro', sans-serif;
 }
 
-/* Arabic is a cursive script ΓÇö any tracking severs the glyph joins and makes
+/* Arabic is a cursive script — any tracking severs the glyph joins and makes
    words unreadable. This neutralises the letter-spacing declarations that the
    Latin design sets throughout the CSS modules. */
 html[lang="ar"] body,
