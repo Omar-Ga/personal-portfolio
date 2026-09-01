@@ -63,14 +63,10 @@ p {
   max-width: 70ch;
 }
 
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+/* Ensure GSAP pin-spacers resize synchronously without CSS transition delay */
+.pin-spacer,
+.pin-spacer * {
+  transition: none !important;
 }
 
 /* GSAP Performance Optimizations ΓÇö GPU layers only during animation */

@@ -190,7 +190,6 @@ export default function ServicesSection() {
           anticipatePin: 1,
           scrub: 1,
           invalidateOnRefresh: true,
-          refreshPriority: 10,
           end: () => "+=" + (getInitialHoldDist() + getHorizontalDist() + getVerticalDist() + getHoldDist())
         }
       });
@@ -236,8 +235,7 @@ export default function ServicesSection() {
             start: "top top",
             end: "+=150%",
             scrub: 1,
-            invalidateOnRefresh: true,
-            refreshPriority: 10
+            invalidateOnRefresh: true
           }
         });
 

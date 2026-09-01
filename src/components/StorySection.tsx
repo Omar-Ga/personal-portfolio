@@ -90,7 +90,6 @@ export default function StorySection({ isLoaded = false }: StorySectionProps) {
         start: "top top",
         end: "+=150%",
         scrub: 0.5,
-        refreshPriority: 8,
         invalidateOnRefresh: true,
       }
     });

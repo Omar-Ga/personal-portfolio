@@ -131,7 +131,6 @@ export default function ProjectsSection() {
         start: "top top",
         end: `+=${PROJECT_IDS.length * 200}%`,
         scrub: 0.7,
-        refreshPriority: 6,
         invalidateOnRefresh: true,
         snap: {
           snapTo: (value: number) => {

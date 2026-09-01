@@ -290,13 +290,13 @@ export default function Home() {
         <div className="gsap-scrub-spacer" style={{ height: "500vh", position: "relative", zIndex: 0 }}></div>
 
         {/* Services Section */}
-        {isLoaded && <ServicesSection />}
+        <ServicesSection />
 
         {/* Story / About Section */}
-        {isLoaded && <StorySection isLoaded={isLoaded} />}
+        <StorySection isLoaded={isLoaded} />
 
         {/* Projects Section */}
-        {isLoaded && <ProjectsSection />}
+        <ProjectsSection />
 
         {/* Custom Scroll Progress Bar */}
         {isLoaded && (
