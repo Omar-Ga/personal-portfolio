@@ -137,12 +137,14 @@ export default function HeroSection() {
     // Act 1: Fade out hero content (0% - 15%)
     scrollTl.addLabel("act1", 0)
       .fromTo(".gsap-main-elem, .gsap-title-decode, .gsap-rotating-container, .gsap-subtitle, .gsap-cta", 
-      { autoAlpha: 1, y: 0 },
+      { autoAlpha: 1, y: 0, scale: 1 },
       {
         autoAlpha: 0,
-        y: -30,
+        y: -25,
+        scale: 0.96,
+        transformOrigin: "center center",
         duration: 0.15,
-        stagger: 0.02,
+        stagger: 0.015,
         ease: "power2.inOut",
         immediateRender: false
       }, "act1");
@@ -150,10 +152,11 @@ export default function HeroSection() {
     // Act 2: Video Collapse into Void (15% - 30%)
     scrollTl.addLabel("act2", 0.15)
       .fromTo(".gsap-video-bg", 
-      { scale: 1.05, borderRadius: "0%", autoAlpha: 1 },
+      { scale: 1.05, borderRadius: "0%", autoAlpha: 1, transformOrigin: "center center" },
       {
         scale: 0,
         borderRadius: "50%",
+        transformOrigin: "center center",
         duration: 0.15,
         ease: "power2.inOut",
         immediateRender: false
