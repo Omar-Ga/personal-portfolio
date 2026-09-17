@@ -34,6 +34,7 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isArchiveOpen, setIsArchiveOpen] = useState(false);
+  const [hasOpenedArchive, setHasOpenedArchive] = useState(false);
   const [isHeroVideoLoaded, setIsHeroVideoLoaded] = useState(false);
   const lenis = useLenis();
 
@@ -133,6 +134,11 @@ export default function Home() {
       };
     }
   }, [lenis, isLoaded]);
+
+  // Track first archive open for lazy mounting
+  useEffect(() => {
+    if (isArchiveOpen && !hasOpenedArchive) setHasOpenedArchive(true);
+  }, [isArchiveOpen, hasOpenedArchive]);
 
   // Listen for the global 'open-contact' and 'open-archive' events fired on the page
   useEffect(() => {
@@ -306,7 +312,7 @@ export default function Home() {
       </div>
 
       <ContactOverlay isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
-      <AllProjectsOverlay isOpen={isArchiveOpen} onClose={() => setIsArchiveOpen(false)} />
+      {hasOpenedArchive && <AllProjectsOverlay isOpen={isArchiveOpen} onClose={() => setIsArchiveOpen(false)} />}
       {isLoaded && <VoiceAssistant hidden={isContactOpen || isArchiveOpen} />}
       <CustomCursor />
     </>

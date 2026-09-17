@@ -61,6 +61,12 @@ function createProgram(gl: WebGLRenderingContext, vsSrc: string, fsSrc: string):
   gl.attachShader(prog, fs);
   gl.linkProgram(prog);
 
+  // Detach and delete shaders after linking to free GPU memory
+  gl.detachShader(prog, vs);
+  gl.detachShader(prog, fs);
+  gl.deleteShader(vs);
+  gl.deleteShader(fs);
+
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
     console.error("Program link error:", gl.getProgramInfoLog(prog));
     gl.deleteProgram(prog);
@@ -109,8 +115,15 @@ export function WebGLShader() {
     let time = 0.0;
     let isVisible = true;
 
+    const startLoop = () => {
+      if (animationId) return;
+      animationId = requestAnimationFrame(render);
+    };
+
     const io = new IntersectionObserver(([entry]) => {
+      const wasVisible = isVisible;
       isVisible = entry.isIntersecting;
+      if (!wasVisible && isVisible) startLoop();
     }, { threshold: 0.05 });
     io.observe(canvas);
 
@@ -135,30 +148,34 @@ export function WebGLShader() {
     window.addEventListener("resize", debouncedResize);
 
     const render = () => {
-      if (isVisible) {
-        time += 0.01;
-
-        gl.clearColor(1.0, 1.0, 1.0, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-
-        gl.useProgram(program);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
-        gl.enableVertexAttribArray(posAttrLoc);
-        gl.vertexAttribPointer(posAttrLoc, 2, gl.FLOAT, false, 0, 0);
-
-        gl.uniform2f(uResolution, canvas.width, canvas.height);
-        gl.uniform1f(uTime, time);
-        gl.uniform1f(uXScale, 1.0);
-        gl.uniform1f(uYScale, 0.5);
-        gl.uniform1f(uDistortion, 0.05);
-
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      if (!isVisible) {
+        animationId = 0;
+        return;
       }
+
+      time += 0.01;
+
+      gl.clearColor(1.0, 1.0, 1.0, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+
+      gl.useProgram(program);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
+      gl.enableVertexAttribArray(posAttrLoc);
+      gl.vertexAttribPointer(posAttrLoc, 2, gl.FLOAT, false, 0, 0);
+
+      gl.uniform2f(uResolution, canvas.width, canvas.height);
+      gl.uniform1f(uTime, time);
+      gl.uniform1f(uXScale, 1.0);
+      gl.uniform1f(uYScale, 0.5);
+      gl.uniform1f(uDistortion, 0.05);
+
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+
       animationId = requestAnimationFrame(render);
     };
 
-    animationId = requestAnimationFrame(render);
+    startLoop();
 
     return () => {
       io.disconnect();

@@ -34,6 +34,13 @@ export default function StorySection({ isLoaded = false }: StorySectionProps) {
     return () => clearTimeout(timer);
   }, [isLoaded, shouldLoadVideo]);
 
+  // Safari/iOS fix: explicitly trigger video loading when dynamic sources mount
+  useEffect(() => {
+    if (shouldLoadVideo && videoRef.current) {
+      videoRef.current.load();
+    }
+  }, [shouldLoadVideo]);
+
   useEffect(() => {
     const container = containerRef.current;
     const videoEl = videoRef.current;
@@ -89,7 +96,7 @@ export default function StorySection({ isLoaded = false }: StorySectionProps) {
         anticipatePin: 1,
         start: "top top",
         end: "+=150%",
-        scrub: 0.5,
+        scrub: 1.5,
         invalidateOnRefresh: true,
       }
     });

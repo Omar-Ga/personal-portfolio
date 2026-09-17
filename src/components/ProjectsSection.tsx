@@ -130,7 +130,7 @@ export default function ProjectsSection() {
         anticipatePin: 1,
         start: "top top",
         end: `+=${PROJECT_IDS.length * 200}%`,
-        scrub: 0.7,
+        scrub: 1.5,
         invalidateOnRefresh: true,
         snap: {
           snapTo: (value: number) => {

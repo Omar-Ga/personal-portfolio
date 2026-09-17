@@ -86,9 +86,16 @@ function compile(gl: WebGLRenderingContext, type: number, src: string) {
 
 function linkProg(gl: WebGLRenderingContext, vsSrc: string, fsSrc: string) {
   const p = gl.createProgram()!;
-  gl.attachShader(p, compile(gl, gl.VERTEX_SHADER, vsSrc));
-  gl.attachShader(p, compile(gl, gl.FRAGMENT_SHADER, fsSrc));
+  const vs = compile(gl, gl.VERTEX_SHADER, vsSrc);
+  const fs = compile(gl, gl.FRAGMENT_SHADER, fsSrc);
+  gl.attachShader(p, vs);
+  gl.attachShader(p, fs);
   gl.linkProgram(p);
+  // Detach and delete shaders after linking to free GPU memory
+  gl.detachShader(p, vs);
+  gl.detachShader(p, fs);
+  gl.deleteShader(vs);
+  gl.deleteShader(fs);
   if (!gl.getProgramParameter(p, gl.LINK_STATUS))
     console.error('Link:', gl.getProgramInfoLog(p));
   return p;
@@ -289,12 +296,22 @@ export default function RippleCanvas({ images, activeIndex, className }: Props) 
       };
       stateRef.current = s;
 
+      let idleFrames = 0;
+      const IDLE_THRESHOLD = 120; // Stop sim after ~2s of stillness
+
       const tick = () => {
         if (!s.alive) return;
         if (isIntersecting) {
-          if (s.mouseOn) addDrop(s, s.mouseU, s.mouseV, DROP_R, DROP_STR);
-          simStep(s);
-          uploadRipple(s);
+          if (s.mouseOn) {
+            addDrop(s, s.mouseU, s.mouseV, DROP_R, DROP_STR);
+            idleFrames = 0;
+          }
+
+          if (idleFrames < IDLE_THRESHOLD) {
+            simStep(s);
+            uploadRipple(s);
+            idleFrames++;
+          }
           render(s, canvas);
         }
         s.raf = requestAnimationFrame(tick);
