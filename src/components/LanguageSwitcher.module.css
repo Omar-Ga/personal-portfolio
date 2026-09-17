@@ -64,7 +64,10 @@
 .bar .option {
   font-size: 0.95rem;
   letter-spacing: 0.1em;
-  padding: 0.25rem 0.15rem;
+  padding: 0.6rem 0.75rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   color: inherit;
 }
 
