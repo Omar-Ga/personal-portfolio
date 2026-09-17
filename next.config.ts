@@ -5,8 +5,16 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  allowedDevOrigins: ['*.trycloudflare.com', 'trycloudflare.com']
+  allowedDevOrigins: ['*.trycloudflare.com', 'trycloudflare.com'],
+  images: {
+    formats: ['image/avif', 'image/webp'],
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
+  },
+  experimental: {
+    optimizePackageImports: ['three', 'gsap', '@google/genai'],
+  },
 };
 
 export default withNextIntl(nextConfig);

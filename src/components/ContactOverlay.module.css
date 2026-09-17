@@ -4,6 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   z-index: 100;
   pointer-events: none;
   opacity: 0;
@@ -11,6 +12,7 @@
   will-change: opacity, visibility;
   display: flex;
   overflow: hidden;
+  overscroll-behavior: contain;
   background-color: #050505;
 }
 
@@ -162,24 +164,6 @@
 .submitBtn:hover {
   background: #fff;
   color: #000;
-}
-
-.overlayWrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  z-index: 100;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  will-change: opacity, visibility;
-  display: flex;
-  overflow: hidden;
-  overscroll-behavior: contain;
-  background-color: #050505;
 }
 
 @media (max-width: 900px) {

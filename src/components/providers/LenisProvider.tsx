@@ -10,27 +10,22 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function LenisProvider({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<any>(null);
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {
-    const checkDisabled = () => {
-      const isSmall = window.innerWidth <= 768;
-      setIsDisabled(isSmall);
-    };
-    checkDisabled();
+    const mql = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mql.matches);
 
-    const mqlMobile = window.matchMedia("(max-width: 768px)");
-
-    const handleChange = () => checkDisabled();
-    mqlMobile.addEventListener("change", handleChange);
+    const handleChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handleChange);
 
     return () => {
-      mqlMobile.removeEventListener("change", handleChange);
+      mql.removeEventListener("change", handleChange);
     };
   }, []);
 
   useEffect(() => {
-    if (isDisabled) {
+    if (isMobile) {
       ScrollTrigger.refresh();
       return;
     }
@@ -55,14 +50,15 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
       }
       gsap.ticker.remove(update);
     };
-  }, [isDisabled]);
-
-  if (isDisabled) {
-    return <>{children}</>;
-  }
+  }, [isMobile]);
 
   return (
-    <ReactLenis ref={lenisRef} autoRaf={false} root>
+    <ReactLenis
+      ref={lenisRef}
+      autoRaf={false}
+      root
+      options={{ smoothWheel: !isMobile }}
+    >
       {children}
     </ReactLenis>
   );

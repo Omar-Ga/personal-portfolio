@@ -9,14 +9,12 @@ import { routing, localeDirection, type Locale } from "@/i18n/routing";
 
 const outfit = Outfit({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
   variable: "--font-outfit",
   display: "swap"
 });
 
 const readexPro = Readex_Pro({
   subsets: ["arabic"],
-  weight: ["200", "300", "400", "500", "600", "700"],
   variable: "--font-readex",
   display: "swap"
 });
