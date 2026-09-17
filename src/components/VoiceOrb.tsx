@@ -539,7 +539,7 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
     };
 
     /* ------------------------------------------------- 1. Core Plasma Mesh */
-    const coreGeo = new THREE.IcosahedronGeometry(0.42, 16);
+    const coreGeo = new THREE.IcosahedronGeometry(0.42, 8);
     const coreMat = new THREE.ShaderMaterial({
       vertexShader: CORE_VERTEX,
       fragmentShader: CORE_FRAGMENT,
@@ -552,8 +552,8 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
     scene.add(coreMesh);
 
     /* ----------------------------------------- 2. Main Crystal Glass Shell */
-    // Detail 32 -> ultra-smooth organic sphere without jagged facets
-    const shellGeo = new THREE.IcosahedronGeometry(0.76, 32);
+    // Detail 14 -> smooth organic sphere, visually identical at rendered size
+    const shellGeo = new THREE.IcosahedronGeometry(0.76, 14);
     const shellMat = new THREE.ShaderMaterial({
       vertexShader: SHELL_VERTEX,
       fragmentShader: SHELL_FRAGMENT,
@@ -564,7 +564,7 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
     scene.add(shellMesh);
 
     /* ------------------------------------------------ 3. Atmospheric Aura */
-    const auraGeo = new THREE.IcosahedronGeometry(0.96, 20);
+    const auraGeo = new THREE.IcosahedronGeometry(0.96, 10);
     const auraMat = new THREE.ShaderMaterial({
       vertexShader: AURA_VERTEX,
       fragmentShader: AURA_FRAGMENT,

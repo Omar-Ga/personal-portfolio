@@ -188,7 +188,7 @@ export default function ServicesSection() {
           trigger: sectionRef.current,
           pin: true,
           anticipatePin: 1,
-          scrub: 1,
+          scrub: 1.5,
           invalidateOnRefresh: true,
           end: () => "+=" + (getInitialHoldDist() + getHorizontalDist() + getVerticalDist() + getHoldDist())
         }

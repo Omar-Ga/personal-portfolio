@@ -131,7 +131,7 @@ export default function HeroSection() {
         trigger: ".gsap-scrub-spacer",
         start: "top top",
         end: "bottom bottom",
-        scrub: 1,
+        scrub: 1.5,
         invalidateOnRefresh: true,
       }
     });

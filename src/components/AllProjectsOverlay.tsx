@@ -190,8 +190,6 @@ export default function AllProjectsOverlay({ isOpen, onClose }: AllProjectsOverl
     render();
 
     const tick = (_time: number, deltaTime: number) => {
-      measurePeriod();
-
       const period = periodRef.current || 4700;
       const dt = Math.min(deltaTime / 16.667, 3);
 

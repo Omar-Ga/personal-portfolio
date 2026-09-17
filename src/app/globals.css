@@ -81,6 +81,12 @@ body.hide-default-cursor * {
   cursor: none !important;
 }
 
+/* Restore native text cursor on form fields for usability */
+body.hide-default-cursor input,
+body.hide-default-cursor textarea {
+  cursor: text !important;
+}
+
 /* ==========================================================================
    ARABIC LOCALE LAYER
    --------------------------------------------------------------------------
