@@ -312,7 +312,7 @@
     "p16": {
       "title": "AI Career Flow & Interview Simulator",
       "category": "Generative AI Career & Technical Assessment",
-      "description": "AI-driven career acceleration suite that ingests candidate resumes, extracts structured skill graphs (14+ technologies), deploys an autonomous conversational AI recruiter, and spins up an adaptive in-browser Monaco code editor with live difficulty calibration ([HARD LEVEL]) and market salary benchmarks.",
+      "description": "AI-driven career acceleration suite that ingests candidate resumes, extracts structured skill graphs (14+ technologies), deploys an autonomous conversational AI recruiter, and spins up an adaptive in-browser Monaco code editor whose question difficulty adapts to the candidate’s level in real time, plus market salary benchmarks.",
       "keywords": [
         "React 18",
         "Monaco Editor",

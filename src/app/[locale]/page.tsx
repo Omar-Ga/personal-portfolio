@@ -311,8 +311,8 @@ export default function Home() {
           </div>
         </main>
 
-        {/* Invisible Scrub Spacer for Curtain Reveal — 500vh adapts dynamically to screen height */}
-        <div className="gsap-scrub-spacer" style={{ height: "500vh", position: "relative", zIndex: 0 }}></div>
+        {/* Invisible scrub spacer (height in page.module.css): hero fade + statement reveal, then Services curtain */}
+        <div className={`${styles.scrubSpacer} gsap-scrub-spacer`}></div>
 
         {/* Services Section */}
         <ServicesSection />

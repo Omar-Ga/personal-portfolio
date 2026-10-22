@@ -23,11 +23,5 @@
     ]
   ],
   "cta": "VIEW PROJECTS",
-  "philosophy": [
-    "SYSTEMS BUILT FOR RELIABILITY.",
-    "INTERFACES BUILT FOR SPEED.",
-    "CODE GROUNDED IN PRACTICE.",
-    "EVERY COMPONENT MEASURED.",
-    "DELIVERED IN PRODUCTION."
-  ]
+  "statement": "I build the software your business actually runs on, and make it a pleasure to use."
 }

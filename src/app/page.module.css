@@ -27,6 +27,12 @@
   z-index: 1;
 }
 
+/* Set by HeroSection while the statement covers the video: the footage is very
+   pale, so push saturation/depth to keep the iridescence visible inside the letters. */
+.videoBackgroundLight[data-statement="true"] {
+  filter: saturate(3.2) contrast(1.4) brightness(0.8);
+}
+
 .contentWrapper {
   position: relative;
   z-index: 2;
@@ -80,5 +86,19 @@
   .scrollProgressBarFill {
     transform-origin: left;
     transform: scaleX(0);
+  }
+}
+
+/* Scroll runway for the hero -> statement sequence (scrub distance = height - 100vh).
+   Was 500vh for the old five-slogan flythrough. */
+.scrubSpacer {
+  position: relative;
+  z-index: 0;
+  height: 250vh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrubSpacer {
+    height: 150vh;
   }
 }

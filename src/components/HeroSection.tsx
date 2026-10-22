@@ -1,12 +1,14 @@
 "use client";
 
-import { useRef } from 'react';
+import { Fragment, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLenis } from 'lenis/react';
 import { useLocale, useTranslations } from 'next-intl';
+import { getPerfTier, prefersReducedMotion } from '@/lib/devicePerf';
+import { createStatementPainter, wordOpacity } from '@/lib/statementPainter';
 import styles from './HeroSection.module.css';
 
 if (typeof window !== "undefined") {
@@ -21,6 +23,9 @@ interface SubtitleToken {
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const layerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
   const lenis = useLenis();
   const locale = useLocale();
   const isRTL = locale === 'ar';
@@ -28,7 +33,7 @@ export default function HeroSection() {
 
   const rotatingPhrases = t.raw('rotatingPhrases') as string[];
   const subtitleLines = t.raw('subtitleLines') as SubtitleToken[][];
-  const philosophyPhrases = t.raw('philosophy') as string[];
+  const statementWords = t('statement').split(/\s+/).filter(Boolean);
   const ctaLabel = t('cta');
 
   useGSAP((context, contextSafe) => {
@@ -123,122 +128,104 @@ export default function HeroSection() {
       };
     }
 
-    // 6. PHILOSOPHY SCROLL SEQUENCE
-    gsap.set(".gsap-phrase-1, .gsap-phrase-2, .gsap-phrase-3, .gsap-phrase-4, .gsap-phrase-5", { autoAlpha: 0 });
+    // 6. STATEMENT SCROLL SEQUENCE
+    // The hero copy fades, a light paper layer rises over the hero video and the
+    // sentence is revealed word by word (faint -> solid) with the video showing
+    // through the letters, ending on the same #f5f5f5 as the Services section.
+    const layer = layerRef.current;
+    const canvas = canvasRef.current;
+    const textEl = textRef.current;
+    const words = Array.from(textEl?.querySelectorAll<HTMLElement>('[data-word]') ?? []);
+    const reduceMotion = prefersReducedMotion();
+    // Video-in-letters costs a full-viewport canvas repaint per scroll frame, so
+    // low-tier devices (and reduced motion) get solid ink words instead.
+    const painter =
+      layer && canvas && textEl && !reduceMotion && getPerfTier() !== 'low'
+        ? createStatementPainter({ canvas, text: textEl, words, rtl: isRTL })
+        : null;
+    if (layer) layer.dataset.mode = painter ? 'canvas' : 'dom';
 
-    const scrollTl = gsap.timeline({
-      scrollTrigger: {
+    const heroEls = ".gsap-main-elem, .gsap-title-decode, .gsap-rotating-container, .gsap-subtitle, .gsap-cta";
+    let onRefresh: (() => void) | null = null;
+    let statementTl: gsap.core.Timeline | null = null;
+
+    // The footage is pale pastel; once the paper covers most of it, give it more
+    // saturation/depth (a static filter, flipped here) so the colour survives inside the letters.
+    let boostTrigger: ScrollTrigger | null = null;
+    const videoEl = document.querySelector<HTMLElement>(".gsap-video-bg");
+    if (painter && videoEl) {
+      boostTrigger = ScrollTrigger.create({
         trigger: ".gsap-scrub-spacer",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1.5,
-        invalidateOnRefresh: true,
-      }
-    });
+        start: "top+=18% top",
+        end: "max",
+        onToggle: (self) => { videoEl.dataset.statement = self.isActive ? "true" : "false"; },
+      });
+    }
 
-    // Act 1: Fade out hero content (0% - 15%)
-    scrollTl.addLabel("act1", 0)
-      .fromTo(".gsap-main-elem, .gsap-title-decode, .gsap-rotating-container, .gsap-subtitle, .gsap-cta", 
-      { autoAlpha: 1, y: 0, scale: 1 },
-      {
-        autoAlpha: 0,
-        y: -25,
-        scale: 0.96,
-        transformOrigin: "center center",
-        duration: 0.15,
-        stagger: 0.015,
-        ease: "power2.inOut",
-        immediateRender: false
-      }, "act1");
+    if (painter) {
+      onRefresh = () => painter.measure();
+      ScrollTrigger.addEventListener('refresh', onRefresh);
+      if ('fonts' in document) document.fonts.ready.then(() => painter.measure());
+      painter.measure();
+    }
 
-    // Act 2: Video Collapse into Void (15% - 30%)
-    scrollTl.addLabel("act2", 0.15)
-      .fromTo(".gsap-video-bg", 
-      { scale: 1.05, borderRadius: "0%", autoAlpha: 1, transformOrigin: "center center" },
-      {
-        scale: 0,
-        borderRadius: "50%",
-        transformOrigin: "center center",
-        duration: 0.15,
-        ease: "power2.inOut",
-        immediateRender: false
-      }, "act2")
-      .to(".gsap-video-bg", {
-        autoAlpha: 0,
-        duration: 0.05,
-        ease: "power2.in"
-      }, "act2+=0.10");
+    if (reduceMotion) {
+      // No scrub: one short cross-fade once the visitor starts scrolling.
+      words.forEach((w) => { w.style.opacity = '1'; });
+      statementTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".gsap-scrub-spacer",
+          start: "top+=6% top",
+          toggleActions: "play none none reverse",
+        },
+      });
+      statementTl
+        .to(heroEls, { autoAlpha: 0, duration: 0.25, ease: "none" }, 0)
+        .to(layer, { autoAlpha: 1, duration: 0.35, ease: "none" }, 0);
+    } else {
+      const reveal = { r: 0 };
+      const paintReveal = () => {
+        if (painter) painter.draw(reveal.r);
+        else words.forEach((w, i) => { w.style.opacity = String(wordOpacity(i, words.length, reveal.r)); });
+      };
+      paintReveal();
 
-    // Act 3: Typography Bespoke Flythrough (30% - 90%)
-    const getPhrase1StartX = () => {
-      const dist = window.innerWidth <= 768 ? 100 : 150;
-      return isRTL ? -dist : dist;
-    };
-    const getPhrase1EndX = () => {
-      const dist = window.innerWidth <= 768 ? 100 : 150;
-      return isRTL ? dist : -dist;
-    };
+      statementTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".gsap-scrub-spacer",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
 
-    gsap.set(".gsap-phrase-1", { xPercent: getPhrase1StartX(), autoAlpha: 0 });
-    
-    scrollTl.to(".gsap-phrase-1", { autoAlpha: 1, duration: 0.01 }, 0.29);
-    
-    scrollTl.fromTo(".gsap-phrase-1",
-      { xPercent: () => getPhrase1StartX() },
-      { xPercent: () => getPhrase1EndX(), duration: 0.14, ease: "none", immediateRender: false },
-      0.30
-    );
-
-    scrollTl.to(".gsap-phrase-1", { autoAlpha: 0, duration: 0.01 }, 0.44);
-
-    // Phrase 2: Sleek fade up with transform scale (0.46 - 0.56)
-    gsap.set(".gsap-phrase-2", { y: 50, autoAlpha: 0, scale: 0.95 });
-    scrollTl.fromTo(".gsap-phrase-2",
-      { y: 50, autoAlpha: 0, scale: 0.95 },
-      { y: -15, autoAlpha: 1, scale: 1.05, duration: 0.06, ease: "power2.out", immediateRender: false },
-      0.46
-    ).to(".gsap-phrase-2", {
-      y: -50, autoAlpha: 0, scale: 1.1, duration: 0.03, ease: "power2.in"
-    }, 0.53);
-
-    // Phrase 3: Slide-in reveal (0.57 - 0.68)
-    const phrase3StartX = isRTL ? 100 : -100;
-    const phrase3EndX = isRTL ? -100 : 100;
-
-    gsap.set(".gsap-phrase-3", { xPercent: phrase3StartX, autoAlpha: 0 });
-    scrollTl.fromTo(".gsap-phrase-3",
-      { xPercent: phrase3StartX, autoAlpha: 0 },
-      { xPercent: 0, autoAlpha: 1, duration: 0.06, ease: "power3.out", immediateRender: false },
-      0.57
-    ).to(".gsap-phrase-3", {
-      xPercent: phrase3EndX, autoAlpha: 0, duration: 0.03, ease: "power2.in"
-    }, 0.65);
-
-    // Phrase 4: Scale and opacity fade (0.69 - 0.79)
-    gsap.set(".gsap-phrase-4", { autoAlpha: 0, scale: 1.2 });
-    scrollTl.fromTo(".gsap-phrase-4",
-      { autoAlpha: 0, scale: 1.2 },
-      { autoAlpha: 1, scale: 1, duration: 0.06, ease: "power2.out", immediateRender: false },
-      0.69
-    ).to(".gsap-phrase-4", {
-      autoAlpha: 0, scale: 0.8, duration: 0.03, ease: "power2.in"
-    }, 0.76);
-
-    // Phrase 5: Slam into center and hold (0.80 - 0.90)
-    gsap.set(".gsap-phrase-5", { scale: 0.1, autoAlpha: 0 });
-    scrollTl.fromTo(".gsap-phrase-5",
-      { scale: 0.1, autoAlpha: 0 },
-      { scale: 1, autoAlpha: 1, duration: 0.04, ease: "power2.out", immediateRender: false },
-      0.80
-    ).to(".gsap-phrase-5", {
-      scale: 1.05, duration: 0.06, ease: "none"
-    }, 0.84);
+      // Hero copy out (0% - 15%)
+      statementTl
+        .fromTo(heroEls,
+          { autoAlpha: 1, y: 0, scale: 1 },
+          {
+            autoAlpha: 0,
+            y: -25,
+            scale: 0.96,
+            transformOrigin: "center center",
+            duration: 0.15,
+            stagger: 0.015,
+            ease: "power2.inOut",
+            immediateRender: false,
+          }, 0)
+        // Paper over the video (6% - 26%)
+        .fromTo(layer,
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.2, ease: "power1.inOut", immediateRender: false }, 0.06)
+        // Word-by-word reveal (24% - 84%), then a short hold before Services arrives
+        .to(reveal, { r: 1, duration: 0.6, ease: "none", onUpdate: paintReveal }, 0.24)
+        .set({}, {}, 1);
+    }
 
     // 7. AMBIENT SUBTITLE GLITCH
     const glitchWords = gsap.utils.toArray(".gsap-glitch-word") as HTMLElement[];
     let glitchCall: gsap.core.Tween | null = null;
-
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const triggerGlitch = () => {
       // The glitch is ambient decoration: skip it when nobody can see the hero
@@ -268,6 +255,9 @@ export default function HeroSection() {
     return () => {
       if (ctaCleanup) ctaCleanup();
       if (glitchCall) glitchCall.kill();
+      if (onRefresh) ScrollTrigger.removeEventListener('refresh', onRefresh);
+      if (boostTrigger) boostTrigger.kill();
+      if (videoEl) delete videoEl.dataset.statement;
     };
   }, { dependencies: [isRTL] });
 
@@ -343,17 +333,16 @@ export default function HeroSection() {
           
       </section>
       
-      {/* Philosophy Sequence container */}
-      <div className={styles.philosophyContainer}>
-        {philosophyPhrases.map((phrase, idx) => (
-          <div
-            key={idx}
-            className={`${styles.philosophyPhrase} ${styles[`phrase${idx + 1}`]} gsap-phrase-${idx + 1}`}
-            dir="auto"
-          >
-            {phrase}
-          </div>
-        ))}
+      {/* Statement: light paper + one sentence, revealed word by word on scroll */}
+      <div ref={layerRef} className={`${styles.statementLayer} gsap-statement`} data-mode="dom" dir={isRTL ? 'rtl' : 'ltr'}>
+        <canvas ref={canvasRef} className={styles.statementCanvas} aria-hidden="true" />
+        <p ref={textRef} className={styles.statementText}>
+          {statementWords.map((word, idx) => (
+            <Fragment key={idx}>
+              <span data-word className={styles.statementWord}>{word}</span>{' '}
+            </Fragment>
+          ))}
+        </p>
       </div>
     </div>
   );
