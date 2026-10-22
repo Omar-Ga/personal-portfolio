@@ -11,3 +11,34 @@
   z-index: 1;
   will-change: opacity;
 }
+
+.introTextContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.introText {
+  position: absolute;
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  font-weight: 500;
+  color: #fff; /* White text on the dark overlay */
+  opacity: 0;
+  text-align: center;
+  will-change: transform, opacity;
+  padding: 0 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .introText {
+    font-size: clamp(1.8rem, 8vw, 3.2rem);
+  }
+}
