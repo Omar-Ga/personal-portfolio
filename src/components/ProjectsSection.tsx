@@ -30,9 +30,9 @@ const PROJECT_IDS = ['p1', 'p2', 'p3', 'p4'] as const;
 
 const PROJECT_IMAGES = [
   '/images/skycourt/skycourt_1.webp',
-  '/images/kafaa/kafaa_1.webp',
-  '/images/o2mation/o2mation_1.webp',
-  '/images/services/strategy.webp'
+  '/images/queen-hive/featured.webp',
+  '/images/texture-extractor/featured.webp',
+  '/images/o2mation-chatbot/featured.webp'
 ];
 
 export default function ProjectsSection() {
@@ -107,20 +107,30 @@ export default function ProjectsSection() {
     if (texts.length === 0) return;
 
     const wrapper = listRef.current.parentElement;
-    const wrapperHeight = wrapper ? wrapper.offsetHeight : window.innerHeight;
-    const containerCenter = wrapperHeight / 2;
-    const maxDist = wrapperHeight / 1.5;
+    const list = listRef.current;
 
-    const itemCenters = texts.map(el => el.offsetTop + el.offsetHeight / 2);
-    const listScrollHeight = listRef.current.scrollHeight;
-    const maxScrollY = listScrollHeight - wrapperHeight;
+    // Measured values depend on the viewport (the wheel's height is flex/dvh
+    // driven on phones), so they are re-measured on every ScrollTrigger refresh
+    // (resize, rotation, URL-bar changes) instead of being frozen at mount.
+    let wrapperHeight = 0;
+    let containerCenter = 0;
+    let maxDist = 1;
+    let itemCenters: number[] = [];
+    let maxScrollY = 0;
 
-    const snapPoints = itemCenters.map((itemCenterY) => {
-      const targetY = containerCenter - itemCenterY;
-      const progress = -targetY / Math.max(1, maxScrollY);
-      return Math.max(0, Math.min(1, progress));
-    });
-    snapPointsRef.current = snapPoints;
+    const measure = () => {
+      wrapperHeight = wrapper ? wrapper.offsetHeight : window.innerHeight;
+      containerCenter = wrapperHeight / 2;
+      maxDist = wrapperHeight / 1.5;
+      itemCenters = texts.map(el => el.offsetTop + el.offsetHeight / 2);
+      maxScrollY = list.scrollHeight - wrapperHeight;
+      snapPointsRef.current = itemCenters.map((itemCenterY) => {
+        const targetY = containerCenter - itemCenterY;
+        const progress = -targetY / Math.max(1, maxScrollY);
+        return Math.max(0, Math.min(1, progress));
+      });
+    };
+    measure();
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -132,6 +142,7 @@ export default function ProjectsSection() {
         end: `+=${PROJECT_IDS.length * 200}%`,
         scrub: 1.5,
         invalidateOnRefresh: true,
+        onRefreshInit: measure,
         snap: {
           snapTo: (value: number) => {
             const points = snapPointsRef.current;
@@ -194,7 +205,7 @@ export default function ProjectsSection() {
     });
 
     tl.to(listRef.current, {
-      y: -maxScrollY,
+      y: () => -maxScrollY,
       ease: "none"
     });
 
@@ -286,7 +297,13 @@ export default function ProjectsSection() {
                   onClick={() => handleThumbnailClick(idx)}
                   title={t('jumpTo', { title: p.title })}
                 >
-                  <img src={p.image} alt={p.title} className={styles.thumbnailImg} />
+                  <img
+                    src={p.image.replace(/\.webp$/, '_mobile.webp')}
+                    alt={p.title}
+                    className={styles.thumbnailImg}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </button>
               ))}
             </div>

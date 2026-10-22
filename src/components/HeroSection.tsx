@@ -238,8 +238,15 @@ export default function HeroSection() {
     const glitchWords = gsap.utils.toArray(".gsap-glitch-word") as HTMLElement[];
     let glitchCall: gsap.core.Tween | null = null;
 
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const triggerGlitch = () => {
-      if (glitchWords.length === 0) return;
+      // The glitch is ambient decoration: skip it when nobody can see the hero
+      // (scrolled into the philosophy sequence / other sections, or tab hidden).
+      if (glitchWords.length === 0 || document.hidden || window.scrollY > window.innerHeight * 0.6) {
+        scheduleNextGlitch();
+        return;
+      }
       const word = glitchWords[Math.floor(Math.random() * glitchWords.length)];
       const original = word.dataset.original || word.textContent || "";
 
@@ -256,7 +263,7 @@ export default function HeroSection() {
       glitchCall = gsap.delayedCall(delay, triggerGlitch);
     };
 
-    scheduleNextGlitch();
+    if (!reduceMotion) scheduleNextGlitch();
 
     return () => {
       if (ctaCleanup) ctaCleanup();

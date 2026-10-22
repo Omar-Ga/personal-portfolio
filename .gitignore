@@ -83,3 +83,7 @@ font_preview.html
 
 .vercel
 .opencode/
+
+# Remotion motion clips: deps and render output
+/motion/node_modules
+/motion/out

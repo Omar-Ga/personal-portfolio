@@ -30,10 +30,16 @@ interface AllProjectsOverlayProps {
   onClose: () => void;
 }
 
-/** 9 Unique cards per column (18 total projects across 2 tracks). */
-const UNIQUE_PER_COL = 9;
-/** Duplications per track to ensure seamless infinite looping past 4K displays. */
-const TRACK_REPEATS = 3;
+/** 10 unique cards per column (20 total projects across 2 tracks). */
+const UNIQUE_PER_COL = 10;
+/**
+ * Copies of each 10-card cycle per track. The drift only needs
+ * (repeats - 1) * period >= the 140vh track window; one cycle is >= 2400px on
+ * every layout, so 2 copies cover any viewport up to ~1700px tall and the third
+ * is only added for taller screens. Each extra copy is 20 more cards, images
+ * and layers.
+ */
+const trackRepeatsFor = (viewportHeight: number) => (viewportHeight > 1500 ? 3 : 2);
 /** Idle drift in px per frame at 60fps. */
 const BASE_SPEED = 2.4;
 /** Ceiling on wheel-injected velocity (px/frame). */
@@ -69,11 +75,14 @@ export default function AllProjectsOverlay({ isOpen, onClose }: AllProjectsOverl
   const hoverTargetRef = useRef(1);
   const hoverFactorRef = useRef(1);
 
-  // Split 18 projects into 2 columns of 9, duplicated TRACK_REPEATS times
-  const leftColumnProjects = Array.from({ length: TRACK_REPEATS }, () =>
+  // Split 20 projects into 2 columns of 10, repeated to loop seamlessly.
+  const [trackRepeats, setTrackRepeats] = useState(() =>
+    trackRepeatsFor(typeof window === 'undefined' ? 0 : window.innerHeight)
+  );
+  const leftColumnProjects = Array.from({ length: trackRepeats }, () =>
     allProjects.slice(0, UNIQUE_PER_COL)
   ).flat();
-  const rightColumnProjects = Array.from({ length: TRACK_REPEATS }, () =>
+  const rightColumnProjects = Array.from({ length: trackRepeats }, () =>
     allProjects.slice(UNIQUE_PER_COL, UNIQUE_PER_COL * 2)
   ).flat();
 
@@ -217,6 +226,8 @@ export default function AllProjectsOverlay({ isOpen, onClose }: AllProjectsOverl
     gsap.ticker.add(tick);
 
     const handleResize = () => {
+      // A window grown past the 2-copy limit needs the third copy (never shrinks).
+      setTrackRepeats((r) => Math.max(r, trackRepeatsFor(window.innerHeight)));
       measurePeriod();
       render();
     };
@@ -392,7 +403,7 @@ export default function AllProjectsOverlay({ isOpen, onClose }: AllProjectsOverl
 
   return (
     <div className={`${styles.overlay} ${isOpen ? styles.active : ''}`} ref={overlayRef}>
-      <ShimmeringBeamsBackground active={isOpen} />
+      <ShimmeringBeamsBackground active={isOpen} dimmed={!!selectedProject} />
       
       {/* Header Navigation */}
       <header className={styles.header}>

@@ -7,35 +7,35 @@ export interface ArchiveProjectEntry {
 }
 
 export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
-  // Column 1 (Left Track: 9 Projects)
+  // Column 1 (Left Track: 10 Projects)
   {
     id: 'p1',
     number: '01',
-    slug: 'talking-ai',
-    image: '/images/talking-ai/01_voice_assistant_hero.webp',
+    slug: 'skycourt-wms',
+    image: '/images/skycourt-wms/01_operations_dashboard.webp',
     gallery: [
-      '/images/talking-ai/01_voice_assistant_hero.webp',
-      '/images/talking-ai/02_document_slide_analyzer.webp',
-      '/images/talking-ai/03_streaming_transcript_view.webp',
-      '/images/talking-ai/04_audio_waveform_telemetry.webp',
-      '/images/talking-ai/05_reasoning_thought_drawer.webp',
-      '/images/talking-ai/06_voice_persona_settings.webp',
-      '/images/talking-ai/07_arabic_voice_intelligence.webp'
+      '/images/skycourt-wms/01_operations_dashboard.webp',
+      '/images/skycourt-wms/02_two_operator_dispatch.webp',
+      '/images/skycourt-wms/03_immutable_movement_log.webp',
+      '/images/skycourt-wms/04_inventory_reconciliation.webp',
+      '/images/skycourt-wms/05_purchase_order_lifecycle.webp',
+      '/images/skycourt-wms/06_dispatch_ticket_print.webp',
+      '/images/skycourt-wms/07_supervisor_requisitions_arabic.webp'
     ]
   },
   {
     id: 'p2',
     number: '02',
-    slug: 'skycourt-complex',
-    image: '/images/skycourt-complex/01_destination_hero_portal.webp',
+    slug: 'queen-hive',
+    image: '/images/queen-hive/01_workflow_canvas.webp',
     gallery: [
-      '/images/skycourt-complex/01_destination_hero_portal.webp',
-      '/images/skycourt-complex/02_dining_directory.webp',
-      '/images/skycourt-complex/03_dining_experience.webp',
-      '/images/skycourt-complex/04_about_destination.webp',
-      '/images/skycourt-complex/05_arabic_rtl_skycourt.webp',
-      '/images/skycourt-complex/06_atmosphere_stories.webp',
-      '/images/skycourt-complex/07_location_visit_planner.webp'
+      '/images/queen-hive/01_workflow_canvas.webp',
+      '/images/queen-hive/02_live_run_transcript.webp',
+      '/images/queen-hive/03_work_order.webp',
+      '/images/queen-hive/04_worker_adapters.webp',
+      '/images/queen-hive/05_repair_loop.webp',
+      '/images/queen-hive/06_workflow_catalog.webp',
+      '/images/queen-hive/07_benchmarks_costs.webp'
     ]
   },
   {
@@ -56,21 +56,36 @@ export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
   {
     id: 'p4',
     number: '04',
-    slug: 'o2mation-agency',
-    image: '/images/o2mation-agency/01_flagship_agency_hero.webp',
+    slug: 'talking-ai',
+    image: '/images/talking-ai/01_voice_assistant_hero.webp',
     gallery: [
-      '/images/o2mation-agency/01_flagship_agency_hero.webp',
-      '/images/o2mation-agency/02_automation_solutions_grid.webp',
-      '/images/o2mation-agency/03_case_studies_metrics.webp',
-      '/images/o2mation-agency/04_team_expertise_showcase.webp',
-      '/images/o2mation-agency/05_arabic_rtl_agency_portal.webp',
-      '/images/o2mation-agency/06_consultation_project_modal.webp',
-      '/images/o2mation-agency/07_tech_stack_ecosystem.webp'
+      '/images/talking-ai/01_voice_assistant_hero.webp',
+      '/images/talking-ai/02_document_slide_analyzer.webp',
+      '/images/talking-ai/03_streaming_transcript_view.webp',
+      '/images/talking-ai/04_audio_waveform_telemetry.webp',
+      '/images/talking-ai/05_reasoning_thought_drawer.webp',
+      '/images/talking-ai/06_voice_persona_settings.webp',
+      '/images/talking-ai/07_arabic_voice_intelligence.webp'
     ]
   },
   {
     id: 'p5',
     number: '05',
+    slug: 'skycourt-complex',
+    image: '/images/skycourt-complex/01_destination_hero_portal.webp',
+    gallery: [
+      '/images/skycourt-complex/01_destination_hero_portal.webp',
+      '/images/skycourt-complex/02_dining_directory.webp',
+      '/images/skycourt-complex/03_dining_experience.webp',
+      '/images/skycourt-complex/04_about_destination.webp',
+      '/images/skycourt-complex/05_arabic_rtl_skycourt.webp',
+      '/images/skycourt-complex/06_atmosphere_stories.webp',
+      '/images/skycourt-complex/07_location_visit_planner.webp'
+    ]
+  },
+  {
+    id: 'p6',
+    number: '06',
     slug: 'hard-turso-notes',
     image: '/images/hard-turso-notes/01_markdown_editor_canvas.webp',
     gallery: [
@@ -84,8 +99,8 @@ export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
     ]
   },
   {
-    id: 'p6',
-    number: '06',
+    id: 'p7',
+    number: '07',
     slug: 'study-cafe-step',
     image: '/images/study-cafe-step/01_active_sessions_dashboard.webp',
     gallery: [
@@ -99,8 +114,8 @@ export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
     ]
   },
   {
-    id: 'p7',
-    number: '07',
+    id: 'p8',
+    number: '08',
     slug: 'real-estate-mockup',
     image: '/images/real-estate-mockup/01_real_estate_hero.webp',
     gallery: [
@@ -114,8 +129,8 @@ export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
     ]
   },
   {
-    id: 'p8',
-    number: '08',
+    id: 'p9',
+    number: '09',
     slug: 'abaad-al-erteqa',
     image: '/images/abaad-al-erteqa/01_luxury_corporate_hero.webp',
     gallery: [
@@ -129,25 +144,54 @@ export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
     ]
   },
   {
-    id: 'p9',
-    number: '09',
-    slug: 'antigravity-suite',
-    image: '/images/antigravity-suite/01_antigravity_studio_hero.webp',
-    gallery: [
-      '/images/antigravity-suite/01_antigravity_studio_hero.webp',
-      '/images/antigravity-suite/02_memory_vault_explorer.webp',
-      '/images/antigravity-suite/03_subagent_dispatch_hub.webp',
-      '/images/antigravity-suite/04_graphify_knowledge_graph.webp',
-      '/images/antigravity-suite/05_workflow_execution_runner.webp',
-      '/images/antigravity-suite/06_token_budget_telemetry.webp',
-      '/images/antigravity-suite/07_luxury_theme_studio.webp'
-    ]
-  },
-
-  // Column 2 (Right Track: 9 Projects)
-  {
     id: 'p10',
     number: '10',
+    slug: 'ai-mood-jockey',
+    image: '/images/ai-mood-jockey/01_mood_generator_hero.webp',
+    gallery: [
+      '/images/ai-mood-jockey/01_mood_generator_hero.webp',
+      '/images/ai-mood-jockey/02_jamendo_playlist_player.webp',
+      '/images/ai-mood-jockey/03_valence_energy_telemetry.webp',
+      '/images/ai-mood-jockey/04_mood_history_journal.webp',
+      '/images/ai-mood-jockey/05_genre_instrumental_filters.webp',
+      '/images/ai-mood-jockey/06_playlist_exporter_modal.webp',
+      '/images/ai-mood-jockey/07_live_audio_visualizer.webp'
+    ]
+  },
+  // Column 2 (Right Track: 10 Projects)
+  {
+    id: 'p11',
+    number: '11',
+    slug: 'texture-extractor',
+    image: '/images/texture-extractor/01_ai_smart_select.webp',
+    gallery: [
+      '/images/texture-extractor/01_ai_smart_select.webp',
+      '/images/texture-extractor/02_perspective_rectify.webp',
+      '/images/texture-extractor/03_uv_mesh_fit.webp',
+      '/images/texture-extractor/04_curved_ellipse_fit.webp',
+      '/images/texture-extractor/05_mask_cleanup.webp',
+      '/images/texture-extractor/06_addon_sidebar.webp',
+      '/images/texture-extractor/07_texture_library.webp'
+    ]
+  },
+  {
+    id: 'p12',
+    number: '12',
+    slug: 'o2mation-chatbot',
+    image: '/images/o2mation-chatbot/01_overview_dashboard.webp',
+    gallery: [
+      '/images/o2mation-chatbot/01_overview_dashboard.webp',
+      '/images/o2mation-chatbot/02_live_chat_queue.webp',
+      '/images/o2mation-chatbot/03_agent_takeover_chat.webp',
+      '/images/o2mation-chatbot/04_knowledge_base.webp',
+      '/images/o2mation-chatbot/05_bot_settings.webp',
+      '/images/o2mation-chatbot/06_plans_credits.webp',
+      '/images/o2mation-chatbot/07_landing_page.webp'
+    ]
+  },
+  {
+    id: 'p13',
+    number: '13',
     slug: 'voice-ai-telephony',
     image: '/images/voice-ai-telephony/01_voice_telephony_hud.webp',
     gallery: [
@@ -161,8 +205,38 @@ export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
     ]
   },
   {
-    id: 'p11',
-    number: '11',
+    id: 'p14',
+    number: '14',
+    slug: 'split-diffusion',
+    image: '/images/split-diffusion/01_architecture_overview.webp',
+    gallery: [
+      '/images/split-diffusion/01_architecture_overview.webp',
+      '/images/split-diffusion/02_desktop_inpainting_app.webp',
+      '/images/split-diffusion/03_job_progress.webp',
+      '/images/split-diffusion/04_relay_integrity.webp',
+      '/images/split-diffusion/05_before_after.webp',
+      '/images/split-diffusion/06_gpu_worker_telemetry.webp',
+      '/images/split-diffusion/07_cli_roundtrip.webp'
+    ]
+  },
+  {
+    id: 'p15',
+    number: '15',
+    slug: 'substance-livelink',
+    image: '/images/substance-livelink/01_two_way_sync.webp',
+    gallery: [
+      '/images/substance-livelink/01_two_way_sync.webp',
+      '/images/substance-livelink/02_painter_panel.webp',
+      '/images/substance-livelink/03_blender_export_panel.webp',
+      '/images/substance-livelink/04_auto_wired_nodes.webp',
+      '/images/substance-livelink/05_mesh_hot_reload.webp',
+      '/images/substance-livelink/06_channel_export_settings.webp',
+      '/images/substance-livelink/07_final_render.webp'
+    ]
+  },
+  {
+    id: 'p16',
+    number: '16',
     slug: 'ai-career-flow',
     image: '/images/ai-career-flow/01_career_architect_hero.webp',
     gallery: [
@@ -176,8 +250,8 @@ export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
     ]
   },
   {
-    id: 'p12',
-    number: '12',
+    id: 'p17',
+    number: '17',
     slug: 'o2mation-pos',
     image: '/images/o2mation-pos/01_cashier_checkout_register.webp',
     gallery: [
@@ -191,8 +265,8 @@ export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
     ]
   },
   {
-    id: 'p13',
-    number: '13',
+    id: 'p18',
+    number: '18',
     slug: 'maran-atha',
     image: '/images/maran-atha/01_hero_portal.webp',
     gallery: [
@@ -206,8 +280,8 @@ export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
     ]
   },
   {
-    id: 'p14',
-    number: '14',
+    id: 'p19',
+    number: '19',
     slug: 'questmarket-gaming',
     image: '/images/questmarket-gaming/01_marketplace_storefront.webp',
     gallery: [
@@ -221,38 +295,8 @@ export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
     ]
   },
   {
-    id: 'p15',
-    number: '15',
-    slug: 'lms-frontend',
-    image: '/images/lms-frontend/01_edtech_learning_hero.webp',
-    gallery: [
-      '/images/lms-frontend/01_edtech_learning_hero.webp',
-      '/images/lms-frontend/02_course_catalog_filters.webp',
-      '/images/lms-frontend/03_interactive_lesson_player.webp',
-      '/images/lms-frontend/04_student_quiz_assessment.webp',
-      '/images/lms-frontend/05_bundled_learning_tracks.webp',
-      '/images/lms-frontend/06_arabic_rtl_lms_portal.webp',
-      '/images/lms-frontend/07_student_analytics_dashboard.webp'
-    ]
-  },
-  {
-    id: 'p16',
-    number: '16',
-    slug: 'ai-mood-jockey',
-    image: '/images/ai-mood-jockey/01_mood_generator_hero.webp',
-    gallery: [
-      '/images/ai-mood-jockey/01_mood_generator_hero.webp',
-      '/images/ai-mood-jockey/02_jamendo_playlist_player.webp',
-      '/images/ai-mood-jockey/03_valence_energy_telemetry.webp',
-      '/images/ai-mood-jockey/04_mood_history_journal.webp',
-      '/images/ai-mood-jockey/05_genre_instrumental_filters.webp',
-      '/images/ai-mood-jockey/06_playlist_exporter_modal.webp',
-      '/images/ai-mood-jockey/07_live_audio_visualizer.webp'
-    ]
-  },
-  {
-    id: 'p17',
-    number: '17',
+    id: 'p20',
+    number: '20',
     slug: 'o2-salary-suite',
     image: '/images/o2-salary-suite/01_payroll_dashboard_overview.webp',
     gallery: [
@@ -263,21 +307,6 @@ export const ARCHIVE_ENTRIES: ArchiveProjectEntry[] = [
       '/images/o2-salary-suite/05_arabic_rtl_payroll_suite.webp',
       '/images/o2-salary-suite/06_auth_login_portal.webp',
       '/images/o2-salary-suite/07_printable_payslip_modal.webp'
-    ]
-  },
-  {
-    id: 'p18',
-    number: '18',
-    slug: 'employee-salary-desktop',
-    image: '/images/employee-salary-desktop/01_payroll_desktop_dashboard.webp',
-    gallery: [
-      '/images/employee-salary-desktop/01_payroll_desktop_dashboard.webp',
-      '/images/employee-salary-desktop/02_employee_records_ledger.webp',
-      '/images/employee-salary-desktop/03_salary_calculation_modal.webp',
-      '/images/employee-salary-desktop/04_pdf_payslip_preview.webp',
-      '/images/employee-salary-desktop/05_ntp_hardware_lock.webp',
-      '/images/employee-salary-desktop/06_department_budget_analytics.webp',
-      '/images/employee-salary-desktop/07_access_control_manager.webp'
     ]
   }
 ];

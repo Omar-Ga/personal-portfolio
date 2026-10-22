@@ -155,6 +155,7 @@ export default function SidebarNav() {
               key={item.key}
               className={`${styles.navItem} gsap-nav-item`}
               onClick={() => handleNavClick(item)}
+              data-cursor="hover"
             >
               <span className={styles.navTextBase}>{label}</span>
               <span className={`${styles.navTextOrange} gsap-nav-orange`}>{label}</span>

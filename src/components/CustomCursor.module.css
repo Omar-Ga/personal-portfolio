@@ -4,14 +4,39 @@
   left: 0;
   width: 8px;
   height: 8px;
-  background-color: #fff;
+  background-color: #ffffff;
   border-radius: 50%;
   pointer-events: none;
-  z-index: 9999;
+  user-select: none;
+  -webkit-user-select: none;
+  z-index: 99999;
   mix-blend-mode: difference;
   visibility: hidden;
   opacity: 0;
-  transition: none !important;
-  will-change: transform;
+  will-change: transform, width, height;
+  contain: strict;
+  transition:
+    width 0.18s ease,
+    height 0.18s ease,
+    opacity 0.15s ease;
 }
 
+.cursorDot[data-visible="true"] {
+  opacity: 1;
+}
+
+.cursorDot[data-state="hover"] {
+  width: 22px;
+  height: 22px;
+}
+
+/* Text fields hand control back to the native I-beam. */
+.cursorDot[data-state="text"] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursorDot {
+    transition: none;
+  }
+}

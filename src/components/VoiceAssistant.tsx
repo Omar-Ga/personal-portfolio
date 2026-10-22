@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useGeminiLive } from '@/hooks/useGeminiLive';
+import { preloadGenAI, useGeminiLive } from '@/hooks/useGeminiLive';
 import VoiceOrb from './VoiceOrb';
 import styles from './VoiceAssistant.module.css';
 
@@ -176,6 +176,7 @@ export default function VoiceAssistant({ hidden = false }: VoiceAssistantProps) 
   /* ---------------------------------------------------------------- handlers */
 
   const open = () => {
+    preloadGenAI();
     setIsOpen(true);
     requestAnimationFrame(() => bodyRef.current?.focus());
   };
@@ -215,7 +216,7 @@ export default function VoiceAssistant({ hidden = false }: VoiceAssistantProps) 
         {/* Always mounted: the single orb + its CSS bloom. */}
         <div className={styles.orbDock}>
           <span className={styles.orbHalo} data-phase={phase} />
-          <VoiceOrb phase={phase} getLevels={getLevels} className={styles.orbCanvas} />
+          <VoiceOrb phase={phase} getLevels={getLevels} className={styles.orbCanvas} paused={hidden} />
         </div>
 
         <div
@@ -351,6 +352,7 @@ export default function VoiceAssistant({ hidden = false }: VoiceAssistantProps) 
             type="button"
             className={styles.trigger}
             onClick={open}
+            onPointerEnter={preloadGenAI}
             aria-expanded={false}
             aria-controls="voice-assistant-panel"
             aria-label={t('trigger')}

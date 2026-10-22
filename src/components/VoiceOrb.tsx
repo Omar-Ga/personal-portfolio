@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import type { AudioLevels, LivePhase } from '@/hooks/useGeminiLive';
+import { getPerfTier, isWebGLAvailable, prefersReducedMotion } from '@/lib/devicePerf';
 
 /* ==========================================================================
    Luxury AI Voice Orb
@@ -420,6 +421,8 @@ interface VoiceOrbProps {
   phase: LivePhase;
   getLevels: () => AudioLevels;
   className?: string;
+  /** Stops rendering entirely (e.g. while a full-screen overlay covers the widget). */
+  paused?: boolean;
 }
 
 interface PhaseTarget {
@@ -490,34 +493,44 @@ function targetsFor(phase: LivePhase): PhaseTarget {
   }
 }
 
-export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps) {
+export default function VoiceOrb({ phase, getLevels, className, paused = false }: VoiceOrbProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const phaseRef = useRef<LivePhase>(phase);
   const levelsRef = useRef(getLevels);
+  const pausedRef = useRef(paused);
 
   useEffect(() => {
     phaseRef.current = phase;
     levelsRef.current = getLevels;
-  }, [phase, getLevels]);
+    pausedRef.current = paused;
+  }, [phase, getLevels, paused]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const host = canvas?.parentElement;
-    if (!canvas || !host) return;
+    if (!canvas || !host || !isWebGLAvailable()) return;
+
+    // The orb is a 56-88px badge: it never justifies the discrete GPU or a
+    // full-detail mesh on budget hardware, and MSAA is redundant at DPR >= 2.
+    const tier = getPerfTier();
+    const dpr = Math.min(window.devicePixelRatio || 1, tier === 'high' ? 2 : 1.5);
+    const detail = tier === 'high' ? { core: 8, shell: 14, aura: 10, particles: 140 }
+                                    : { core: 5, shell: 8, aura: 6, particles: 80 };
+    const reduceMotion = prefersReducedMotion();
 
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance'
+        antialias: dpr < 2,
+        powerPreference: 'low-power'
       });
     } catch {
       return;
     }
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(dpr);
     renderer.setClearColor(0x000000, 0);
 
     const scene = new THREE.Scene();
@@ -539,7 +552,7 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
     };
 
     /* ------------------------------------------------- 1. Core Plasma Mesh */
-    const coreGeo = new THREE.IcosahedronGeometry(0.42, 8);
+    const coreGeo = new THREE.IcosahedronGeometry(0.42, detail.core);
     const coreMat = new THREE.ShaderMaterial({
       vertexShader: CORE_VERTEX,
       fragmentShader: CORE_FRAGMENT,
@@ -553,7 +566,7 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
 
     /* ----------------------------------------- 2. Main Crystal Glass Shell */
     // Detail 14 -> smooth organic sphere, visually identical at rendered size
-    const shellGeo = new THREE.IcosahedronGeometry(0.76, 14);
+    const shellGeo = new THREE.IcosahedronGeometry(0.76, detail.shell);
     const shellMat = new THREE.ShaderMaterial({
       vertexShader: SHELL_VERTEX,
       fragmentShader: SHELL_FRAGMENT,
@@ -564,7 +577,7 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
     scene.add(shellMesh);
 
     /* ------------------------------------------------ 3. Atmospheric Aura */
-    const auraGeo = new THREE.IcosahedronGeometry(0.96, 10);
+    const auraGeo = new THREE.IcosahedronGeometry(0.96, detail.aura);
     const auraMat = new THREE.ShaderMaterial({
       vertexShader: AURA_VERTEX,
       fragmentShader: AURA_FRAGMENT,
@@ -577,7 +590,7 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
     scene.add(auraMesh);
 
     /* --------------------------------- 4. Quantum Stardust Particle Cloud */
-    const PARTICLE_COUNT = 140;
+    const PARTICLE_COUNT = detail.particles;
     const particleGeo = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(PARTICLE_COUNT * 3);
     const aPhase = new Float32Array(PARTICLE_COUNT);
@@ -644,6 +657,7 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
     let elapsed = 0;
     let spin = 0.16;
     let visible = !document.hidden;
+    let sinceLast = 0;
 
     const currentCore = PALETTE.restCore.clone();
     const currentEdge = PALETTE.restEdge.clone();
@@ -656,9 +670,20 @@ export default function VoiceOrb({ phase, getLevels, className }: VoiceOrbProps)
     document.addEventListener('visibilitychange', onVisibility);
 
     const tick = (_time: number, deltaMs: number) => {
-      if (!visible) return;
+      if (!visible || pausedRef.current) return;
 
-      const delta = Math.min(deltaMs, 50) / 1000;
+      // Resting orb: drifting slowly in a corner, so 30fps (or a near-still
+      // 4fps for reduced-motion) is indistinguishable. Active conversation
+      // phases run at full rate on capable devices.
+      sinceLast += deltaMs;
+      const resting = phaseRef.current === 'idle' || phaseRef.current === 'error';
+      const minInterval = reduceMotion && resting ? 250
+        : resting || tier === 'low' ? 1000 / 30
+        : 0;
+      if (minInterval && sinceLast < minInterval - 1) return;
+
+      const delta = Math.min(sinceLast, 50) / 1000;
+      sinceLast = 0;
       const target = targetsFor(phaseRef.current);
       const levels = levelsRef.current();
 

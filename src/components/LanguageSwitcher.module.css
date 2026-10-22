@@ -75,3 +75,13 @@
   font-size: 1.2rem;
   letter-spacing: normal;
 }
+
+@media (pointer: coarse) {
+  .inline .option {
+    min-width: 44px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

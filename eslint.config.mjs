@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Remotion project for the Services motion clips (own deps and tsconfig).
+    "motion/**",
   ]),
 ]);
 

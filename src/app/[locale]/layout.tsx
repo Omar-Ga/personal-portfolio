@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -13,16 +13,28 @@ const outfit = Outfit({
   display: "swap"
 });
 
+// Arabic-only face: don't preload it for every visitor. The browser still
+// fetches it on demand (unicode-range) as soon as Arabic glyphs are rendered,
+// so /ar is unaffected while /en saves a render-blocking-priority font request.
 const readexPro = Readex_Pro({
   subsets: ["arabic"],
   variable: "--font-readex",
-  display: "swap"
+  display: "swap",
+  preload: false
 });
 
 /** Pre-render one static shell per locale. */
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
+
+/** `viewport-fit=cover` lets the page paint under notches; the CSS then pads
+ *  fixed UI with `env(safe-area-inset-*)` (see --safe-* in globals.css). */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover"
+};
 
 export async function generateMetadata({
   params

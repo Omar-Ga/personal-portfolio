@@ -52,6 +52,7 @@
 .imageSlot {
   width: 100%;
   height: 100%;
+  position: relative;
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
@@ -64,6 +65,28 @@
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+/* Motion slides are UI compositions: always show them whole (on their own dark
+   backdrop, which matches the clip's vignette) instead of cropping the edges. */
+.motionSlot {
+  background-color: #07070a;
+}
+
+.motionSlot .projectImage,
+.motionSlot .slideVideo {
+  object-fit: contain;
+}
+
+/* Motion clip of the expanded slide, layered over its poster image. */
+.slideVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
 }
 
 .placeholderCard {
@@ -212,6 +235,37 @@
   z-index: 1;
 }
 
+/* Scrubbed half of the split SkyCourt screen, layered over its final-frame poster. */
+.doorVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0;
+}
+
+.doorVideoReady {
+  opacity: 1;
+}
+
+/* Anchor both halves to the seam so the shared screen lines up at any aspect ratio. */
+.doorLeft {
+  object-position: right center;
+}
+
+.doorRight {
+  object-position: left center;
+}
+
+@media (max-width: 768px) {
+  .doorLeft,
+  .doorRight {
+    object-position: center;
+  }
+}
+
 /* Overlay gradient for text readability */
 .overlay {
   position: absolute;
@@ -266,7 +320,7 @@
     width: 100%;
     height: auto;
     min-height: 100dvh;
-    padding: 70px 1.25rem 40px 1.25rem;
+    padding: calc(70px + var(--safe-top)) max(1.25rem, var(--safe-right)) calc(40px + var(--safe-bottom)) max(1.25rem, var(--safe-left));
     gap: 16px;
   }
 
@@ -374,6 +428,62 @@
 }
 
 /* ==========================================================================
+   SHORT VIEWPORTS (desktop layout, e.g. landscape phones wider than 768px)
+   The horizontal panel is a fixed 100vh slab: header clearance + a 25vh text
+   block no longer fit under ~600px, so the text block grows and type shrinks.
+   ========================================================================== */
+@media (min-width: 769px) and (max-height: 600px) {
+  .projectPanel {
+    padding-top: 56px;
+    padding-bottom: 12px;
+    gap: 10px;
+  }
+
+  .imageLayout {
+    gap: 10px;
+  }
+
+  .imageSlot,
+  .placeholderCard {
+    border-radius: 12px;
+  }
+
+  .textSection {
+    height: auto;
+    min-height: 26vh;
+    max-height: 38vh;
+    justify-content: flex-start;
+  }
+
+  .projectTitle {
+    font-size: clamp(1.3rem, min(4vw, 7.5vh), 4rem);
+    margin-bottom: 0.1rem;
+  }
+
+  .projectRole {
+    font-size: clamp(0.7rem, min(1.2vw, 3vh), 1.2rem);
+    margin-bottom: 0.2rem;
+  }
+
+  .projectDescription {
+    font-size: clamp(0.72rem, min(1.1vw, 3.2vh), 1.1rem);
+    line-height: 1.35;
+  }
+
+  .founderInfo {
+    padding: 16px 20px;
+  }
+
+  .founderName {
+    font-size: clamp(1.4rem, 8vh, 3rem) !important;
+  }
+
+  .teaserTitle {
+    font-size: clamp(2rem, min(8vw, 16vh), 8rem);
+  }
+}
+
+/* ==========================================================================
    ARABIC LOCALE OVERRIDES
    ========================================================================== */
 :global(html[lang="ar"]) .projectPanel {
@@ -459,5 +569,24 @@
 
   :global(html[lang="ar"]) .founderName {
     line-height: 1.15;
+  }
+}
+
+/* Landscape phones on the stacked (<=768px) layout: show the big image beside
+   the text instead of letting a 40dvh image + text overflow a 375px viewport. */
+@media (max-width: 768px) and (max-height: 520px) {
+  .projectPanel {
+    padding-top: calc(56px + var(--safe-top));
+    padding-bottom: 24px;
+    min-height: 0;
+  }
+
+  .imageLayout {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: clamp(150px, 62dvh, 260px) 56px;
+  }
+
+  .showcaseWrapper {
+    min-height: 0;
   }
 }

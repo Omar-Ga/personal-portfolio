@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { GoogleGenAI, type LiveServerMessage, type Session } from '@google/genai';
+import type { LiveServerMessage, Session } from '@google/genai';
 
 /* ==========================================================================
    Gemini Live session hook
@@ -97,6 +97,15 @@ function base64ToInt16(base64: string): Int16Array {
  * anything that throws or silently lands on a different rate falls back to the
  * hardware rate, and callers resample.
  */
+/**
+ * The SDK is only needed once a session actually starts, so it stays out of the
+ * widget's initial chunk. `preloadGenAI` lets the UI warm it on first intent.
+ */
+const loadGenAI = () => import('@google/genai');
+export const preloadGenAI = () => {
+  void loadGenAI().catch(() => {});
+};
+
 function createContext(sampleRate: number): AudioContext {
   const Ctor: typeof AudioContext =
     window.AudioContext ??
@@ -502,6 +511,7 @@ export function useGeminiLive(locale: string): GeminiLiveHook {
       freqBufRef.current = new Uint8Array(micAnalyser.frequencyBinCount);
 
       /* 4 — live session over the constrained (ephemeral-token) endpoint */
+      const { GoogleGenAI } = await loadGenAI();
       const ai = new GoogleGenAI({
         apiKey: token,
         httpOptions: { apiVersion: 'v1alpha' }

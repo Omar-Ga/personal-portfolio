@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
 import { useTranslations } from "next-intl";
+import { isSmallVideoVariant, prefersReducedMotion, prefersSavedData } from "@/lib/devicePerf";
 import styles from "./ServicesSection.module.css";
 
 // Register plugins
@@ -43,6 +44,65 @@ const SERVICE_IMAGES: Record<ServiceId, string[]> = {
     "/images/services/ai/ai_5.webp"
   ]
 };
+
+/**
+ * Looping motion clips (rendered with Remotion) layered over the poster image of
+ * the same slide. Only the expanded slide ever loads or plays its clip.
+ */
+const SERVICE_VIDEOS: Partial<Record<ServiceId, string[]>> = {
+  s2: [1, 2, 3, 4, 5].map((n) => `/videos/services/systems_${n}`),
+  s3: [1, 2, 3, 4, 5].map((n) => `/videos/services/ai_${n}`)
+};
+
+/**
+ * Plays `base`.mp4 (or the `_mobile` encode on phones / low-tier devices) over
+ * the poster while it is on screen, fading in once frames are actually playing.
+ * Skipped for reduced motion and Data Saver, where the poster alone is shown.
+ */
+function SlideVideo({ base }: { base: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    // Without a src the element stays invisible, leaving the poster alone.
+    if (!video || prefersReducedMotion() || prefersSavedData()) return;
+    video.src = `${base}${isSmallVideoVariant() ? "_mobile" : ""}.mp4`;
+
+    // The services track is a horizontally pinned strip, so a panel's active
+    // slide can be far off screen: only decode while it is actually visible.
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !document.hidden) video.play().catch(() => {});
+      else video.pause();
+    });
+    io.observe(video);
+    const onVisibility = () => {
+      if (document.hidden) video.pause();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    };
+  }, [base]);
+
+  return (
+    <video
+      ref={videoRef}
+      className={styles.slideVideo}
+      style={{ opacity: playing ? 1 : 0 }}
+      muted
+      loop
+      playsInline
+      preload="none"
+      aria-hidden="true"
+      onPlaying={() => setPlaying(true)}
+    />
+  );
+}
 
 /** A single feature slide within a service pillar. */
 interface ServiceItem {
@@ -122,8 +182,9 @@ const ServicePanel = React.memo(({ serviceId }: { serviceId: ServiceId }) => {
         {displayImages.map((url, i) => (
           <div 
             key={i}
-            className={`${styles.imageSlot} img-target-${serviceId} ${getPosClass(i)}`}
+            className={`${styles.imageSlot} ${SERVICE_VIDEOS[serviceId] ? styles.motionSlot : ""} img-target-${serviceId} ${getPosClass(i)}`}
             onClick={() => handleSwap(i)}
+            data-cursor="hover"
             data-flip-id={`img-${serviceId}-${i}`}
           >
             {url ? (
@@ -134,7 +195,8 @@ const ServicePanel = React.memo(({ serviceId }: { serviceId: ServiceId }) => {
                   className={styles.projectImage}
                   alt={tSection("imageAlt", { index: i })}
                   decoding="async"
-                  loading={i === 0 ? "eager" : "lazy"}
+                  loading="lazy"
+                  fetchPriority="low"
                 />
               </picture>
             ) : (
@@ -144,6 +206,9 @@ const ServicePanel = React.memo(({ serviceId }: { serviceId: ServiceId }) => {
                 </span>
               </div>
             )}
+            {i === activeIndex && SERVICE_VIDEOS[serviceId]?.[i] ? (
+              <SlideVideo base={SERVICE_VIDEOS[serviceId]![i]} />
+            ) : null}
           </div>
         ))}
       </div>
@@ -164,7 +229,53 @@ export default function ServicesSection() {
   const trackRef = useRef<HTMLDivElement>(null);
   const leftHalfRef = useRef<HTMLDivElement>(null);
   const rightHalfRef = useRef<HTMLDivElement>(null);
+  const leftVideoRef = useRef<HTMLVideoElement>(null);
+  const rightVideoRef = useRef<HTMLVideoElement>(null);
+  /** Scrubs both door clips to `p` (0..1); a no-op until they are loaded. */
+  const seekDoorsRef = useRef<(p: number) => void>(() => {});
   const t = useTranslations('services.teaser');
+
+  // The finale doors carry one SkyCourt screen split down the middle: the
+  // blueprint (systems) half and the finished-product (craft) half, rendered
+  // with Remotion (motion/src/MindSplit.tsx). Their playback is scrubbed by the
+  // door scroll timeline. Clips load once the services section is near; under
+  // reduced motion or Data Saver the final-frame posters are shown instead.
+  useEffect(() => {
+    const section = sectionRef.current;
+    const videos = [leftVideoRef.current, rightVideoRef.current].filter(Boolean) as HTMLVideoElement[];
+    if (!section || videos.length < 2 || prefersReducedMotion() || prefersSavedData()) return;
+
+    let lastP = -1;
+    const seek = (p: number) => {
+      lastP = p;
+      for (const v of videos) {
+        if (v.readyState < 1 || !v.duration) continue;
+        const target = p * (v.duration - 0.05);
+        if (Math.abs(v.currentTime - target) > 0.015) v.currentTime = target;
+      }
+    };
+
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      io.disconnect();
+      const suffix = isSmallVideoVariant() ? "_mobile" : "";
+      videos.forEach((v, i) => {
+        v.preload = "auto";
+        v.src = `/videos/mind/${i === 0 ? "systems" : "craft"}${suffix}.mp4`;
+        v.addEventListener("loadeddata", () => {
+          if (lastP >= 0) seek(lastP);
+          v.classList.add(styles.doorVideoReady);
+        }, { once: true });
+      });
+      seekDoorsRef.current = seek;
+    }, { rootMargin: "100% 0px" });
+    io.observe(section);
+
+    return () => {
+      io.disconnect();
+      seekDoorsRef.current = () => {};
+    };
+  }, []);
 
   useGSAP(() => {
     const track = trackRef.current;
@@ -215,6 +326,14 @@ export default function ServicesSection() {
         duration: () => getVerticalDist() 
       }, "aboutPanel");
 
+      const doorBuild = { p: 0 };
+      tl.to(doorBuild, {
+        p: 1,
+        ease: "none",
+        duration: () => getVerticalDist(),
+        onUpdate: () => seekDoorsRef.current(doorBuild.p)
+      }, "aboutPanel");
+
       tl.to({}, { duration: () => getHoldDist() });
     });
 
@@ -241,8 +360,11 @@ export default function ServicesSection() {
 
         mobileTl.addLabel("aboutPanel");
 
+        const mobileBuild = { p: 0 };
+
         mobileTl.to(leftHalfRef.current, { yPercent: 0, ease: "none", duration: 1 }, "aboutPanel")
                 .to(rightHalfRef.current, { yPercent: 0, ease: "none", duration: 1 }, "aboutPanel")
+                .to(mobileBuild, { p: 1, ease: "none", duration: 1, onUpdate: () => seekDoorsRef.current(mobileBuild.p) }, "aboutPanel")
                 .to({}, { duration: 0.4 });
       }
     });
@@ -273,13 +395,14 @@ export default function ServicesSection() {
             {/* Left Pillar */}
             <div className={`${styles.windowHalf} ${styles.leftHalf}`} ref={leftHalfRef}>
               <picture style={{ width: '100%', height: '100%', display: 'block', position: 'absolute', top: 0, left: 0, zIndex: 1 }}>
-                <source media="(max-width: 768px)" srcSet="/images/split/tech_direction_mobile.webp" />
+                <source media="(max-width: 768px)" srcSet="/images/split/mind_systems_mobile.webp" />
                 <img 
-                  src="/images/split/tech_direction.webp" 
+                  src="/images/split/mind_systems.webp" 
                   alt={t('left.imageAlt')} 
-                  className={styles.founderImage} 
+                  className={`${styles.founderImage} ${styles.doorLeft}`}
                 />
               </picture>
+              <video ref={leftVideoRef} className={`${styles.doorVideo} ${styles.doorLeft}`} muted playsInline preload="none" aria-hidden="true" />
               <div className={styles.overlay}></div>
               <div className={styles.founderInfo}>
                 <p className={styles.founderRole}>{t('left.role')}</p>
@@ -297,13 +420,14 @@ export default function ServicesSection() {
             {/* Right Pillar */}
             <div className={`${styles.windowHalf} ${styles.rightHalf}`} ref={rightHalfRef}>
               <picture style={{ width: '100%', height: '100%', display: 'block', position: 'absolute', top: 0, left: 0, zIndex: 1 }}>
-                <source media="(max-width: 768px)" srcSet="/images/split/client_strategy_mobile.webp" />
+                <source media="(max-width: 768px)" srcSet="/images/split/mind_craft_mobile.webp" />
                 <img 
-                  src="/images/split/client_strategy.webp" 
+                  src="/images/split/mind_craft.webp" 
                   alt={t('right.imageAlt')} 
-                  className={styles.founderImage} 
+                  className={`${styles.founderImage} ${styles.doorRight}`}
                 />
               </picture>
+              <video ref={rightVideoRef} className={`${styles.doorVideo} ${styles.doorRight}`} muted playsInline preload="none" aria-hidden="true" />
               <div className={styles.overlay}></div>
               <div className={styles.founderInfo}>
                 <p className={styles.founderRole}>{t('right.role')}</p>

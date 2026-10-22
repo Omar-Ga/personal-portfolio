@@ -16,6 +16,7 @@ import GlobalNav from "@/components/GlobalNav";
 import ServicesSection from "@/components/ServicesSection";
 import StorySection from "@/components/StorySection";
 import ProjectsSection from "@/components/ProjectsSection";
+import { attachVideoSources } from '@/lib/devicePerf';
 import styles from '../page.module.css';
 
 // Pull heavy off-screen overlays and 3D/AI widgets out of the initial bundle
@@ -36,8 +37,37 @@ export default function Home() {
   const [isArchiveOpen, setIsArchiveOpen] = useState(false);
   const [hasOpenedArchive, setHasOpenedArchive] = useState(false);
   const [isHeroVideoLoaded, setIsHeroVideoLoaded] = useState(false);
+  const [isVoiceReady, setIsVoiceReady] = useState(false);
   const lenis = useLenis();
 
+
+  // Choose the hero encode on the client (size/tier aware) and start fetching it.
+  // Data Saver / 2G visitors keep the static page background instead.
+  useEffect(() => {
+    if (heroVideoRef.current) attachVideoSources(heroVideoRef.current, 'light_web');
+  }, []);
+
+  // The voice widget pulls in three.js; mount it once the page is idle after the
+  // intro instead of competing with the boot animation and first scroll.
+  useEffect(() => {
+    if (!isLoaded || isVoiceReady) return;
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    let idleId = 0;
+    const timer = setTimeout(() => {
+      if (w.requestIdleCallback) {
+        idleId = w.requestIdleCallback(() => setIsVoiceReady(true), { timeout: 3000 });
+      } else {
+        setIsVoiceReady(true);
+      }
+    }, 1500);
+    return () => {
+      clearTimeout(timer);
+      if (idleId && w.cancelIdleCallback) w.cancelIdleCallback(idleId);
+    };
+  }, [isLoaded, isVoiceReady]);
 
   // Auto-pause Hero video when user scrolls off-screen
   useEffect(() => {
@@ -106,31 +136,23 @@ export default function Home() {
     }
 
     if (isLoaded) {
-      // Force ScrollTrigger refresh once fonts & assets finish loading
-      let resizeTimer: NodeJS.Timeout;
+      // Force ScrollTrigger refresh once fonts & assets finish loading.
+      // `load` and `resize` are already in ScrollTrigger's own autoRefreshEvents
+      // (debounced); handling them here too ran every refresh twice, and on
+      // phones refreshed on each address-bar collapse.
       const handleRefresh = () => {
         ScrollTrigger.refresh();
-      };
-      const debouncedRefresh = () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(handleRefresh, 200);
       };
 
       if (typeof document !== 'undefined' && 'fonts' in document) {
         document.fonts.ready.then(handleRefresh);
       }
 
-      window.addEventListener('load', handleRefresh);
-      window.addEventListener('resize', debouncedRefresh);
-
       // Delayed refresh as fallback for dynamic media
       const timer = setTimeout(handleRefresh, 1000);
 
       return () => {
-        window.removeEventListener('load', handleRefresh);
-        window.removeEventListener('resize', debouncedRefresh);
         clearTimeout(timer);
-        clearTimeout(resizeTimer);
       };
     }
   }, [lenis, isLoaded]);
@@ -198,7 +220,7 @@ export default function Home() {
     const mm = gsap.matchMedia();
 
     // Desktop Video Parallax (enabled when fine pointer/hover present)
-    mm.add("(hover: hover)", () => {
+    mm.add("(hover: hover) and (prefers-reduced-motion: no-preference)", () => {
       const videoBg = document.querySelector(".gsap-video-bg") as HTMLElement | null;
       const videoXTo = videoBg ? gsap.quickTo(videoBg, "x", { duration: 1.2, ease: "power2" }) : null;
       const videoYTo = videoBg ? gsap.quickTo(videoBg, "y", { duration: 1.2, ease: "power2" }) : null;
@@ -266,6 +288,7 @@ export default function Home() {
             loop 
             muted 
             playsInline
+            preload="auto"
             style={{ opacity: isHeroVideoLoaded ? 1 : 0 }}
             onLoadedData={() => {
               setIsHeroVideoLoaded(true);
@@ -274,10 +297,7 @@ export default function Home() {
               }
             }}
           >
-            <source src="/light_web_mobile.webm" type="video/webm" media="(max-width: 768px)" />
-            <source src="/light_web_mobile.mp4" type="video/mp4" media="(max-width: 768px)" />
-            <source src="/light_web.webm" type="video/webm" />
-            <source src="/light_web.mp4" type="video/mp4" />
+            {/* <source> children are attached on the client by attachVideoSources() */}
           </video>
 
           <BootLoader onComplete={() => setIsLoaded(true)} />
@@ -313,7 +333,7 @@ export default function Home() {
 
       <ContactOverlay isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
       {hasOpenedArchive && <AllProjectsOverlay isOpen={isArchiveOpen} onClose={() => setIsArchiveOpen(false)} />}
-      {isLoaded && <VoiceAssistant hidden={isContactOpen || isArchiveOpen} />}
+      {isLoaded && isVoiceReady && <VoiceAssistant hidden={isContactOpen || isArchiveOpen} />}
       <CustomCursor />
     </>
   );

@@ -2,7 +2,8 @@
   position: fixed;
   top: 24px;
   left: 0;
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   display: flex;
   justify-content: center;
   gap: 40px;
@@ -13,7 +14,7 @@
   opacity: 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px), (max-height: 500px) and (max-width: 1000px) {
   .topNav {
     display: none !important;
   }
@@ -29,6 +30,7 @@
   cursor: pointer;
   transition: opacity 0.3s ease;
   pointer-events: auto;
+  white-space: nowrap;
 }
 
 .topNavItem:hover {
@@ -36,7 +38,10 @@
 }
 
 :global(html[lang="ar"]) .topNav {
-  gap: 56px;
+  /* Arabic runs at a 150% root size, so the five links + switcher are much
+     wider; let the gap shrink with the viewport so the bar never overflows. */
+  gap: clamp(14px, 3.2vw, 56px);
+  padding: 0 12px;
 }
 
 :global(html[lang="ar"]) .topNavItem {

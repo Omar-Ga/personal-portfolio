@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { getPerfTier, prefersReducedMotion } from "@/lib/devicePerf";
+import { linkProgramAsync } from "@/lib/glProgram";
 
 const VERTEX_SHADER = `
 attribute vec2 a_position;
@@ -10,7 +12,11 @@ void main() {
 `;
 
 const FRAGMENT_SHADER = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
+#else
+precision mediump float;
+#endif
 uniform vec2 resolution;
 uniform float time;
 uniform float xScale;
@@ -36,45 +42,6 @@ void main() {
 }
 `;
 
-function compileShader(gl: WebGLRenderingContext, type: number, src: string): WebGLShader | null {
-  const shader = gl.createShader(type);
-  if (!shader) return null;
-  gl.shaderSource(shader, src);
-  gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error("Shader error:", gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
-    return null;
-  }
-  return shader;
-}
-
-function createProgram(gl: WebGLRenderingContext, vsSrc: string, fsSrc: string): WebGLProgram | null {
-  const vs = compileShader(gl, gl.VERTEX_SHADER, vsSrc);
-  const fs = compileShader(gl, gl.FRAGMENT_SHADER, fsSrc);
-  if (!vs || !fs) return null;
-
-  const prog = gl.createProgram();
-  if (!prog) return null;
-
-  gl.attachShader(prog, vs);
-  gl.attachShader(prog, fs);
-  gl.linkProgram(prog);
-
-  // Detach and delete shaders after linking to free GPU memory
-  gl.detachShader(prog, vs);
-  gl.detachShader(prog, fs);
-  gl.deleteShader(vs);
-  gl.deleteShader(fs);
-
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-    console.error("Program link error:", gl.getProgramInfoLog(prog));
-    gl.deleteProgram(prog);
-    return null;
-  }
-  return prog;
-}
-
 export function WebGLShader() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -85,8 +52,12 @@ export function WebGLShader() {
     const gl = canvas.getContext("webgl", { alpha: true, antialias: false });
     if (!gl) return;
 
-    const program = createProgram(gl, VERTEX_SHADER, FRAGMENT_SHADER);
-    if (!program) return;
+    // Shaders compile in the background (see linkProgramAsync); everything
+    // below runs once the program is ready.
+    let disposed = false;
+    let cleanup = () => {};
+    void linkProgramAsync(gl, VERTEX_SHADER, FRAGMENT_SHADER, () => !disposed).then((program) => {
+    if (!program || disposed) return;
 
     // Fullscreen 2D quad (2 triangles)
     const quadBuffer = gl.createBuffer();
@@ -111,14 +82,24 @@ export function WebGLShader() {
     const uYScale = gl.getUniformLocation(program, "yScale");
     const uDistortion = gl.getUniformLocation(program, "distortion");
 
-    let animationId: number;
+    const tier = getPerfTier();
+    const frameInterval = tier === 'high' ? 0 : 1000 / 30;
+    const reduceMotion = prefersReducedMotion();
+
+    let animationId = 0;
     let time = 0.0;
+    let lastFrame = 0;
     let isVisible = true;
 
     const startLoop = () => {
-      if (animationId) return;
+      if (animationId || document.hidden) return;
       animationId = requestAnimationFrame(render);
     };
+
+    const onVisibility = () => {
+      if (!document.hidden && isVisible) startLoop();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
 
     const io = new IntersectionObserver(([entry]) => {
       const wasVisible = isVisible;
@@ -131,10 +112,12 @@ export function WebGLShader() {
       const parent = canvas.parentElement;
       const width = parent ? parent.clientWidth : window.innerWidth;
       const height = parent ? parent.clientHeight : window.innerHeight;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Full-viewport fragment shader: cost scales with pixel count, and the
+      // output is a set of soft sine lines, so cap well below native DPR.
+      const dpr = Math.min(window.devicePixelRatio || 1, tier === 'high' ? 1.5 : 1);
 
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      canvas.width = Math.max(1, Math.round(width * dpr));
+      canvas.height = Math.max(1, Math.round(height * dpr));
       gl.viewport(0, 0, canvas.width, canvas.height);
     };
 
@@ -147,13 +130,21 @@ export function WebGLShader() {
     };
     window.addEventListener("resize", debouncedResize);
 
-    const render = () => {
-      if (!isVisible) {
+    const render = (now: number) => {
+      if (!isVisible || document.hidden) {
         animationId = 0;
         return;
       }
 
-      time += 0.01;
+      // Lower-tier devices animate at 30fps; the wave drift looks identical
+      // and the GPU cost halves.
+      if (frameInterval && now - lastFrame < frameInterval - 1) {
+        animationId = requestAnimationFrame(render);
+        return;
+      }
+      lastFrame = now;
+
+      if (!reduceMotion) time += frameInterval ? 0.02 : 0.01;
 
       gl.clearColor(1.0, 1.0, 1.0, 1.0);
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -177,13 +168,21 @@ export function WebGLShader() {
 
     startLoop();
 
-    return () => {
+    cleanup = () => {
       io.disconnect();
       clearTimeout(resizeTimer);
       cancelAnimationFrame(animationId);
+      document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("resize", debouncedResize);
       if (quadBuffer) gl.deleteBuffer(quadBuffer);
       if (program) gl.deleteProgram(program);
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
+    };
+    });
+
+    return () => {
+      disposed = true;
+      cleanup();
     };
   }, []);
 

@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTranslations } from 'next-intl';
+import { attachVideoSources, isSmallVideoVariant } from '@/lib/devicePerf';
 import styles from './StorySection.module.css';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -34,11 +35,16 @@ export default function StorySection({ isLoaded = false }: StorySectionProps) {
     return () => clearTimeout(timer);
   }, [isLoaded, shouldLoadVideo]);
 
-  // Safari/iOS fix: explicitly trigger video loading when dynamic sources mount
+  // Resolve which encode to fetch only once loading is wanted; Data Saver / 2G
+  // visitors keep the poster frame and never download the clip.
+  // (attachVideoSources also calls load(), which covers the Safari/iOS quirk.)
   useEffect(() => {
-    if (shouldLoadVideo && videoRef.current) {
-      videoRef.current.load();
-    }
+    const video = videoRef.current;
+    if (!shouldLoadVideo || !video) return;
+    // Poster is fetched together with the clip (not at first paint, the section
+    // is far below the fold), and the 17 KB mobile poster is used on small screens.
+    video.poster = isSmallVideoVariant() ? '/story_bg_mobile_poster.webp' : '/story_bg_poster.webp';
+    attachVideoSources(video, 'story_bg');
   }, [shouldLoadVideo]);
 
   useEffect(() => {
@@ -110,7 +116,6 @@ export default function StorySection({ isLoaded = false }: StorySectionProps) {
         loop 
         muted 
         playsInline
-        poster="/story_bg_poster.webp"
         preload="auto"
         style={{ opacity: isVideoLoaded ? 1 : 0 }}
         onCanPlayThrough={() => {
@@ -120,20 +125,17 @@ export default function StorySection({ isLoaded = false }: StorySectionProps) {
           }
         }}
       >
-        {shouldLoadVideo && (
-          <>
-            <source src="/story_bg_mobile.webm" type="video/webm" media="(max-width: 768px)" />
-            <source src="/story_bg_mobile.mp4" type="video/mp4" media="(max-width: 768px)" />
-            <source src="/story_bg.webm" type="video/webm" />
-            <source src="/story_bg.mp4" type="video/mp4" />
-          </>
-        )}
+        {/* <source> children are attached on demand by attachVideoSources() */}
       </video>
       <div className={styles.storyContainer}>
         <h2 className={styles.storyHeadline}>
           {headlineLines.map((line, i) => (
             <React.Fragment key={i}>
-              {line}
+              {line.split(' ').map((word, j) => (
+                <span key={`h-${i}-${j}`} className="gsap-story-word">
+                  {word}{' '}
+                </span>
+              ))}
               {i < headlineLines.length - 1 ? <br /> : null}
             </React.Fragment>
           ))}

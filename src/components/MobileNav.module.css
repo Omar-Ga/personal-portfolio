@@ -4,16 +4,16 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 64px;
+  height: calc(64px + var(--safe-top));
   z-index: 150;
-  padding: 0 1.5rem;
+  padding: var(--safe-top) max(1.5rem, var(--safe-right)) 0 max(1.5rem, var(--safe-left));
   align-items: center;
   justify-content: space-between;
   mix-blend-mode: difference;
   pointer-events: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px), (max-height: 500px) and (max-width: 1000px) {
   .mobileHeader {
     display: flex;
   }
@@ -73,24 +73,26 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 5rem 2rem 3rem 2rem;
+  padding: calc(5rem + var(--safe-top)) max(2rem, var(--safe-right)) calc(3rem + var(--safe-bottom)) max(2rem, var(--safe-left));
   opacity: 0;
   visibility: hidden;
   will-change: transform, opacity;
   overscroll-behavior: contain;
   touch-action: none;
+  overflow: hidden;
 }
 
 .drawerNav {
   display: flex;
   flex-direction: column;
-  gap: 1.8rem;
+  gap: clamp(0.9rem, 3.6dvh, 1.8rem);
   align-items: flex-start;
 }
 
 .drawerNavItem {
   font-family: var(--font-serif);
-  font-size: clamp(2.2rem, 9vw, 3.5rem);
+  font-size: clamp(1.8rem, min(9vw, 7dvh), 3.5rem);
+  min-height: 44px;
   font-weight: 500;
   letter-spacing: -0.02em;
   text-transform: uppercase;
@@ -130,4 +132,24 @@
 .footerRole {
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Short landscape phones: the stacked drawer cannot fit, so tighten it and put
+   the five links on a wrapped row instead of one tall column. */
+@media (max-width: 900px) and (max-height: 520px) {
+  .drawerOverlay {
+    padding-top: calc(4rem + var(--safe-top));
+    padding-bottom: calc(1rem + var(--safe-bottom));
+  }
+  .drawerNav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+  }
+  .drawerNavItem {
+    font-size: clamp(1.3rem, 5.5dvh, 2rem);
+  }
+  .drawerFooter {
+    padding-top: 0.75rem;
+  }
 }

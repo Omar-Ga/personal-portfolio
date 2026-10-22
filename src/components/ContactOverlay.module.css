@@ -5,11 +5,13 @@
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  z-index: 100;
+  /* Above MobileNav's header (150) so its hamburger can't sit on the close button. */
+  z-index: 160;
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  will-change: opacity, visibility;
+  /* No permanent will-change: a viewport-sized promoted layer sat in GPU memory
+     for the whole visit; GSAP's opacity tween promotes it only while animating. */
   display: flex;
   overflow: hidden;
   overscroll-behavior: contain;
@@ -168,7 +170,7 @@
 
 @media (max-width: 900px) {
   .contentContainer {
-    padding: 1.5rem 1.25rem 2rem 1.25rem;
+    padding: calc(1rem + var(--safe-top)) max(1.25rem, var(--safe-right)) calc(1.5rem + var(--safe-bottom)) max(1.25rem, var(--safe-left));
   }
   .closeBtn {
     padding: 0.5rem;
@@ -180,10 +182,16 @@
     gap: 1.5rem;
     padding: 0;
     overflow-y: auto;
+    min-height: 0;
+    justify-content: flex-start;
+    align-items: stretch;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   .leftCol, .rightCol {
     max-width: 100%;
     width: 100%;
+    flex: none; /* base rule is flex: 1, which stretched the columns apart in a column layout */
   }
   .title {
     font-size: clamp(2.8rem, 9vw, 4.5rem);
@@ -204,5 +212,56 @@
     text-align: center;
     padding: 1rem;
     margin-top: 0.5rem;
+    min-height: 48px;
+  }
+  .closeBtn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Landscape phones / short windows: title + form side by side, form scrolls. */
+@media (max-height: 520px) and (max-width: 900px) {
+  .contentContainer {
+    padding-top: calc(0.5rem + var(--safe-top));
+    padding-bottom: calc(0.75rem + var(--safe-bottom));
+  }
+  .mainLayout {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+  .leftCol {
+    flex: 0 0 42%;
+    max-width: 42%;
+  }
+  .rightCol {
+    flex: 1 1 0;
+    min-width: 0;
+    max-height: 100%;
+    overflow-y: auto;
+  }
+  .title {
+    font-size: clamp(2rem, min(7vw, 16dvh), 3.2rem);
+  }
+  .form {
+    gap: 1rem;
+  }
+  .textarea {
+    min-height: 64px;
+  }
+}
+
+/* Wide-but-short desktops: shrink the giant title so the form stays visible. */
+@media (min-width: 901px) and (max-height: 640px) {
+  .contentContainer {
+    padding: 1.5rem 3rem;
+  }
+  .title {
+    font-size: clamp(3rem, min(10vw, 20dvh), 10rem);
+    margin-bottom: 1rem;
+  }
+  .form {
+    gap: 1.5rem;
   }
 }

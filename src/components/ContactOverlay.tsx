@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useTranslations } from 'next-intl';
+import { attachVideoSources } from '@/lib/devicePerf';
 import styles from './ContactOverlay.module.css';
 
 if (typeof window !== "undefined") {
@@ -24,11 +25,9 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const t = useTranslations('contact');
 
-  // Safari/iOS fix: explicitly trigger video loading when dynamic sources mount
+  // (attachVideoSources also calls load(), which covers the Safari/iOS quirk.)
   useEffect(() => {
-    if (shouldLoadVideo && videoRef.current) {
-      videoRef.current.load();
-    }
+    if (shouldLoadVideo && videoRef.current) attachVideoSources(videoRef.current, 'dark_cropped');
   }, [shouldLoadVideo]);
 
   // Dismiss overlay on Escape key
@@ -152,14 +151,7 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
           }
         }}
       >
-        {shouldLoadVideo && (
-          <>
-            <source src="/dark_cropped_mobile.webm" type="video/webm" media="(max-width: 768px)" />
-            <source src="/dark_cropped_mobile.mp4" type="video/mp4" media="(max-width: 768px)" />
-            <source src="/dark_cropped.webm" type="video/webm" />
-            <source src="/dark_cropped.mp4" type="video/mp4" />
-          </>
-        )}
+        {/* <source> children are attached on demand by attachVideoSources() */}
       </video>
 
       <div className={styles.contentContainer}>

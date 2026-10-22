@@ -21,7 +21,8 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
     // Performance optimizations
     gsap.config({ force3D: true });
 
-    const skipIntro = false; // Entrance sequence enabled
+    // Entrance sequence enabled, except for visitors who asked for reduced motion.
+    const skipIntro = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       // Lock scroll and reset position during boot phase
       if (!skipIntro) {
@@ -50,6 +51,9 @@ export default function BootLoader({ onComplete }: BootLoaderProps) {
       const entryTl = gsap.timeline({ 
         delay: skipIntro ? 0 : 0.1,
         onComplete: () => {
+          // Fully transparent by now: drop the viewport-sized layer instead of
+          // keeping a composited black plane above the page for the whole visit.
+          gsap.set(".gsap-dark-overlay", { display: "none" });
           document.body.style.overflow = "";
           onComplete();
         }

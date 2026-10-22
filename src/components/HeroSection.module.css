@@ -352,7 +352,7 @@
 
 @media (max-width: 768px) {
   .hero {
-    padding: 130px 1.25rem 4dvh 1.25rem;
+    padding: calc(110px + var(--safe-top)) max(1.25rem, var(--safe-right)) calc(4dvh + var(--safe-bottom)) max(1.25rem, var(--safe-left));
     justify-content: flex-start;
   }
   .heroContent {
@@ -409,5 +409,146 @@
   }
   :global(html[lang="ar"]) .cta {
     align-self: stretch;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SHORT VIEWPORTS (landscape phones / small laptops). Everything above is sized
+   from the viewport *width*; on a 375-430px tall screen the three-line title
+   alone would fill the page and push the CTA out of reach, so type and spacing
+   are also capped by viewport height.
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) and (max-height: 540px) {
+  .hero {
+    padding-top: calc(60px + var(--safe-top));
+    padding-bottom: calc(3dvh + var(--safe-bottom));
+    justify-content: center;
+  }
+  .title {
+    font-size: clamp(1.6rem, min(7.5vw, 13dvh), 3rem);
+    line-height: 1;
+    margin-bottom: 0.9rem;
+  }
+  .rotatingItem {
+    font-size: inherit; /* base mobile rule sizes it independently of the title */
+  }
+  .bottomSection {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .textContent {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 100%;
+  }
+  .subtitle {
+    font-size: clamp(0.85rem, 2.6vw, 1.05rem);
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .cta {
+    width: auto;
+    align-self: center;
+    flex: none;
+    padding: 0.8rem 1.5rem;
+    min-height: 44px;
+  }
+  /* Arabic runs at a 150% root size and wraps to more lines, so size it in
+     px against the viewport rather than in rem. */
+  :global(html[lang="ar"]) .title {
+    font-size: clamp(20px, min(4.6vw, 8.5dvh), 34px);
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+  }
+  :global(html[lang="ar"]) .subtitle {
+    font-size: clamp(13px, 2.2vw, 16px);
+    line-height: 1.5;
+  }
+  :global(html[lang="ar"]) .textContent {
+    align-items: center;
+  }
+  :global(html[lang="ar"]) .cta {
+    align-self: center;
+  }
+}
+
+@media (min-width: 769px) and (max-height: 600px) {
+  .hero {
+    padding-top: clamp(1rem, 3vh, 2rem);
+    padding-bottom: clamp(1rem, 3vh, 2rem);
+  }
+  .title {
+    font-size: clamp(2rem, min(6.8vw, 14dvh), 6.6rem);
+    margin-bottom: clamp(0.75rem, 2.5vh, 1.5rem);
+  }
+  .subtitle {
+    font-size: clamp(0.9rem, min(1.45vw, 3.6dvh), 1.25rem);
+  }
+  .textContent {
+    gap: clamp(0.6rem, 2vh, 1.2rem);
+  }
+  .cta {
+    padding: 0.7rem 1.8rem;
+  }
+  :global(html[lang="ar"]) .title {
+    font-size: clamp(1.9rem, min(6.3vw, 13dvh), 6.12rem);
+  }
+}
+
+/* Landscape phones wider than 768px use the desktop hero but the hamburger
+   header (no sidebar), so clear the header and honour the notch. */
+@media (min-width: 769px) and (max-height: 500px) and (max-width: 1000px) {
+  .hero {
+    padding-top: calc(56px + var(--safe-top));
+    padding-left: max(2rem, var(--safe-left));
+    padding-right: max(2rem, var(--safe-right));
+  }
+  .title {
+    font-size: clamp(1.6rem, min(5.5vw, 11dvh), 3.2rem);
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+  .rotatingItem {
+    font-size: inherit;
+  }
+  .textContent {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 100%;
+  }
+  .subtitle {
+    font-size: clamp(0.8rem, 1.8vw, 1rem);
+    flex: 1 1 0;
+  }
+  .cta {
+    flex: none;
+    padding: 0.7rem 1.5rem;
+    min-height: 44px;
+  }
+  :global(html[lang="ar"]) .title {
+    font-size: clamp(20px, min(4.2vw, 8.5dvh), 34px);
+    line-height: 1.25;
+  }
+  :global(html[lang="ar"]) .subtitle {
+    font-size: clamp(13px, 1.8vw, 16px);
+    line-height: 1.5;
+  }
+  :global(html[lang="ar"]) .textContent {
+    align-items: center;
+  }
+}
+
+/* Arabic on narrow desktop-layout widths (tablets, 769-1100px): the rotating
+   phrase is `nowrap`, and at the 150% Arabic root size it ran past the edge and
+   was clipped. Let it wrap and use a size that fits the narrower column. */
+@media (min-width: 769px) and (max-width: 1100px) {
+  :global(html[lang="ar"]) .title {
+    font-size: clamp(2rem, 5.6vw, 3.6rem);
+  }
+  :global(html[lang="ar"]) .rotatingItem {
+    white-space: normal;
   }
 }

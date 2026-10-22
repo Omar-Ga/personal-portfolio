@@ -88,7 +88,8 @@
   inset: -28%;
   border-radius: 50%;
   z-index: 1;
-  filter: blur(16px);
+  /* No filter: blur(): the gradient already fades to transparent, and a
+     blur here re-rasterises on every phase colour transition. */
   background: radial-gradient(
     circle at 50% 50%,
     rgba(30, 41, 59, 0.4) 0%,
@@ -155,6 +156,7 @@
   position: absolute;
   inset: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr); /* lets long (Arabic) labels shrink instead of widening the panel past its clip */
   grid-template-rows: auto 1fr auto auto;
   padding: 18px;
   opacity: 0;
@@ -490,8 +492,8 @@
 
 @media (max-width: 768px) {
   .root {
-    bottom: 1rem;
-    right: 1rem;
+    bottom: calc(1rem + var(--safe-bottom));
+    right: calc(1rem + var(--safe-right));
     width: 56px;
     height: 56px;
   }

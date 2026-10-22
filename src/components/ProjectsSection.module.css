@@ -25,6 +25,12 @@
   box-sizing: border-box;
 }
 
+@media (min-width: 1921px) {
+  .projectsContainer {
+    max-width: min(100%, 3600px);
+  }
+}
+
 /* LEFT SIDE: List of projects */
 .servicesListWrapper {
   width: 32%;
@@ -244,24 +250,32 @@
 }
 
 @media (max-width: 900px) {
+  /* Single column that always fits the dynamic viewport: the title/description
+     wheel takes whatever height the canvas and meta rows leave over (flex: 1),
+     instead of being a fixed 45dvh that the flex column used to squash. */
   .projectsContainer {
     flex-direction: column;
-    padding: 70px 1.25rem 20px 1.25rem;
-    gap: 1.25rem;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: calc(64px + env(safe-area-inset-top, 0px)) calc(1.25rem + env(safe-area-inset-right, 0px)) calc(1rem + env(safe-area-inset-bottom, 0px)) calc(1.25rem + env(safe-area-inset-left, 0px));
+    gap: 0.75rem;
+    height: 100vh;
     height: 100dvh;
   }
-  
+
   .visualCanvas {
     width: 100%;
-    height: 35dvh;
-    max-height: 40dvh;
+    height: clamp(130px, 26dvh, 340px);
+    max-height: none;
     flex: none;
     order: -1; /* Move image canvas above text on mobile */
     border-radius: 12px;
   }
-  
+
   .servicesListWrapper {
-    height: 45dvh;
+    height: auto;
+    flex: 1 1 0;
+    min-height: 120px;
     width: 100%;
     overflow: hidden;
     perspective: none;
@@ -269,29 +283,36 @@
 
   .servicesList {
     width: 100%;
-    padding-top: 20dvh;
-    padding-bottom: 20dvh;
+    padding-top: 12dvh;
+    padding-bottom: 12dvh;
   }
-  
+
+  .serviceItem {
+    padding: 2dvh 0;
+  }
+
   .serviceTitle {
-    font-size: clamp(1.8rem, 6.5vw, 3rem);
+    font-size: clamp(1.5rem, 6.2vw, 2.6rem);
   }
-  
+
   .serviceDescription {
-    font-size: clamp(0.85rem, 3.5vw, 1.05rem);
+    font-size: clamp(0.82rem, 3.3vw, 1.05rem);
     max-width: 100%;
   }
 
   .projectMetaWidget {
     width: 100%;
+    max-width: 100%;
+    flex: none;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.6rem;
     order: 0;
   }
 
   .keywordsBlock {
+    width: 100%;
     align-items: center;
     text-align: center;
   }
@@ -315,10 +336,22 @@
     border: 1px solid rgba(255, 255, 255, 0.12);
   }
 
+  .exploreArchiveBtn {
+    margin-top: 0.7rem;
+    padding: 0.7rem 1.25rem;
+    min-height: 44px;
+    white-space: nowrap;
+  }
+
+  /* Thumbnails sit bottom-left; the right ~88px is kept clear for the fixed
+     voice-assistant orb so the two never overlap. */
   .thumbnailStrip {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 8px;
+    padding: 0 88px 0 0;
+    width: 100%;
   }
 
   .activeDash {
@@ -328,11 +361,136 @@
   .thumbnailList {
     flex-direction: row;
     gap: 8px;
+    min-width: 0;
   }
 
   .thumbnailItem {
+    flex: 0 1 44px;
     width: 44px;
+    min-width: 36px;
     height: 44px;
+  }
+
+  /* Short portrait phones: drop the keyword header and keep pills on one
+     scrollable line so the wheel keeps enough height for a full description. */
+  @media (max-height: 720px) {
+    .projectsContainer {
+      gap: 0.5rem;
+    }
+    .visualCanvas {
+      height: clamp(110px, 22dvh, 200px);
+    }
+    .keywordsHeader {
+      display: none;
+    }
+    .keywordsList {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      overflow-x: auto;
+      max-width: 100%;
+    }
+    .keywordItem {
+      flex-shrink: 0;
+    }
+    .exploreArchiveBtn {
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+/* Landscape phones / short tablets: a stacked column cannot fit, so lay the
+   section out as three columns: canvas | wheel | meta. */
+@media (max-width: 900px) and (max-height: 520px) and (orientation: landscape) {
+  .projectsContainer {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 1rem;
+    padding: calc(52px + env(safe-area-inset-top, 0px)) calc(1rem + env(safe-area-inset-right, 0px)) calc(0.75rem + env(safe-area-inset-bottom, 0px)) calc(1rem + env(safe-area-inset-left, 0px));
+  }
+
+  .visualCanvas {
+    width: 34%;
+    height: auto;
+    align-self: stretch;
+    flex: 0 0 34%;
+    order: -1;
+  }
+
+  .servicesListWrapper {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+  }
+
+  .servicesList {
+    padding-top: 30dvh;
+    padding-bottom: 30dvh;
+  }
+
+  .serviceTitle {
+    font-size: clamp(1.2rem, 3.2vw, 1.8rem);
+  }
+
+  .serviceDescription {
+    font-size: clamp(0.78rem, 1.9vw, 0.95rem);
+  }
+
+  .projectMetaWidget {
+    width: 26%;
+    flex: 0 0 26%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .keywordsList {
+    display: none;
+  }
+
+  .keywordsBlock {
+    align-items: center;
+  }
+
+  .exploreArchiveBtn {
+    margin-top: 0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.7rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .thumbnailStrip {
+    padding: 0;
+    justify-content: center;
+  }
+
+  .thumbnailList {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .thumbnailItem {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 32px;
+  }
+}
+
+/* Short desktop-layout viewports (e.g. 1024x600): keep the wheel legible. */
+@media (min-width: 901px) and (max-height: 640px) {
+  .projectsContainer {
+    padding-top: 56px;
+    padding-bottom: 16px;
+  }
+  .visualCanvas {
+    height: 66dvh;
+  }
+  .serviceTitle {
+    font-size: clamp(1.4rem, min(3.2vw, 7dvh), 3.6rem);
+  }
+  .serviceDescription {
+    font-size: clamp(0.75rem, min(1.05vw, 3.2dvh), 1.1rem);
+    line-height: 1.4;
   }
 }
 
@@ -340,9 +498,9 @@
 .exploreArchiveBtn {
   margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--primary, #fb923c);
   border: 1px solid var(--primary, #fb923c);
-  color: #fff;
+  color: #000;
   font-family: var(--font-sans);
   font-size: 0.8rem;
   font-weight: 600;
@@ -350,7 +508,7 @@
   text-transform: uppercase;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   backdrop-filter: blur(8px);
   display: inline-flex;
   align-items: center;
@@ -358,9 +516,10 @@
 }
 
 .exploreArchiveBtn:hover {
-  background: var(--primary, #fb923c);
-  color: #000;
-  box-shadow: 0 0 20px rgba(251, 146, 60, 0.4);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  border-color: var(--primary, #fb923c);
+  box-shadow: 0 0 15px rgba(251, 146, 60, 0.25);
 }
 
 /* Arabic (RTL) Meta Widget alignment & Typography */
@@ -412,4 +571,66 @@
   letter-spacing: normal;
 }
 
+@media (max-width: 900px) {
+  /* Arabic runs at a 150% root size; size the stacked mobile layout in px so the
+     wheel keeps enough height to show a whole description. */
+  :global(html[lang="ar"]) .serviceTitle {
+    font-size: clamp(20px, 6vw, 38px);
+    line-height: 1.3;
+  }
 
+  :global(html[lang="ar"]) .serviceDescription {
+    font-size: clamp(13px, 3.5vw, 17px);
+    line-height: 1.6;
+  }
+
+  :global(html[lang="ar"]) .visualCanvas {
+    height: clamp(110px, 22dvh, 300px);
+  }
+
+  :global(html[lang="ar"]) .keywordsHeader {
+    display: none;
+  }
+
+  :global(html[lang="ar"]) .keywordsList {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
+  :global(html[lang="ar"]) .keywordItem {
+    flex-shrink: 0;
+  }
+
+  :global(html[lang="ar"]) .keywordItem {
+    font-size: 11.5px;
+  }
+
+  :global(html[lang="ar"]) .exploreArchiveBtn {
+    font-size: 13px;
+  }
+
+  :global(html[lang="ar"]) .keywordsBlock {
+    align-items: center;
+    text-align: center;
+  }
+
+  :global(html[lang="ar"]) .thumbnailStrip {
+    padding: 0 88px 0 0;
+  }
+
+  :global(html[lang="ar"]) .projectMetaWidget {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 900px) and (max-height: 520px) and (orientation: landscape) {
+  :global(html[lang="ar"]) .thumbnailStrip {
+    padding: 0;
+  }
+
+  :global(html[lang="ar"]) .projectMetaWidget {
+    justify-content: center;
+  }
+}

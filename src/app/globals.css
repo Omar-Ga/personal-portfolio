@@ -13,6 +13,12 @@
   --radius-sm: 0.5rem;
   --viewport-height: 100vh;
   --viewport-height: 100dvh;
+
+  /* Notch / home-indicator insets (0 unless viewport-fit=cover on a notched device) */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
 }
 
 * {
@@ -35,6 +41,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Ultra-wide: nearly everything is sized in rem, so growing the root size past
+   1920px keeps type, padding and tap targets proportional on 2560 / 3440 / 4K
+   screens instead of leaving a tiny layout floating in a huge canvas. */
+@media (min-width: 1921px) {
+  html {
+    font-size: clamp(100%, 0.8334vw, 220%);
+  }
+
+  html[lang="ar"] {
+    font-size: clamp(150%, 1.25vw, 330%);
+  }
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -81,10 +100,27 @@ body.hide-default-cursor * {
   cursor: none !important;
 }
 
-/* Restore native text cursor on form fields for usability */
-body.hide-default-cursor input,
-body.hide-default-cursor textarea {
+/* Restore the native text cursor on editable fields only; other input types
+   (checkbox, radio, range, buttons, …) keep the custom cursor. Editable regions
+   also re-enable it for their descendants (spans etc.), which the blanket
+   `cursor: none` above would otherwise hide while the custom dot is hidden. */
+body.hide-default-cursor textarea,
+body.hide-default-cursor [contenteditable]:not([contenteditable="false"]),
+body.hide-default-cursor input:not([type]),
+body.hide-default-cursor input[type="text"],
+body.hide-default-cursor input[type="email"],
+body.hide-default-cursor input[type="search"],
+body.hide-default-cursor input[type="tel"],
+body.hide-default-cursor input[type="url"],
+body.hide-default-cursor input[type="password"],
+body.hide-default-cursor input[type="number"] {
   cursor: text !important;
+}
+
+/* Children of an editable region (spans, marks, …) also need a native cursor;
+   `auto` keeps the I-beam over text while still honouring nested controls. */
+body.hide-default-cursor [contenteditable]:not([contenteditable="false"]) * {
+  cursor: auto !important;
 }
 
 /* ==========================================================================
