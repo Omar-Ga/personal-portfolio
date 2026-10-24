@@ -23,7 +23,42 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
   const videoRef = useRef<HTMLVideoElement>(null);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const t = useTranslations('contact');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (status === 'submitting') return;
+
+    setStatus('submitting');
+    setErrorMessage('');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        throw new Error(data?.error || t('form.error'));
+      }
+
+      setStatus('success');
+      setName('');
+      setEmail('');
+      setMessage('');
+    } catch (err) {
+      setStatus('error');
+      setErrorMessage(err instanceof Error ? err.message : t('form.error'));
+    }
+  };
 
   // (attachVideoSources also calls load(), which covers the Safari/iOS quirk.)
   useEffect(() => {
@@ -178,17 +213,59 @@ export default function ContactOverlay({ isOpen, onClose }: ContactOverlayProps)
           </div>
 
           <div className={styles.rightCol}>
-            <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+            <form className={styles.form} onSubmit={handleSubmit}>
               <div className={styles.inputGroup}>
-                <input type="text" placeholder={t('form.name')} className={styles.input} required />
+                <input
+                  type="text"
+                  placeholder={t('form.name')}
+                  className={styles.input}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  disabled={status === 'submitting'}
+                  required
+                />
               </div>
               <div className={styles.inputGroup}>
-                <input type="email" placeholder={t('form.email')} className={styles.input} required />
+                <input
+                  type="email"
+                  placeholder={t('form.email')}
+                  className={styles.input}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={status === 'submitting'}
+                  required
+                />
               </div>
               <div className={styles.inputGroup}>
-                <textarea placeholder={t('form.message')} className={styles.textarea} required></textarea>
+                <textarea
+                  placeholder={t('form.message')}
+                  className={styles.textarea}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  disabled={status === 'submitting'}
+                  required
+                />
               </div>
-              <button type="submit" className={styles.submitBtn}>{t('form.submit')}</button>
+
+              <button
+                type="submit"
+                className={styles.submitBtn}
+                disabled={status === 'submitting'}
+              >
+                {status === 'submitting' ? t('form.submitting') : t('form.submit')}
+              </button>
+
+              {status === 'success' && (
+                <div className={`${styles.statusMessage} ${styles.statusSuccess}`} role="status">
+                  {t('form.success')}
+                </div>
+              )}
+
+              {status === 'error' && (
+                <div className={`${styles.statusMessage} ${styles.statusError}`} role="alert">
+                  {errorMessage || t('form.error')}
+                </div>
+              )}
             </form>
           </div>
         </div>

@@ -6,6 +6,9 @@
     "name": "YOUR NAME",
     "email": "EMAIL ADDRESS",
     "message": "WHAT’S ON YOUR MIND?",
-    "submit": "Send Message"
+    "submit": "Send Message",
+    "submitting": "Sending...",
+    "success": "Thank you! Your message has been sent successfully. I'll get back to you soon.",
+    "error": "Failed to send message. Please try again or email contact@omargamal.studio directly."
   }
 }
